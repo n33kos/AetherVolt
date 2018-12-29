@@ -7,6 +7,7 @@ import Player      from 'class/Player';
 import randomRange from 'lib/randomRange';
 import Tile        from 'class/Tile';
 import TileType    from 'class/TileType';
+import uuidv4      from 'uuid/v4';
 import Vector2     from 'class/Vector2';
 
 export default class extends Level {
@@ -32,6 +33,8 @@ export default class extends Level {
       new Player({
         GameState : this.GameState,
         name : 'Player 1',
+        uuid : uuidv4(),
+        color: 'blue',
         avatar: new Avatar({
           GameState : this.GameState,
           x: 0,
@@ -45,6 +48,8 @@ export default class extends Level {
       new Player({
         GameState : this.GameState,
         name : 'Player 2',
+        uuid : uuidv4(),
+        color: 'red',
         avatar: new Avatar({
           GameState : this.GameState,
           x: 7,
@@ -81,11 +86,17 @@ export default class extends Level {
     this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
   }
 
+  cyclePlayerTurn() {
+    this.currentPlayerTurn++;
+    if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
+  }
+
   handleClick(e) {
     const clickedCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
     if (clickedCell) {
       clickedCell.setType(new TileType('BEND'));
       clickedCell.rotateCell(1);
+      this.cyclePlayerTurn();
     }
   }
 
@@ -94,10 +105,8 @@ export default class extends Level {
     if (!this.hoveredCell) return;
 
     this.grid.tiles.forEach(cell => {
-      cell.strokeStyle = 'white';
-      if (this.hoveredCell.id === cell.id) {
-        cell.strokeStyle = 'pink';
-      }
+      cell.isHovered = false;
+      if (this.hoveredCell.id === cell.id) cell.isHovered = true;
     })
   }
 }

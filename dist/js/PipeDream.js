@@ -714,14 +714,14 @@ var _class = function (_Sprite) {
         y = config.y,
         id = config.id,
         type = config.type,
-        player = config.player;
+        cellPlayer = config.cellPlayer;
 
 
     _this.x = x;
     _this.y = y;
     _this.id = id;
     _this.tileType = type;
-    _this.player = player;
+    _this.cellPlayer = cellPlayer;
 
     _this.animations = {
       exist: {
@@ -732,6 +732,7 @@ var _class = function (_Sprite) {
     };
     _this.currentAnimation = 'exist';
     _this.neighborPattern = [];
+    _this.isHovered = false;
 
     _this.setType(type);
     _this.calculateOffset();
@@ -808,12 +809,20 @@ var _class = function (_Sprite) {
       this.drawOutline();
     }
   }, {
+    key: 'setOutlineColor',
+    value: function setOutlineColor() {
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
+      if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
+      if (this.isHovered) {
+        this.GameState.Canvas.ctx.strokeStyle = this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].color;
+      }
+    }
+  }, {
     key: 'drawOutline',
     value: function drawOutline() {
       this.GameState.Canvas.ctx.beginPath();
       this.GameState.Canvas.ctx.lineWidth = 1 * window.devicePixelRatio;
-      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
-      if (this.tileType.type !== 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 255, 0.3)';
+      this.setOutlineColor();
       this.GameState.Canvas.ctx.rect(0, 0, this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y);
       this.GameState.Canvas.ctx.stroke();
     }
@@ -847,19 +856,19 @@ var _GameState = __webpack_require__(16);
 
 var _GameState2 = _interopRequireDefault(_GameState);
 
-var _Render = __webpack_require__(28);
+var _Render = __webpack_require__(27);
 
 var _Render2 = _interopRequireDefault(_Render);
 
-var _Scene = __webpack_require__(29);
+var _Scene = __webpack_require__(28);
 
 var _Scene2 = _interopRequireDefault(_Scene);
 
-var _UI = __webpack_require__(30);
+var _UI = __webpack_require__(29);
 
 var _UI2 = _interopRequireDefault(_UI);
 
-var _Update = __webpack_require__(31);
+var _Update = __webpack_require__(30);
 
 var _Update2 = _interopRequireDefault(_Update);
 
@@ -1559,6 +1568,10 @@ var _TileType = __webpack_require__(2);
 
 var _TileType2 = _interopRequireDefault(_TileType);
 
+var _v = __webpack_require__(1);
+
+var _v2 = _interopRequireDefault(_v);
+
 var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
@@ -1602,6 +1615,8 @@ var _class = function (_Level) {
       this.players = [new _Player2.default({
         GameState: this.GameState,
         name: 'Player 1',
+        uuid: (0, _v2.default)(),
+        color: 'blue',
         avatar: new _Avatar2.default({
           GameState: this.GameState,
           x: 0,
@@ -1614,6 +1629,8 @@ var _class = function (_Level) {
       }), new _Player2.default({
         GameState: this.GameState,
         name: 'Player 2',
+        uuid: (0, _v2.default)(),
+        color: 'red',
         avatar: new _Avatar2.default({
           GameState: this.GameState,
           x: 7,
@@ -1649,12 +1666,19 @@ var _class = function (_Level) {
       this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
     }
   }, {
+    key: 'cyclePlayerTurn',
+    value: function cyclePlayerTurn() {
+      this.currentPlayerTurn++;
+      if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
+    }
+  }, {
     key: 'handleClick',
     value: function handleClick(e) {
       var clickedCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
       if (clickedCell) {
         clickedCell.setType(new _TileType2.default('BEND'));
         clickedCell.rotateCell(1);
+        this.cyclePlayerTurn();
       }
     }
   }, {
@@ -1666,10 +1690,8 @@ var _class = function (_Level) {
       if (!this.hoveredCell) return;
 
       this.grid.tiles.forEach(function (cell) {
-        cell.strokeStyle = 'white';
-        if (_this3.hoveredCell.id === cell.id) {
-          cell.strokeStyle = 'pink';
-        }
+        cell.isHovered = false;
+        if (_this3.hoveredCell.id === cell.id) cell.isHovered = true;
       });
     }
   }]);
@@ -2064,7 +2086,7 @@ var _class = function () {
         GameState: this.GameState,
         dimensions: new _Vector2.default(64, 64),
         offset: new _Vector2.default(0.5, 0.5),
-        player: cellPlayer,
+        cellPlayer: cellPlayer,
         scale: new _Vector2.default(this.cellSize / 64, this.cellSize / 64),
         id: x + '_' + y,
         x: x,
@@ -2118,6 +2140,7 @@ var _class = function () {
     _classCallCheck(this, _class);
 
     this.tileTypes = [];
+    this.selectedTile = 0;
   }
 
   _createClass(_class, [{
@@ -2151,20 +2174,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _HumanController = __webpack_require__(27);
-
-var _HumanController2 = _interopRequireDefault(_HumanController);
-
-var _v = __webpack_require__(1);
-
-var _v2 = _interopRequireDefault(_v);
-
-var _Vector = __webpack_require__(0);
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _class = function _class(_ref) {
@@ -2173,7 +2182,7 @@ var _class = function _class(_ref) {
       actions = _ref$actions === undefined ? 2 : _ref$actions,
       avatar = _ref.avatar,
       _ref$controller = _ref.controller,
-      controller = _ref$controller === undefined ? new _HumanController2.default() : _ref$controller,
+      controller = _ref$controller === undefined ? 'human' : _ref$controller,
       _ref$hand = _ref.hand,
       hand = _ref$hand === undefined ? [] : _ref$hand,
       _ref$handSize = _ref.handSize,
@@ -2181,7 +2190,13 @@ var _class = function _class(_ref) {
       _ref$maxActions = _ref.maxActions,
       maxActions = _ref$maxActions === undefined ? 2 : _ref$maxActions,
       _ref$name = _ref.name,
-      name = _ref$name === undefined ? 'Player 1' : _ref$name;
+      name = _ref$name === undefined ? 'Player 1' : _ref$name,
+      _ref$color = _ref.color,
+      color = _ref$color === undefined ? 'blue' : _ref$color,
+      _ref$health = _ref.health,
+      health = _ref$health === undefined ? 20 : _ref$health,
+      _ref$damage = _ref.damage,
+      damage = _ref$damage === undefined ? 4 : _ref$damage;
 
   _classCallCheck(this, _class);
 
@@ -2193,33 +2208,15 @@ var _class = function _class(_ref) {
   this.handSize = handSize;
   this.actions = actions;
   this.maxActions = maxActions;
+  this.color = color;
+  this.health = health;
+  this.damage = damage;
 };
 
 exports.default = _class;
 
 /***/ }),
 /* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function _class() {
-  // Make me do things!
-
-  _classCallCheck(this, _class);
-};
-
-exports.default = _class;
-
-/***/ }),
-/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2279,7 +2276,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2308,6 +2305,9 @@ var _class = function () {
   }
 
   _createClass(_class, [{
+    key: 'init',
+    value: function init() {}
+  }, {
     key: 'add',
     value: function add(gameObject) {
       gameObject.uuid = (0, _v2.default)();
@@ -2338,7 +2338,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2529,7 +2529,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

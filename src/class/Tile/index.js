@@ -10,14 +10,14 @@ export default class extends Sprite {
       y,
       id,
       type,
-      player,
+      cellPlayer, // Player object for avatar in this cell
     } = config;
 
     this.x = x;
     this.y = y;
     this.id = id;
     this.tileType = type;
-    this.player = player;
+    this.cellPlayer = cellPlayer;
 
     this.animations = {
       exist: {
@@ -28,6 +28,7 @@ export default class extends Sprite {
     };
     this.currentAnimation = 'exist';
     this.neighborPattern = [];
+    this.isHovered = false;
 
     this.setType(type);
     this.calculateOffset();
@@ -87,11 +88,20 @@ export default class extends Sprite {
     this.drawOutline();
   }
 
+  setOutlineColor() {
+    this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
+    if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
+    if (this.isHovered) {
+      this.GameState.Canvas.ctx.strokeStyle = this.GameState.currentLevel.players[
+        this.GameState.currentLevel.currentPlayerTurn
+      ].color;
+    }
+  }
+
   drawOutline() {
     this.GameState.Canvas.ctx.beginPath();
     this.GameState.Canvas.ctx.lineWidth = 1 * window.devicePixelRatio;
-    this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
-    if (this.tileType.type !== 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 255, 0.3)';
+    this.setOutlineColor();
     this.GameState.Canvas.ctx.rect(
       0,
       0,

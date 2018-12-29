@@ -6,6 +6,8 @@ export default class {
     this.gameObjects = [];
   }
 
+  init() {}
+
   add(gameObject) {
     gameObject.uuid = uuidv4();
     gameObject.load();

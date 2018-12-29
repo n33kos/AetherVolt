@@ -1,17 +1,16 @@
-import HumanController from 'class/HumanController';
-import uuidv4          from 'uuid/v4';
-import Vector2         from 'class/Vector2';
-
 export default class {
   constructor({
     GameState,
     actions = 2,
     avatar,
-    controller = new HumanController(),
+    controller = 'human',
     hand = [],
     handSize = 4,
     maxActions = 2,
     name = 'Player 1',
+    color = 'blue',
+    health = 20,
+    damage = 4,
   }) {
     this.GameState = GameState;
     this.name = name;
@@ -21,5 +20,8 @@ export default class {
     this.handSize = handSize;
     this.actions = actions;
     this.maxActions = maxActions;
+    this.color = color;
+    this.health = health;
+    this.damage = damage;
   }
 }

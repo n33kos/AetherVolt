@@ -76,7 +76,7 @@ export default class {
       GameState: this.GameState,
       dimensions: new Vector2(64, 64),
       offset: new Vector2(0.5, 0.5),
-      player: cellPlayer,
+      cellPlayer,
       scale: new Vector2(this.cellSize / 64, this.cellSize / 64),
       id: `${x}_${y}`,
       x,

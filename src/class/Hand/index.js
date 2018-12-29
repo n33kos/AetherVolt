@@ -3,6 +3,7 @@ import uuidv4 from 'uuid/v4';
 export default class {
   constructor() {
     this.tileTypes = [];
+    this.selectedTile = 0;
   }
 
   add(tile) {
