@@ -1,9 +1,11 @@
-import Avatar      from 'gameObjects/Avatar';
+import Avatar      from 'class/Avatar';
+import Deck        from 'class/Deck';
 import Grid        from 'class/Grid';
+import Hand        from 'class/Hand';
 import Level       from 'class/Level';
 import Player      from 'class/Player';
 import randomRange from 'lib/randomRange';
-import Tile        from 'gameObjects/Tile';
+import Tile        from 'class/Tile';
 import Vector2     from 'class/Vector2';
 
 export default class extends Level {
@@ -11,10 +13,17 @@ export default class extends Level {
     super(config);
 
     this.name = "Prototype";
+    this.rows = 6;
+    this.columns = 6;
   }
 
   load() {
     this.GameState.Scene.clear();
+
+    // Init deck
+    this.deck = new Deck({
+      deckSize : this.rows * this.columns,
+    });
 
     // Init players
     this.players = [
@@ -46,11 +55,20 @@ export default class extends Level {
       }),
     ];
 
+    // Init hands
+    this.players.forEach(player => {
+      const hand = new Hand();
+      for (let i = 0; i < player.handSize; i++) {
+        hand.add(this.deck.draw());
+      }
+      player.hand = hand;
+    });
+
     // Init grid, it automatically adds the cells to the scene
     this.grid = new Grid({
       GameState : this.GameState,
-      rows : 6,
-      columns : 6,
+      rows : this.rows,
+      columns : this.columns,
       minimumPadding : 100,
       players: this.players,
     });

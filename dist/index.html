@@ -18,8 +18,20 @@
   <body>
     <div class="UserInterface">
       <div data-screen="mainmenu" data-gamestate-init-audio>
-        <button data-ui-target-screen="level">Play</button>
+        <button data-ui-target-screen="level">Single Player</button>
+        <button disabled>Multi Player</button>
         <button data-ui-target-screen="about">About</button>
+      </div>
+
+      <div data-screen="level">
+        <div>
+          <button class="IconButton LevelDown" data-gamestate-change-level="-1">Previous Level</button>
+          <div class="Level" data-ui="level">Level Name</div>
+          <button class="IconButton LevelUp" data-gamestate-change-level="1">Next Level</button>
+        </div>
+
+        <button data-ui-target-screen="game" data-gamestate-play>Play</button>
+        <button data-ui-target-screen="mainmenu">Back</button>
       </div>
 
       <div data-screen="level">

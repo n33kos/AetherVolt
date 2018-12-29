@@ -21,6 +21,8 @@ const PipeDream = {
 document.addEventListener("DOMContentLoaded", (e) => {
   const GameState = new PipeDream.GameState();
   GameState.init();
+
+  // Add gamestate to window so we can inspect it if we like
   window.GameState = GameState;
 
   // Audio needs to be initialized after user input, refer to UI class for init() call

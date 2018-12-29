@@ -24,7 +24,4 @@ export default class extends Sprite {
     };
     this.currentAnimation = 'exist';
   }
-
-  update() {
-  }
 }

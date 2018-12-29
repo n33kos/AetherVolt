@@ -5,18 +5,21 @@ import Vector2         from 'class/Vector2';
 export default class {
   constructor({
     GameState,
-    name = 'Player 1',
-    hand = [],
-    controller = new HumanController(),
+    actions = 2,
     avatar,
+    controller = new HumanController(),
+    hand = [],
+    handSize = 4,
+    maxActions = 2,
+    name = 'Player 1',
   }) {
     this.GameState = GameState;
     this.name = name;
     this.hand = hand;
     this.controller = controller;
     this.avatar = avatar;
-
-    this.actions = 2;
-    this.maxActions = 2;
+    this.handSize = handSize;
+    this.actions = actions;
+    this.maxActions = maxActions;
   }
 }

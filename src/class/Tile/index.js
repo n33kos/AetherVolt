@@ -16,7 +16,7 @@ export default class extends Sprite {
     this.x = x;
     this.y = y;
     this.id = id;
-    this.type = type;
+    this.tileType = type;
     this.player = player;
 
     this.animations = {
@@ -34,37 +34,8 @@ export default class extends Sprite {
   }
 
   setType(type) {
-    // make these types into constants or class or something
-    if (type === 'playerColumn') {
-      this.animations.exist.spriteSheet = './img/Pipes_Empty.png';
-      this.neighborPattern = [0,2];
-    }
-
-    if (type === 'empty') {
-      this.animations.exist.spriteSheet = './img/Pipes_Empty.png';
-      this.neighborPattern = [];
-    }
-
-    if (type === 'straight') {
-      this.animations.exist.spriteSheet = './img/Pipes_Straight.png';
-      this.neighborPattern = [1,3];
-    }
-
-    if (type === 'bend') {
-      this.animations.exist.spriteSheet = './img/Pipes_Bend.png';
-      this.neighborPattern = [0,1];
-    }
-
-    if (type === 'triple') {
-      this.animations.exist.spriteSheet = './img/Pipes_Triple.png';
-      this.neighborPattern = [0,1,3];
-    }
-
-    if (type === 'quad') {
-      this.animations.exist.spriteSheet = './img/Pipes_Quad.png';
-      this.neighborPattern = [0,1,2,3];
-    }
-
+    this.animations.exist.spriteSheet = type.spriteSheet;
+    this.neighborPattern = type.neighborPattern
     this.load();
   }
 
@@ -120,7 +91,7 @@ export default class extends Sprite {
     this.GameState.Canvas.ctx.beginPath();
     this.GameState.Canvas.ctx.lineWidth = 1 * window.devicePixelRatio;
     this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
-    if (this.type !== 'playerColumn') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 255, 0.3)';
+    if (this.tileType.type !== 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 255, 0.3)';
     this.GameState.Canvas.ctx.rect(
       0,
       0,

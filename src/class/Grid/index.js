@@ -1,7 +1,8 @@
-import Tile         from 'gameObjects/Tile';
-import randomRange  from 'lib/randomRange';
-import Vector2      from 'class/Vector2';
 import LoadedEntity from 'class/LoadedEntity';
+import randomRange  from 'lib/randomRange';
+import Tile         from 'class/Tile';
+import TileType     from 'class/TileType';
+import Vector2      from 'class/Vector2';
 
 export default class extends LoadedEntity{
   constructor(config) {
@@ -41,8 +42,8 @@ export default class extends LoadedEntity{
     // Build grid
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.columns; x++) {
-        let type = 'empty';
-        if (x === 0 || x === this.columns - 1) type = 'playerColumn';
+        let type = new TileType('EMPTY');
+        if (x === 0 || x === this.columns - 1) type = new TileType('PLAYER_COLUMN');
 
         let cellPlayer = null;
         this.players.forEach(player => {
@@ -99,7 +100,7 @@ export default class extends LoadedEntity{
   handleClick(e) {
     const clickedCell = this.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
     if (clickedCell) {
-      clickedCell.setType('straight');
+      clickedCell.setType(new TileType('BEND'));
       clickedCell.rotateCell(1);
     }
   }
