@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+    <title>PipeDream</title>
+
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <link rel="stylesheet" href="./styles/styles.css">
+
+    <script src="./js/PipeDream.js"></script>
+    <!-- <script src="./js/PipeDream.min.js"></script> -->
+  </head>
+
+  <body>
+    <div class="UserInterface">
+      <div data-screen="mainmenu" data-gamestate-init-audio>
+        <button data-ui-target-screen="level">Play</button>
+        <button data-ui-target-screen="about">About</button>
+      </div>
+
+      <div data-screen="level">
+        <div>
+          <button class="IconButton LevelDown" data-gamestate-change-level="-1">Previous Level</button>
+          <div class="Level" data-ui="level">Level Name</div>
+          <button class="IconButton LevelUp" data-gamestate-change-level="1">Next Level</button>
+        </div>
+
+        <button data-ui-target-screen="game" data-gamestate-play>Play</button>
+        <button data-ui-target-screen="mainmenu">Back</button>
+      </div>
+
+      <div data-screen="about">
+        About Screen
+        <button data-ui-target-screen="mainmenu">Back</button>
+      </div>
+
+      <div data-screen="game">
+        <div data-ui="score"></div>
+
+        <button data-gamestate-pause data-gamestate-mute>Pause</button>
+        <button data-gamestate-restart>Restart</button>
+        <button data-gamestate-quit>Quit</button>
+      </div>
+
+      <div data-screen="score">
+        <span data-ui="score">0</span>
+
+        <button data-ui-target-screen="mainmenu">Menu</button>
+      </div>
+    </div>
+
+    <canvas></canvas>
+  </body>
+</html>

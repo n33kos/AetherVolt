@@ -1,0 +1,68 @@
+html {
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+  background-color: #222;
+  height: 100%;
+  image-rendering: pixelated;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+}
+
+canvas {
+  display: block;
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.UserInterface {
+  display: block;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+[data-screen] {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 1s ease;
+
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+[data-screen] {
+  background: rgba(255, 255, 255, 0.2);
+  height: 200px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+}
+
+[data-screen="game"] {
+  top: 0;
+  left: 0;
+  transform: none;
+  width: auto;
+  height: auto;
+}
