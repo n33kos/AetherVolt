@@ -1,5 +1,7 @@
 export default class {
-  constructor(GameState) {
+  constructor({
+    GameState,
+  }) {
     this.GameState = GameState;
     this.audioNodes = [];
     this.controlCallbackIds = [];
