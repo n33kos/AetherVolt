@@ -6,6 +6,7 @@ import Level       from 'class/Level';
 import Player      from 'class/Player';
 import randomRange from 'lib/randomRange';
 import Tile        from 'class/Tile';
+import TileType    from 'class/TileType';
 import Vector2     from 'class/Vector2';
 
 export default class extends Level {
@@ -15,6 +16,7 @@ export default class extends Level {
     this.name = "Prototype";
     this.rows = 6;
     this.columns = 6;
+    this.currentPlayerTurn = 0;
   }
 
   load() {
@@ -73,5 +75,29 @@ export default class extends Level {
       players: this.players,
     });
     this.grid.init();
+
+    // Init Controls
+    this.addControlsCallback('mouseUp', this.handleClick.bind(this));
+    this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
+  }
+
+  handleClick(e) {
+    const clickedCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
+    if (clickedCell) {
+      clickedCell.setType(new TileType('BEND'));
+      clickedCell.rotateCell(1);
+    }
+  }
+
+  handleMouseMove(e) {
+    this.hoveredCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.position);
+    if (!this.hoveredCell) return;
+
+    this.grid.tiles.forEach(cell => {
+      cell.strokeStyle = 'white';
+      if (this.hoveredCell.id === cell.id) {
+        cell.strokeStyle = 'pink';
+      }
+    })
   }
 }

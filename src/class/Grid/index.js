@@ -1,13 +1,10 @@
-import LoadedEntity from 'class/LoadedEntity';
 import randomRange  from 'lib/randomRange';
 import Tile         from 'class/Tile';
 import TileType     from 'class/TileType';
 import Vector2      from 'class/Vector2';
 
-export default class extends LoadedEntity{
+export default class {
   constructor(config) {
-    super(config);
-
     const {
       GameState,
       rows = 6,
@@ -16,15 +13,13 @@ export default class extends LoadedEntity{
       players,
     } = config;
 
+    this.GameState = GameState;
     this.rows = rows;
     this.columns = columns + 2; // add 2 empty columns for player position
     this.maxRowsOrColumns = Math.max(this.rows, this.columns);
     this.minimumPadding = minimumPadding;
-    this.grid = [];
+    this.tiles = [];
     this.players = players;
-
-    this.addControlsCallback('mouseUp', this.handleClick.bind(this));
-    this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
   }
 
   init() {
@@ -57,8 +52,8 @@ export default class extends LoadedEntity{
     }
 
     // Init cells
-    this.grid.forEach(cell => {
-      cell.init(this.grid);
+    this.tiles.forEach(cell => {
+      cell.init(this.tiles);
     });
 
     //Position and init Avatars
@@ -94,32 +89,12 @@ export default class extends LoadedEntity{
     );
 
     this.GameState.Scene.add(cell);
-    this.grid.push(cell);
-  }
-
-  handleClick(e) {
-    const clickedCell = this.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
-    if (clickedCell) {
-      clickedCell.setType(new TileType('BEND'));
-      clickedCell.rotateCell(1);
-    }
-  }
-
-  handleMouseMove(e) {
-    this.hoveredCell = this.getCellAtCanvasPosition(this.GameState.Controls.position);
-    if (!this.hoveredCell) return;
-
-    this.grid.forEach(cell => {
-      cell.fillStyle = 'white';
-      if (this.hoveredCell.id === cell.id) {
-        cell.fillStyle = 'pink';
-      }
-    })
+    this.tiles.push(cell);
   }
 
   getCellAtCanvasPosition(position) {
     const x = Math.floor((position.x - this.padding.x) / this.cellSize);
     const y = Math.floor((position.y - this.padding.y) / this.cellSize);
-    return this.grid.find(cell => cell.id === `${x}_${y}`);
+    return this.tiles.find(cell => cell.id === `${x}_${y}`);
   }
 }

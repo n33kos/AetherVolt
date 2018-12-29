@@ -6,10 +6,6 @@ export default class {
     this.gameObjects = [];
   }
 
-  init() {
-    // Nothing here yet
-  }
-
   add(gameObject) {
     gameObject.uuid = uuidv4();
     gameObject.load();
@@ -19,7 +15,6 @@ export default class {
   remove(uuid) {
     const gameObject = this.gameObjects.find(el => el.uuid === uuid);
     gameObject.unload();
-
     this.gameObjects = this.gameObjects.filter(el => el.uuid !== uuid);
   }
 
