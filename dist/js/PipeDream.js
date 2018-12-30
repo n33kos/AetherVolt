@@ -742,6 +742,7 @@ var _class = function (_Sprite) {
   _createClass(_class, [{
     key: 'setType',
     value: function setType(type) {
+      this.tileType = type;
       this.animations.exist.spriteSheet = type.spriteSheet;
       this.neighborPattern = type.neighborPattern;
       this.load();
@@ -1666,19 +1667,18 @@ var _class = function (_Level) {
       this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
     }
   }, {
-    key: 'cyclePlayerTurn',
-    value: function cyclePlayerTurn() {
-      this.currentPlayerTurn++;
-      if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
-    }
-  }, {
     key: 'handleClick',
     value: function handleClick(e) {
+      // Bail out if we didnt click a cell
       var clickedCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
-      if (clickedCell) {
-        clickedCell.setType(new _TileType2.default('BEND'));
-        clickedCell.rotateCell(1);
-        this.cyclePlayerTurn();
+      if (!clickedCell) return;
+
+      if (clickedCell.tileType.type === 'EMPTY') {
+        this.commitAction('place', clickedCell);
+      }
+
+      if (clickedCell.tileType.type !== 'EMPTY' && clickedCell.tileType.type !== 'PLAYER_COLUMN') {
+        this.commitAction('rotate', clickedCell);
       }
     }
   }, {
@@ -1686,6 +1686,7 @@ var _class = function (_Level) {
     value: function handleMouseMove(e) {
       var _this3 = this;
 
+      // Bail out if we didnt click a cell
       this.hoveredCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.position);
       if (!this.hoveredCell) return;
 
@@ -1693,6 +1694,42 @@ var _class = function (_Level) {
         cell.isHovered = false;
         if (_this3.hoveredCell.id === cell.id) cell.isHovered = true;
       });
+    }
+
+    // TODO: create an action type class and pass it instead maybe?
+
+  }, {
+    key: 'commitAction',
+    value: function commitAction(actionType, cell) {
+      switch (actionType) {
+        case 'rotate':
+          cell.rotateCell(1);
+          this.cycleActions();
+          break;
+        case 'place':
+          cell.setType(new _TileType2.default('BEND'));
+          this.cycleActions();
+          break;
+      }
+
+      this.GameState.UI.updatePlayerStats(this.players);
+    }
+  }, {
+    key: 'cycleActions',
+    value: function cycleActions() {
+      this.players[this.currentPlayerTurn].actions -= 1;
+      if (this.players[this.currentPlayerTurn].actions <= 0) {
+        // Reset player actions to max
+        this.players[this.currentPlayerTurn].actions = this.players[this.currentPlayerTurn].maxActions;
+        // Cycle turns
+        this.cyclePlayerTurn();
+      }
+    }
+  }, {
+    key: 'cyclePlayerTurn',
+    value: function cyclePlayerTurn() {
+      this.currentPlayerTurn++;
+      if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
     }
   }]);
 
@@ -2181,36 +2218,39 @@ var _class = function _class(_ref) {
       _ref$actions = _ref.actions,
       actions = _ref$actions === undefined ? 2 : _ref$actions,
       avatar = _ref.avatar,
+      _ref$color = _ref.color,
+      color = _ref$color === undefined ? 'blue' : _ref$color,
       _ref$controller = _ref.controller,
       controller = _ref$controller === undefined ? 'human' : _ref$controller,
+      _ref$damage = _ref.damage,
+      damage = _ref$damage === undefined ? 4 : _ref$damage,
       _ref$hand = _ref.hand,
       hand = _ref$hand === undefined ? [] : _ref$hand,
       _ref$handSize = _ref.handSize,
       handSize = _ref$handSize === undefined ? 4 : _ref$handSize,
-      _ref$maxActions = _ref.maxActions,
-      maxActions = _ref$maxActions === undefined ? 2 : _ref$maxActions,
-      _ref$name = _ref.name,
-      name = _ref$name === undefined ? 'Player 1' : _ref$name,
-      _ref$color = _ref.color,
-      color = _ref$color === undefined ? 'blue' : _ref$color,
       _ref$health = _ref.health,
       health = _ref$health === undefined ? 20 : _ref$health,
-      _ref$damage = _ref.damage,
-      damage = _ref$damage === undefined ? 4 : _ref$damage;
+      _ref$maxActions = _ref.maxActions,
+      maxActions = _ref$maxActions === undefined ? 2 : _ref$maxActions,
+      _ref$maxHealth = _ref.maxHealth,
+      maxHealth = _ref$maxHealth === undefined ? 20 : _ref$maxHealth,
+      _ref$name = _ref.name,
+      name = _ref$name === undefined ? 'Player 1' : _ref$name;
 
   _classCallCheck(this, _class);
 
   this.GameState = GameState;
-  this.name = name;
-  this.hand = hand;
-  this.controller = controller;
-  this.avatar = avatar;
-  this.handSize = handSize;
   this.actions = actions;
-  this.maxActions = maxActions;
+  this.avatar = avatar;
   this.color = color;
-  this.health = health;
+  this.controller = controller;
   this.damage = damage;
+  this.hand = hand;
+  this.handSize = handSize;
+  this.health = health;
+  this.maxActions = maxActions;
+  this.maxHealth = maxHealth;
+  this.name = name;
 };
 
 exports.default = _class;
@@ -2505,11 +2545,17 @@ var _class = function () {
       this.isFullscreen = !this.isFullscreen;
     }
   }, {
-    key: 'updateScore',
-    value: function updateScore(score) {
-      var scores = document.querySelectorAll('[data-ui="score"]');
-      Array.from(scores).forEach(function (scoreElement) {
-        scoreElement.innerHTML = score;
+    key: 'updatePlayerStats',
+    value: function updatePlayerStats(players) {
+      players.forEach(function (player, index) {
+        var name = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="name"]');
+        var health = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="health"]');
+        var damage = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="damage"]');
+        var actions = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="actions"]');
+        name.innerHTML = player.name;
+        health.innerHTML = 'HP: ' + player.health + '/' + player.maxHealth;
+        damage.innerHTML = 'DMG: ' + player.damage;
+        actions.innerHTML = 'ACT: ' + player.actions + '/' + player.maxActions;
       });
     }
   }, {

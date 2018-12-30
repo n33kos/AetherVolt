@@ -35,6 +35,7 @@ export default class extends Sprite {
   }
 
   setType(type) {
+    this.tileType = type;
     this.animations.exist.spriteSheet = type.spriteSheet;
     this.neighborPattern = type.neighborPattern
     this.load();

@@ -51,7 +51,19 @@
       </div>
 
       <div data-screen="game">
-        <div data-ui="score"></div>
+        <div class="PlayerStats" data-ui-player="1">
+          <div data-ui="name"></div>
+          <div data-ui="health"></div>
+          <div data-ui="damage"></div>
+          <div data-ui="actions"></div>
+        </div>
+
+        <div class="PlayerStats"  data-ui-player="2">
+          <div data-ui="name"></div>
+          <div data-ui="health"></div>
+          <div data-ui="damage"></div>
+          <div data-ui="actions"></div>
+        </div>
 
         <button data-gamestate-pause data-gamestate-mute>Pause</button>
         <button data-gamestate-restart>Restart</button>

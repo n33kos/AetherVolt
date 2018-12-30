@@ -86,21 +86,22 @@ export default class extends Level {
     this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
   }
 
-  cyclePlayerTurn() {
-    this.currentPlayerTurn++;
-    if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
-  }
-
   handleClick(e) {
+    // Bail out if we didnt click a cell
     const clickedCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
-    if (clickedCell) {
-      clickedCell.setType(new TileType('BEND'));
-      clickedCell.rotateCell(1);
-      this.cyclePlayerTurn();
+    if (!clickedCell) return;
+
+    if (clickedCell.tileType.type === 'EMPTY') {
+      this.commitAction('place', clickedCell);
+    }
+
+    if (clickedCell.tileType.type !== 'EMPTY' && clickedCell.tileType.type !== 'PLAYER_COLUMN') {
+      this.commitAction('rotate', clickedCell);
     }
   }
 
   handleMouseMove(e) {
+    // Bail out if we didnt click a cell
     this.hoveredCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.position);
     if (!this.hoveredCell) return;
 
@@ -108,5 +109,36 @@ export default class extends Level {
       cell.isHovered = false;
       if (this.hoveredCell.id === cell.id) cell.isHovered = true;
     })
+  }
+
+  // TODO: create an action type class and pass it instead maybe?
+  commitAction(actionType, cell) {
+    switch (actionType) {
+      case 'rotate':
+        cell.rotateCell(1);
+        this.cycleActions();
+        break;
+      case 'place':
+        cell.setType(new TileType('BEND'));
+        this.cycleActions();
+        break;
+    }
+
+    this.GameState.UI.updatePlayerStats(this.players);
+  }
+
+  cycleActions() {
+    this.players[this.currentPlayerTurn].actions -= 1;
+    if (this.players[this.currentPlayerTurn].actions <= 0) {
+      // Reset player actions to max
+      this.players[this.currentPlayerTurn].actions = this.players[this.currentPlayerTurn].maxActions;
+      // Cycle turns
+      this.cyclePlayerTurn();
+    }
+  }
+
+  cyclePlayerTurn() {
+    this.currentPlayerTurn++;
+    if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
   }
 }
