@@ -64,12 +64,18 @@ export default class extends Level {
 
     // Init hands
     this.players.forEach(player => {
-      const hand = new Hand();
+      const hand = new Hand({
+        GameState : this.GameState,
+        position: new Vector2(0, -this.GameState.Canvas.cy),
+      });
       for (let i = 0; i < player.handSize; i++) {
         hand.add(this.deck.draw());
       }
       player.hand = hand;
+      this.GameState.Scene.add(hand);
     });
+    this.players[0].hand.setVisibility(true);
+    this.players[1].hand.setVisibility(false);
 
     // Init grid, it automatically adds the cells to the scene
     this.grid = new Grid({
@@ -86,17 +92,38 @@ export default class extends Level {
     this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
   }
 
+  findTileAtPosition(pos) {
+    // Search grid
+    let clickedCell = this.grid.getCellAtCanvasPosition(pos);
+
+    // Then search hand
+    if (!clickedCell) {
+      clickedCell = this.players[this.currentPlayerTurn].hand.getCellAtCanvasPosition(pos);
+    }
+
+    return clickedCell;
+  }
+
   handleClick(e) {
-    // Bail out if we didnt click a cell
-    const clickedCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.lastPosition);
+    const clickedCell = this.findTileAtPosition(this.GameState.Controls.lastPosition)
     if (!clickedCell) return;
 
     if (clickedCell.tileType.type === 'EMPTY') {
       this.commitAction('place', clickedCell);
+      if (!clickedCell.isInHand) this.cycleActions();
+      return;
     }
 
     if (clickedCell.tileType.type !== 'EMPTY' && clickedCell.tileType.type !== 'PLAYER_COLUMN') {
       this.commitAction('rotate', clickedCell);
+      if (!clickedCell.isInHand) this.cycleActions();
+      return;
+    }
+
+    if (clickedCell.tileType.type === 'PLAYER_COLUMN') {
+      this.commitAction('move', clickedCell);
+      if (!clickedCell.isInHand) this.cycleActions();
+      return;
     }
   }
 
@@ -116,11 +143,17 @@ export default class extends Level {
     switch (actionType) {
       case 'rotate':
         cell.rotateCell(1);
-        this.cycleActions();
         break;
       case 'place':
         cell.setType(new TileType('BEND'));
-        this.cycleActions();
+        break;
+      case 'move':
+        cell.setExclusivePlayer(this.players[this.currentPlayerTurn]);
+        this.grid.setAvatarPosition(
+          this.players[this.currentPlayerTurn].avatar,
+          cell.x,
+          cell.y,
+        );
         break;
     }
 
@@ -138,7 +171,13 @@ export default class extends Level {
   }
 
   cyclePlayerTurn() {
+    // Hide old hand
+    this.players[this.currentPlayerTurn].hand.setVisibility(false);
+
     this.currentPlayerTurn++;
     if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
+
+    //Show new hand
+    this.players[this.currentPlayerTurn].hand.setVisibility(true);
   }
 }

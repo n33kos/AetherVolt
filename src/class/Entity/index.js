@@ -26,6 +26,7 @@ export default class extends LoadedEntity {
     this.offset = offset;
     this.position = position;
     this.rotation = rotation;
+    this.isVisible = true;
 
     this.setPosition(position);
   }
@@ -45,6 +46,8 @@ export default class extends LoadedEntity {
   }
 
   drawEntity() {
+    if (!this.isVisible) return;
+
     // Move canvas, rotate, then add offset.
     this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
     this.GameState.Canvas.ctx.rotate(this.rotation);

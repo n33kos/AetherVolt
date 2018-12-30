@@ -10,14 +10,16 @@ export default class extends Sprite {
       y,
       id,
       type,
-      cellPlayer, // Player object for avatar in this cell
+      player, // Player object for avatar in this cell
+      isInHand = false,
     } = config;
 
     this.x = x;
     this.y = y;
     this.id = id;
     this.tileType = type;
-    this.cellPlayer = cellPlayer;
+    this.player = player;
+    this.isInHand = isInHand;
 
     this.animations = {
       exist: {
@@ -48,6 +50,7 @@ export default class extends Sprite {
 
   getNeighbors() {
     const neighbors = [];
+    if (!this.grid) return [];
 
     if (this.neighborPattern.includes(0)) {
       neighbors.push(this.grid.find(cell => cell.id == `${this.x + 1}_${this.y}`));
@@ -65,7 +68,11 @@ export default class extends Sprite {
     return neighbors;
   }
 
-  update() {
+  setExclusivePlayer(player) {
+    this.grid.forEach(cell => {
+      if (cell.player && cell.player.uuid === player.uuid) cell.player = null;
+    });
+    this.player = player;
   }
 
   rotateCell(direction) {
@@ -92,7 +99,7 @@ export default class extends Sprite {
   setOutlineColor() {
     this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
     if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
-    if (this.isHovered) {
+    if (this.isHovered || this.isInHand) {
       this.GameState.Canvas.ctx.strokeStyle = this.GameState.currentLevel.players[
         this.GameState.currentLevel.currentPlayerTurn
       ].color;
