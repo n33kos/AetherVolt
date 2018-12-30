@@ -39,17 +39,18 @@ export default class {
       for (let x = 0; x < this.columns; x++) {
         let type = new TileType('EMPTY');
         if (x === 0 || x === this.columns - 1) type = new TileType('PLAYER_COLUMN');
-
-        let cellPlayer = null;
-        this.players.forEach(player => {
-          if (player.avatar.x === x && player.avatar.y === y){
-            cellPlayer = player;
-          }
-        });
-
-        this.addCell(x, y, type, cellPlayer);
+        this.addCell(x, y, type);
       }
     }
+
+    // Position avatars
+    this.players.forEach((player, index) => {
+      const tileID = `${index === 0 ? 0 : this.columns - 1}_${Math.floor(randomRange(0, this.rows - 1))}`;
+      const tile = this.tiles.find(tile => tile.id === tileID);
+
+      tile.player = player;
+      player.setAvatarPosition(tile);
+    });
 
     // Init cells
     this.tiles.forEach(cell => {
@@ -58,25 +59,16 @@ export default class {
 
     //Position and init Avatars
     this.players.forEach(player => {
-      this.setAvatarPosition(player.avatar, player.avatar.x, player.avatar.y);
+      player.setAvatarPosition(player.avatar, player.avatar.x, player.avatar.y);
       this.GameState.Scene.add(player.avatar);
     });
   }
 
-  setAvatarPosition(avatar, x, y) {
-    avatar.canvasPosition = new Vector2(
-      (x * this.cellSize) + this.padding.x + (this.cellSize/2),
-      (y * this.cellSize) + this.padding.y + (this.cellSize/2),
-    );
-    avatar.calculateOffset();
-  }
-
-  addCell(x, y, type, cellPlayer) {
+  addCell(x, y, type) {
     const cell = new Tile({
       GameState: this.GameState,
       dimensions: new Vector2(64, 64),
       offset: new Vector2(0.5, 0.5),
-      cellPlayer,
       scale: new Vector2(this.cellSize / 64, this.cellSize / 64),
       id: `${x}_${y}`,
       x,

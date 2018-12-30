@@ -12,6 +12,7 @@ export default class extends Sprite {
       type,
       player, // Player object for avatar in this cell
       isInHand = false,
+      isSelected = false,
     } = config;
 
     this.x = x;
@@ -20,6 +21,7 @@ export default class extends Sprite {
     this.tileType = type;
     this.player = player;
     this.isInHand = isInHand;
+    this.isSelected = isSelected;
 
     this.animations = {
       exist: {
@@ -104,6 +106,7 @@ export default class extends Sprite {
         this.GameState.currentLevel.currentPlayerTurn
       ].color;
     }
+    if (this.isSelected) this.GameState.Canvas.ctx.strokeStyle = 'pink';
   }
 
   drawOutline() {

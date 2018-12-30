@@ -3,15 +3,16 @@ export default class {
     this.GameState = GameState;
     this.screens = document.querySelectorAll('[data-screen]');
     this.buttons = {
-      fullscreen  : document.querySelectorAll('[data-gamestate-fullscreen]'),
-      initAudio   : document.querySelectorAll('[data-gamestate-init-audio]'),
-      level       : document.querySelectorAll('[data-gamestate-change-level]'),
-      mute        : document.querySelectorAll('[data-gamestate-mute]'),
-      pause       : document.querySelectorAll('[data-gamestate-pause]'),
-      play        : document.querySelectorAll('[data-gamestate-play]'),
-      quit        : document.querySelectorAll('[data-gamestate-quit]'),
-      restart     : document.querySelectorAll('[data-gamestate-restart]'),
-      screens     : document.querySelectorAll('[data-ui-target-screen]'),
+      commitAction : document.querySelectorAll('[data-gamestate-commit-action]'),
+      fullscreen   : document.querySelectorAll('[data-gamestate-fullscreen]'),
+      initAudio    : document.querySelectorAll('[data-gamestate-init-audio]'),
+      level        : document.querySelectorAll('[data-gamestate-change-level]'),
+      mute         : document.querySelectorAll('[data-gamestate-mute]'),
+      pause        : document.querySelectorAll('[data-gamestate-pause]'),
+      play         : document.querySelectorAll('[data-gamestate-play]'),
+      quit         : document.querySelectorAll('[data-gamestate-quit]'),
+      restart      : document.querySelectorAll('[data-gamestate-restart]'),
+      screens      : document.querySelectorAll('[data-ui-target-screen]'),
     };
     this.isFullscreen = false;
   }
@@ -75,6 +76,14 @@ export default class {
     Array.from(this.buttons.screens).forEach(button => {
       button.addEventListener('click', this.initTransitions.bind(this));
     });
+
+    // Commit action
+    Array.from(this.buttons.commitAction).forEach(button => {
+      button.addEventListener('click', () => {
+        this.GameState.currentLevel.currentAction.commit();
+      });
+    });
+
   }
 
   initTransitions(e) {

@@ -26,4 +26,9 @@ export default class {
     this.maxHealth = maxHealth;
     this.name = name;
   }
+
+  setAvatarPosition(tile) {
+    this.avatar.canvasPosition = tile.canvasPosition;
+    this.avatar.calculateOffset();
+  }
 }

@@ -6,14 +6,8 @@ export default class extends Sprite {
     super(config);
 
     const {
-      x,
-      y,
       sprite,
     } = config;
-
-    this.x = x;
-    this.y = y;
-    this.id = `${x}_${y}`;
 
     this.animations = {
       exist: {
