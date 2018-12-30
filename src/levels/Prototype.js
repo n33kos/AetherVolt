@@ -18,6 +18,7 @@ export default class extends Level {
     this.rows = 6;
     this.columns = 6;
     this.currentPlayerTurn = 0;
+    this.selectedCell = null;
   }
 
   load() {
@@ -104,11 +105,26 @@ export default class extends Level {
     return clickedCell;
   }
 
+  handleMouseMove(e) {
+    // Bail out if we didnt click a cell
+    this.hoveredCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.position);
+    if (!this.hoveredCell) return;
+
+    this.grid.tiles.forEach(cell => {
+      cell.isHovered = false;
+      if (this.hoveredCell.id === cell.id) cell.isHovered = true;
+    })
+  }
+
   handleClick(e) {
     const clickedCell = this.findTileAtPosition(this.GameState.Controls.lastPosition)
     if (!clickedCell) return;
 
-    if (clickedCell.tileType.type === 'EMPTY') {
+    if (clickedCell.isInHand) {
+      this.selectedCell = clickedCell;
+    }
+
+    if (clickedCell.tileType.type === 'EMPTY' && this.selectedCell) {
       this.commitAction('place', clickedCell);
       if (!clickedCell.isInHand) this.cycleActions();
       return;
@@ -127,17 +143,6 @@ export default class extends Level {
     }
   }
 
-  handleMouseMove(e) {
-    // Bail out if we didnt click a cell
-    this.hoveredCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.position);
-    if (!this.hoveredCell) return;
-
-    this.grid.tiles.forEach(cell => {
-      cell.isHovered = false;
-      if (this.hoveredCell.id === cell.id) cell.isHovered = true;
-    })
-  }
-
   // TODO: create an action type class and pass it instead maybe?
   commitAction(actionType, cell) {
     switch (actionType) {
@@ -145,7 +150,11 @@ export default class extends Level {
         cell.rotateCell(1);
         break;
       case 'place':
-        cell.setType(new TileType('BEND'));
+        cell.setType(this.selectedCell.tileType);
+        cell.rotation = this.selectedCell.rotation;
+
+        this.players[this.currentPlayerTurn].hand.remove(this.selectedCell.uuid);
+        this.selectedCell = null;
         break;
       case 'move':
         cell.setExclusivePlayer(this.players[this.currentPlayerTurn]);
@@ -179,5 +188,7 @@ export default class extends Level {
 
     //Show new hand
     this.players[this.currentPlayerTurn].hand.setVisibility(true);
+    // Draw new tile
+    this.players[this.currentPlayerTurn].hand.add(this.deck.draw());
   }
 }

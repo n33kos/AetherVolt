@@ -1723,6 +1723,7 @@ var _class = function (_Level) {
     _this.rows = 6;
     _this.columns = 6;
     _this.currentPlayerTurn = 0;
+    _this.selectedCell = null;
     return _this;
   }
 
@@ -1812,12 +1813,30 @@ var _class = function (_Level) {
       return clickedCell;
     }
   }, {
+    key: 'handleMouseMove',
+    value: function handleMouseMove(e) {
+      var _this3 = this;
+
+      // Bail out if we didnt click a cell
+      this.hoveredCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.position);
+      if (!this.hoveredCell) return;
+
+      this.grid.tiles.forEach(function (cell) {
+        cell.isHovered = false;
+        if (_this3.hoveredCell.id === cell.id) cell.isHovered = true;
+      });
+    }
+  }, {
     key: 'handleClick',
     value: function handleClick(e) {
       var clickedCell = this.findTileAtPosition(this.GameState.Controls.lastPosition);
       if (!clickedCell) return;
 
-      if (clickedCell.tileType.type === 'EMPTY') {
+      if (clickedCell.isInHand) {
+        this.selectedCell = clickedCell;
+      }
+
+      if (clickedCell.tileType.type === 'EMPTY' && this.selectedCell) {
         this.commitAction('place', clickedCell);
         if (!clickedCell.isInHand) this.cycleActions();
         return;
@@ -1835,20 +1854,6 @@ var _class = function (_Level) {
         return;
       }
     }
-  }, {
-    key: 'handleMouseMove',
-    value: function handleMouseMove(e) {
-      var _this3 = this;
-
-      // Bail out if we didnt click a cell
-      this.hoveredCell = this.grid.getCellAtCanvasPosition(this.GameState.Controls.position);
-      if (!this.hoveredCell) return;
-
-      this.grid.tiles.forEach(function (cell) {
-        cell.isHovered = false;
-        if (_this3.hoveredCell.id === cell.id) cell.isHovered = true;
-      });
-    }
 
     // TODO: create an action type class and pass it instead maybe?
 
@@ -1860,7 +1865,11 @@ var _class = function (_Level) {
           cell.rotateCell(1);
           break;
         case 'place':
-          cell.setType(new _TileType2.default('BEND'));
+          cell.setType(this.selectedCell.tileType);
+          cell.rotation = this.selectedCell.rotation;
+
+          this.players[this.currentPlayerTurn].hand.remove(this.selectedCell.uuid);
+          this.selectedCell = null;
           break;
         case 'move':
           cell.setExclusivePlayer(this.players[this.currentPlayerTurn]);
@@ -1892,6 +1901,8 @@ var _class = function (_Level) {
 
       //Show new hand
       this.players[this.currentPlayerTurn].hand.setVisibility(true);
+      // Draw new tile
+      this.players[this.currentPlayerTurn].hand.add(this.deck.draw());
     }
   }]);
 
