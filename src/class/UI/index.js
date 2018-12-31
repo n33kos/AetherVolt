@@ -145,4 +145,10 @@ export default class {
       levelElement.innerHTML = level;
     });
   }
+
+  updateScoreScreen() {
+    if (!this.GameState.currentLevel.winner) return;
+    const winner = document.querySelector('[data-ui="winner"]');
+    winner.innerHTML = `${this.GameState.currentLevel.winner.name} Wins!`;
+  }
 }

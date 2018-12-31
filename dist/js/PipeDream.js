@@ -1848,8 +1848,9 @@ var _class = function (_Level) {
           GameState: _this2.GameState,
           position: new _Vector2.default(0, -_this2.GameState.Canvas.cy)
         });
+
         // Draw tiles from deck
-        for (var i = 0; i < player.handSize; i++) {
+        for (var i = 0; i < player.handSize - index; i++) {
           hand.add(_this2.deck.draw());
         }
 
@@ -2020,6 +2021,28 @@ var _class = function (_Level) {
 
         // Apply Damage
         endCell.player.health -= startCell.player.damage + damageAmplifier;
+      }
+
+      this.endGameLogic();
+    }
+  }, {
+    key: 'endGameLogic',
+    value: function endGameLogic() {
+      var gameOver = false;
+
+      this.players.forEach(function (player) {
+        if (player.health <= 0) {
+          gameOver = true;
+          player.health = 0;
+        }
+      });
+
+      if (gameOver) {
+        this.winner = this.players.find(function (player) {
+          return player.health > 0;
+        });
+        this.GameState.UI.updateScoreScreen();
+        this.GameState.UI.setScreen('score');
       }
     }
   }]);
@@ -3104,6 +3127,13 @@ var _class = function () {
       Array.from(document.querySelectorAll('[data-ui="level"]')).forEach(function (levelElement) {
         levelElement.innerHTML = level;
       });
+    }
+  }, {
+    key: 'updateScoreScreen',
+    value: function updateScoreScreen() {
+      if (!this.GameState.currentLevel.winner) return;
+      var winner = document.querySelector('[data-ui="winner"]');
+      winner.innerHTML = this.GameState.currentLevel.winner.name + ' Wins!';
     }
   }]);
 

@@ -70,8 +70,9 @@ export default class extends Level {
         GameState : this.GameState,
         position: new Vector2(0, -this.GameState.Canvas.cy),
       });
+
       // Draw tiles from deck
-      for (let i = 0; i < player.handSize; i++) {
+      for (let i = 0; i < (player.handSize - index); i++) {
         hand.add(this.deck.draw());
       }
 
@@ -242,6 +243,25 @@ export default class extends Level {
 
       // Apply Damage
       endCell.player.health -= (startCell.player.damage + damageAmplifier);
+    }
+
+    this.endGameLogic();
+  }
+
+  endGameLogic() {
+    let gameOver = false;
+
+    this.players.forEach(player => {
+      if (player.health <= 0) {
+        gameOver = true;
+        player.health = 0;
+      }
+    });
+
+    if (gameOver) {
+      this.winner = this.players.find(player => player.health > 0);
+      this.GameState.UI.updateScoreScreen();
+      this.GameState.UI.setScreen('score');
     }
   }
 }
