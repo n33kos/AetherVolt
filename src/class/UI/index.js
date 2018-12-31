@@ -131,7 +131,7 @@ export default class {
       const health = document.querySelector(`[data-ui-player="${index+1}"] [data-ui="health"]`);
       const damage = document.querySelector(`[data-ui-player="${index+1}"] [data-ui="damage"]`);
       const actions = document.querySelector(`[data-ui-player="${index+1}"] [data-ui="actions"]`);
-      name.innerHTML = player.name;
+      name.innerHTML = `${player.name}${this.GameState.currentLevel.currentPlayerTurn === index ? '*' : ''}`;
       health.innerHTML = `HP: ${player.health}/${player.maxHealth}`;
       damage.innerHTML = `DMG: ${player.damage}`;
       actions.innerHTML = `ACT: ${player.actions}/${player.maxActions}`;

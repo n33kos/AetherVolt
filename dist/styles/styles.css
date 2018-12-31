@@ -66,6 +66,19 @@ canvas {
   left: 0;
   -webkit-transform: none;
           transform: none;
-  width: auto;
-  height: auto;
+  width: 200px;
+  height: 1px;
+  background: none;
+}
+
+.PlayerStats {
+  position: fixed;
+  top: 40px;
+  left: 10px;
+  font-size: 20px;
+  color: white;
+}
+.PlayerStats:last-of-type {
+  left: auto;
+  right: 10px;
 }

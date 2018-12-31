@@ -3081,6 +3081,8 @@ var _class = function () {
   }, {
     key: 'updatePlayerStats',
     value: function updatePlayerStats(players) {
+      var _this2 = this;
+
       if (!players) return;
 
       players.forEach(function (player, index) {
@@ -3088,7 +3090,7 @@ var _class = function () {
         var health = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="health"]');
         var damage = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="damage"]');
         var actions = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="actions"]');
-        name.innerHTML = player.name;
+        name.innerHTML = '' + player.name + (_this2.GameState.currentLevel.currentPlayerTurn === index ? '*' : '');
         health.innerHTML = 'HP: ' + player.health + '/' + player.maxHealth;
         damage.innerHTML = 'DMG: ' + player.damage;
         actions.innerHTML = 'ACT: ' + player.actions + '/' + player.maxActions;

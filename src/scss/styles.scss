@@ -63,6 +63,20 @@ canvas {
   top: 0;
   left: 0;
   transform: none;
-  width: auto;
-  height: auto;
+  width: 200px;
+  height: 1px;
+  background: none;
+}
+
+.PlayerStats {
+  position: fixed;
+  top: 40px;
+  left: 10px;
+  font-size: 20px;
+  color: white;
+
+  &:last-of-type {
+    left: auto;
+    right: 10px;
+  }
 }
