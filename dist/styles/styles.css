@@ -7,7 +7,7 @@ html {
 
 body {
   -webkit-overflow-scrolling: touch;
-  background-color: #111;
+  background-color: #000;
   height: 100%;
   -ms-interpolation-mode: nearest-neighbor;
       image-rendering: -moz-crisp-edges;

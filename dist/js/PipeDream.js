@@ -320,14 +320,16 @@ var _class = function (_Sprite) {
 
     _this.animations = {
       exist: {
-        frames: 1,
+        frames: 8,
         spriteSheet: './img/Pipes_Empty.png',
-        ticksPerFrame: 4
+        ticksPerFrame: 5,
+        loop: false
       }
     };
     _this.currentAnimation = 'exist';
     _this.neighborPattern = [];
     _this.isHovered = false;
+    _this.placedBy = false;
 
     _this.setType(type);
     _this.calculateOffset();
@@ -401,17 +403,17 @@ var _class = function (_Sprite) {
     value: function draw() {
       _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'draw', this).call(this);
       this.drawOutline();
-      if (this.cameFrom) this.drawCameFrom();
     }
   }, {
     key: 'setOutlineColor',
     value: function setOutlineColor() {
-      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
       if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
       if (this.isHovered || this.isInHand) {
         this.GameState.Canvas.ctx.strokeStyle = this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].color;
       }
       if (this.isSelected) this.GameState.Canvas.ctx.strokeStyle = 'pink';
+      if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = this.placedBy.color;
     }
   }, {
     key: 'drawOutline',
@@ -420,19 +422,6 @@ var _class = function (_Sprite) {
       this.GameState.Canvas.ctx.lineWidth = 1 * window.devicePixelRatio;
       this.setOutlineColor();
       this.GameState.Canvas.ctx.rect(0, 0, this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y);
-      this.GameState.Canvas.ctx.stroke();
-    }
-  }, {
-    key: 'drawCameFrom',
-    value: function drawCameFrom() {
-      this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
-      this.GameState.Canvas.ctx.beginPath();
-      this.GameState.Canvas.ctx.lineWidth = 3 * window.devicePixelRatio;
-      this.GameState.Canvas.ctx.strokeStyle = 'yellow';
-      // fix this after figuring out bug
-      if (this.player) this.GameState.Canvas.ctx.strokeStyle = this.player.color;
-      this.GameState.Canvas.ctx.moveTo(this.canvasPosition.x, this.player ? this.canvasPosition.y + 5 : this.canvasPosition.y);
-      this.GameState.Canvas.ctx.lineTo(this.cameFrom.canvasPosition.x, this.player ? this.canvasPosition.y + 5 : this.canvasPosition.y);
       this.GameState.Canvas.ctx.stroke();
     }
   }]);
@@ -1883,7 +1872,7 @@ var _class = function (_Level) {
       this.grid.init();
 
       // Init current action
-      this.currentAction = new _Action2.default({});
+      this.currentAction = new _Action2.default({ player: this.players[this.currentPlayerTurn] });
 
       // Init Controls
       this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
@@ -1904,19 +1893,16 @@ var _class = function (_Level) {
       var clickedTile = this.findTileAtPosition(this.GameState.Controls.position);
       if (!clickedTile) return;
 
+      this.currentAction.targetTile = clickedTile;
+
       if (clickedTile.tileType.type === 'EMPTY' && this.selectedTile.isInHand) {
         this.currentAction.actionType = new _ActionType2.default('PLACE');
-        this.currentAction.sourceTile = this.selectedTile;
-        this.currentAction.targetTile = clickedTile;
-        this.currentAction.player = this.players[this.currentPlayerTurn];
         this.currentAction.commit();
         this.cycleActions();
       }
 
       if (clickedTile.tileType.type === 'PLAYER_COLUMN' && this.selectedTile.tileType.type === 'PLAYER_COLUMN' && clickedTile.uuid !== this.selectedTile.uuid) {
         this.currentAction.actionType = new _ActionType2.default('MOVE');
-        this.currentAction.sourceTile = this.selectedTile;
-        this.currentAction.targetTile = clickedTile;
         this.currentAction.commit();
         this.cycleActions();
       }
@@ -1924,8 +1910,6 @@ var _class = function (_Level) {
       if (clickedTile.tileType.type !== 'PLAYER_COLUMN' && clickedTile.tileType.type !== 'EMPTY' && clickedTile.uuid === this.selectedTile.uuid) {
         // TODO: enable a rotation mode which shows icons to rotate left and right
         this.currentAction.actionType = new _ActionType2.default('ROTATE');
-        this.currentAction.sourceTile = this.selectedTile;
-        this.currentAction.targetTile = clickedTile;
         this.currentAction.commit();
         if (!clickedTile.isInHand) this.cycleActions();
       }
@@ -1964,6 +1948,7 @@ var _class = function (_Level) {
     key: 'selectTile',
     value: function selectTile(tileToSelect) {
       this.selectedTile = tileToSelect;
+      this.currentAction.sourceTile = this.selectedTile;
 
       if (tileToSelect.isInHand || tileToSelect.tileType.type === 'PLAYER_COLUMN') {
         this.previewTile = (0, _cloneClass2.default)(tileToSelect);
@@ -1974,7 +1959,7 @@ var _class = function (_Level) {
   }, {
     key: 'cycleActions',
     value: function cycleActions() {
-      this.processDamage();
+      this.processConnection();
 
       // Decrement action
       this.players[this.currentPlayerTurn].actions -= 1;
@@ -1986,7 +1971,7 @@ var _class = function (_Level) {
       }
 
       // Reset currrent action
-      this.currentAction = new _Action2.default({});
+      this.currentAction = new _Action2.default({ player: this.players[this.currentPlayerTurn] });
 
       // Update UI
       this.GameState.UI.updatePlayerStats(this.players);
@@ -2003,14 +1988,16 @@ var _class = function (_Level) {
 
       //Show new hand
       this.players[this.currentPlayerTurn].hand.setVisibility(true);
+
       // Draw new tile
-      this.players[this.currentPlayerTurn].hand.add(this.deck.draw());
+      if (this.deck.tiles.length > 0) this.players[this.currentPlayerTurn].hand.add(this.deck.draw());
     }
   }, {
-    key: 'processDamage',
-    value: function processDamage() {
+    key: 'processConnection',
+    value: function processConnection() {
       var _this3 = this;
 
+      // vvv There must be a better way to get these cells vvv
       var startCell = this.grid.tiles.find(function (tile) {
         return tile.player && tile.player.name === _this3.players[_this3.currentPlayerTurn].name;
       });
@@ -2019,6 +2006,21 @@ var _class = function (_Level) {
       });
       var pathfinder = new _Pathfinder2.default(this.grid.tiles);
       var path = pathfinder.findPath(startCell, endCell);
+
+      if (path.length > 0) {
+        var damageAmplifier = 0;
+
+        path.forEach(function (tile) {
+          // Animate Tiles in path by resetting frame to 0
+          tile.currentFrame = 0;
+
+          //Increase Damage by 1 for every cell in path placed by the attacker
+          if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
+        });
+
+        // Apply Damage
+        endCell.player.health -= startCell.player.damage + damageAmplifier;
+      }
     }
   }]);
 
@@ -2071,6 +2073,8 @@ var _class = function () {
     key: 'rotate',
     value: function rotate() {
       this.targetTile.rotateCell(1);
+      // Change ownership of tile on rotate
+      this.targetTile.placedBy = this.player;
     }
   }, {
     key: 'place',
@@ -2079,6 +2083,7 @@ var _class = function () {
       this.targetTile.rotation = this.sourceTile.rotation;
       this.targetTile.neighborPattern = this.sourceTile.neighborPattern;
       this.targetTile.neighbors = this.targetTile.getNeighbors();
+      this.targetTile.placedBy = this.player;
       this.player.hand.remove(this.sourceTile.uuid);
     }
   }, {
@@ -2573,7 +2578,7 @@ var _class = function () {
         _ref$controller = _ref.controller,
         controller = _ref$controller === undefined ? 'human' : _ref$controller,
         _ref$damage = _ref.damage,
-        damage = _ref$damage === undefined ? 4 : _ref$damage,
+        damage = _ref$damage === undefined ? 0 : _ref$damage,
         _ref$hand = _ref.hand,
         hand = _ref$hand === undefined ? [] : _ref$hand,
         _ref$handSize = _ref.handSize,
@@ -2657,8 +2662,6 @@ var _class = function () {
   _createClass(_class, [{
     key: 'findPath',
     value: function findPath(startCell, endCell) {
-      console.log('Finding path...' + startCell.id);
-
       this.startCell = startCell;
       this.endCell = endCell;
       this.hasSearched[startCell.id] = true;
@@ -2666,11 +2669,9 @@ var _class = function () {
 
       var breaker = 0;
       var breakerLimit = 100;
-      while (!this.pathFound) {
+      while (!this.pathFound && this.frontier.items.length > 0) {
         breaker++;
         if (breaker > breakerLimit) break;
-
-        if (this.frontier.items.length === 0) this.pathFound = true;
 
         for (var i = 0; i < this.frontier.items.length; i++) {
           this.getFrontier();
@@ -2698,16 +2699,11 @@ var _class = function () {
     value: function getFrontier() {
       var _this = this;
 
-      console.log('Getting Frontier...');
-      console.log('Frontier Size:' + this.frontier.items.length);
       var cell = this.frontier.dequeue();
 
       cell.neighbors.forEach(function (neighbor) {
         if (!neighbor) return;
-        if (neighbor.uuid === _this.endCell.uuid) {
-          _this.pathFound = true;
-          console.log('Found Path!');
-        }
+        if (neighbor.uuid === _this.endCell.uuid) _this.pathFound = true;
 
         if (!_this.hasSearched[neighbor.id] && _this.isPassable(neighbor) && _this.isConnected(cell, neighbor)) {
           _this.hasSearched[neighbor.id] = true;
@@ -2719,12 +2715,11 @@ var _class = function () {
   }, {
     key: 'buildPath',
     value: function buildPath() {
-      console.log('Building Path...');
       var path = [this.endCell];
-
-      var breaker = 0;
       var breakerLimit = 100;
+      var breaker = 0;
       var pathBuilt = false;
+
       while (pathBuilt === false) {
         breaker++;
         if (breaker > breakerLimit) break;
@@ -2735,7 +2730,7 @@ var _class = function () {
         path.push(newestEntry);
       }
 
-      return path;
+      return this.pathFound ? path : [];
     }
   }]);
 

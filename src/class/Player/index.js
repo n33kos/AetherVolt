@@ -5,7 +5,7 @@ export default class {
     avatar,
     color = 'blue',
     controller = 'human',
-    damage = 4,
+    damage = 0,
     hand = [],
     handSize = 4,
     health = 20,

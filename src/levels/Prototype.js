@@ -94,7 +94,7 @@ export default class extends Level {
     this.grid.init();
 
     // Init current action
-    this.currentAction = new Action({});
+    this.currentAction = new Action({ player : this.players[this.currentPlayerTurn] });
 
     // Init Controls
     this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
@@ -113,14 +113,13 @@ export default class extends Level {
     const clickedTile = this.findTileAtPosition(this.GameState.Controls.position)
     if (!clickedTile) return;
 
+    this.currentAction.targetTile = clickedTile;
+
     if (
       clickedTile.tileType.type === 'EMPTY'
       && this.selectedTile.isInHand
     ) {
       this.currentAction.actionType = new ActionType('PLACE');
-      this.currentAction.sourceTile = this.selectedTile;
-      this.currentAction.targetTile = clickedTile;
-      this.currentAction.player = this.players[this.currentPlayerTurn];
       this.currentAction.commit();
       this.cycleActions();
     }
@@ -131,8 +130,6 @@ export default class extends Level {
       && clickedTile.uuid !== this.selectedTile.uuid
     ) {
       this.currentAction.actionType = new ActionType('MOVE');
-      this.currentAction.sourceTile = this.selectedTile;
-      this.currentAction.targetTile = clickedTile;
       this.currentAction.commit();
       this.cycleActions();
     }
@@ -144,8 +141,6 @@ export default class extends Level {
     ) {
       // TODO: enable a rotation mode which shows icons to rotate left and right
       this.currentAction.actionType = new ActionType('ROTATE');
-      this.currentAction.sourceTile = this.selectedTile;
-      this.currentAction.targetTile = clickedTile;
       this.currentAction.commit();
       if (!clickedTile.isInHand) this.cycleActions();
     }
@@ -180,6 +175,7 @@ export default class extends Level {
 
   selectTile(tileToSelect) {
     this.selectedTile = tileToSelect;
+    this.currentAction.sourceTile = this.selectedTile;
 
     if (tileToSelect.isInHand || tileToSelect.tileType.type === 'PLAYER_COLUMN') {
       this.previewTile = cloneClass(tileToSelect);
@@ -189,7 +185,7 @@ export default class extends Level {
   }
 
   cycleActions() {
-    this.processDamage();
+    this.processConnection();
 
     // Decrement action
     this.players[this.currentPlayerTurn].actions -= 1;
@@ -201,7 +197,7 @@ export default class extends Level {
     }
 
     // Reset currrent action
-    this.currentAction = new Action({});
+    this.currentAction = new Action({ player : this.players[this.currentPlayerTurn] });
 
     // Update UI
     this.GameState.UI.updatePlayerStats(this.players);
@@ -222,7 +218,8 @@ export default class extends Level {
     if (this.deck.tiles.length > 0) this.players[this.currentPlayerTurn].hand.add(this.deck.draw());
   }
 
-  processDamage() {
+  processConnection() {
+    // vvv There must be a better way to get these cells vvv
     const startCell = this.grid.tiles.find(tile => {
       return tile.player && tile.player.name === this.players[this.currentPlayerTurn].name;
     });
@@ -231,5 +228,20 @@ export default class extends Level {
     });
     const pathfinder = new Pathfinder(this.grid.tiles);
     const path = pathfinder.findPath(startCell, endCell);
+
+    if (path.length > 0) {
+      let damageAmplifier = 0;
+
+      path.forEach(tile => {
+        // Animate Tiles in path by resetting frame to 0
+        tile.currentFrame = 0
+
+        //Increase Damage by 1 for every cell in path placed by the attacker
+        if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
+      });
+
+      // Apply Damage
+      endCell.player.health -= (startCell.player.damage + damageAmplifier);
+    }
   }
 }

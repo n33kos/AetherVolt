@@ -27,14 +27,16 @@ export default class extends Sprite {
 
     this.animations = {
       exist: {
-        frames        : 1,
+        frames        : 8,
         spriteSheet   : './img/Pipes_Empty.png',
-        ticksPerFrame : 4,
+        ticksPerFrame : 5,
+        loop          : false,
       },
     };
     this.currentAnimation = 'exist';
     this.neighborPattern = [];
     this.isHovered = false;
+    this.placedBy = false;
 
     this.setType(type);
     this.calculateOffset();
@@ -91,11 +93,10 @@ export default class extends Sprite {
   draw() {
     super.draw();
     this.drawOutline();
-    if (this.cameFrom) this.drawCameFrom();
   }
 
   setOutlineColor() {
-    this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
+    this.GameState.Canvas.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
     if (this.isHovered || this.isInHand) {
       this.GameState.Canvas.ctx.strokeStyle = this.GameState.currentLevel.players[
@@ -103,6 +104,7 @@ export default class extends Sprite {
       ].color;
     }
     if (this.isSelected) this.GameState.Canvas.ctx.strokeStyle = 'pink';
+    if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = this.placedBy.color;
   }
 
   drawOutline() {
@@ -115,18 +117,6 @@ export default class extends Sprite {
       this.dimensions.x * this.scale.x,
       this.dimensions.y * this.scale.y,
     );
-    this.GameState.Canvas.ctx.stroke();
-  }
-
-  drawCameFrom() {
-    this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    this.GameState.Canvas.ctx.beginPath();
-    this.GameState.Canvas.ctx.lineWidth = 3 * window.devicePixelRatio;
-    this.GameState.Canvas.ctx.strokeStyle = 'yellow';
-    // fix this after figuring out bug
-    if (this.player) this.GameState.Canvas.ctx.strokeStyle = this.player.color;
-    this.GameState.Canvas.ctx.moveTo(this.canvasPosition.x, this.player ? this.canvasPosition.y + 5 :  this.canvasPosition.y);
-    this.GameState.Canvas.ctx.lineTo(this.cameFrom.canvasPosition.x, this.player ? this.canvasPosition.y + 5 :  this.canvasPosition.y);
     this.GameState.Canvas.ctx.stroke();
   }
 }

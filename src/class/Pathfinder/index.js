@@ -16,8 +16,6 @@ export default class {
   }
 
   findPath(startCell, endCell) {
-    console.log('Finding path...'+startCell.id);
-
     this.startCell = startCell;
     this.endCell = endCell;
     this.hasSearched[startCell.id] = true;
@@ -25,11 +23,9 @@ export default class {
 
     let breaker = 0;
     const breakerLimit = 100;
-    while(!this.pathFound) {
+    while(!this.pathFound && this.frontier.items.length > 0) {
       breaker++;
       if (breaker > breakerLimit) break;
-
-      if (this.frontier.items.length === 0) this.pathFound = true;
 
       for (let i = 0; i < this.frontier.items.length; i++) {
         this.getFrontier();
@@ -55,16 +51,11 @@ export default class {
   }
 
   getFrontier() {
-    console.log('Getting Frontier...');
-    console.log('Frontier Size:' + this.frontier.items.length);
     const cell = this.frontier.dequeue();
 
     cell.neighbors.forEach(neighbor => {
       if (!neighbor) return;
-      if (neighbor.uuid === this.endCell.uuid) {
-        this.pathFound = true;
-        console.log('Found Path!');
-      }
+      if (neighbor.uuid === this.endCell.uuid) this.pathFound = true;
 
       if (
         !this.hasSearched[neighbor.id]
@@ -79,13 +70,11 @@ export default class {
   }
 
   buildPath() {
-    console.log('Building Path...');
     const path = [this.endCell];
-    const isComplete = false;
-
-    let breaker = 0;
     const breakerLimit = 100;
+    let breaker = 0;
     let pathBuilt = false;
+
     while(pathBuilt === false) {
       breaker++;
       if (breaker > breakerLimit) break;
@@ -93,10 +82,9 @@ export default class {
       const newestEntry = path[path.length - 1].cameFrom;
       if (!newestEntry) break;
 
-      if (newestEntry.uuid === this.endCell) isComplete = false;
       path.push(newestEntry);
     }
 
-    return isComplete ? path : null;
+    return this.pathFound ? path : [];
   }
 }

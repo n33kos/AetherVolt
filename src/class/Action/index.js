@@ -15,6 +15,8 @@ export default class {
 
   rotate() {
     this.targetTile.rotateCell(1);
+    // Change ownership of tile on rotate
+    this.targetTile.placedBy = this.player;
   }
 
   place() {
@@ -22,6 +24,7 @@ export default class {
     this.targetTile.rotation = this.sourceTile.rotation;
     this.targetTile.neighborPattern = this.sourceTile.neighborPattern;
     this.targetTile.neighbors = this.targetTile.getNeighbors();
+    this.targetTile.placedBy = this.player;
     this.player.hand.remove(this.sourceTile.uuid);
   }
 
