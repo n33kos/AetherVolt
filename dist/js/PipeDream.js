@@ -1848,7 +1848,6 @@ var _class = function (_Level) {
           GameState: _this2.GameState,
           position: new _Vector2.default(0, -_this2.GameState.Canvas.cy)
         });
-
         // Draw tiles from deck
         for (var i = 0; i < player.handSize - index; i++) {
           hand.add(_this2.deck.draw());

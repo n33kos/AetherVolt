@@ -70,7 +70,6 @@ export default class extends Level {
         GameState : this.GameState,
         position: new Vector2(0, -this.GameState.Canvas.cy),
       });
-
       // Draw tiles from deck
       for (let i = 0; i < (player.handSize - index); i++) {
         hand.add(this.deck.draw());
