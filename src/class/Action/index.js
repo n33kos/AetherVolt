@@ -6,13 +6,11 @@ export default class {
     targetTile = null,
     sourceTile = null,
     player = null,
-    callback = null,
   }) {
     this.actionType = type;
     this.targetTile = targetTile;
     this.sourceTile = sourceTile;
     this.player = player;
-    this.callback = callback;
   }
 
   rotate() {
@@ -26,8 +24,9 @@ export default class {
   }
 
   move() {
-    this.targetTile.setExclusivePlayer(this.player);
-    this.player.setAvatarPosition(this.targetTile);
+    this.targetTile.player = this.sourceTile.player;
+    this.sourceTile.player = null;
+    this.targetTile.player.setAvatarPosition(this.targetTile);
   }
 
   commit() {
@@ -42,6 +41,5 @@ export default class {
         this.rotate();
         break;
     }
-    this.callback();
   }
 }

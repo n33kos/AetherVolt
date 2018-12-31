@@ -1,6 +1,7 @@
 import Action      from 'class/Action';
 import ActionType  from 'class/ActionType';
 import Avatar      from 'class/Avatar';
+import cloneClass  from 'lib/cloneClass';
 import Deck        from 'class/Deck';
 import Grid        from 'class/Grid';
 import Hand        from 'class/Hand';
@@ -21,7 +22,6 @@ export default class extends Level {
     this.columns = 6;
     this.currentPlayerTurn = 0;
     this.selectedTile = null;
-    this.lastSelectedTile = null;
     this.currentAction = null;
   }
 
@@ -89,48 +89,66 @@ export default class extends Level {
     this.grid.init();
 
     // Init current action
-    this.currentAction = new Action({
-      callback : this.cycleActions.bind(this),
-      player   : this.players[this.currentPlayerTurn],
-    });
+    this.currentAction = new Action({});
 
     // Init Controls
-    this.addControlsCallback('mouseUp', this.handleClick.bind(this));
+    this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
+    this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
     this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
   }
 
-  handleMouseMove(e) {
-    // Bail out if we didnt click a tile
-    this.hoveredTile = this.findTileAtPosition(this.GameState.Controls.position);
-    if (!this.hoveredTile) return;
-
-    // Set tile to hovered
-    this.grid.tiles.forEach(tile => {
-      tile.isHovered = false;
-      if (this.hoveredTile.id === tile.id) tile.isHovered = true;
-    })
-  }
-
-  handleClick(e) {
-    //TODO: this function feels messy, figure out a better way to handle this logic
-    const clickedTile = this.findTileAtPosition(this.GameState.Controls.lastPosition)
+  handleMouseDown(e) {
+    const clickedTile = this.findTileAtPosition(this.GameState.Controls.position)
     if (!clickedTile) return;
 
     this.selectTile(clickedTile);
-    this.currentAction.sourceTile = this.lastSelectedTile;
-    this.currentAction.targetTile = this.selectedTile;
+  }
 
-    if (clickedTile.tileType.type === 'EMPTY' && this.lastSelectedTile.isInHand) {
+  handleMouseUp(e) {
+    const clickedTile = this.findTileAtPosition(this.GameState.Controls.position)
+    if (!clickedTile) return;
+
+    if (
+      clickedTile.tileType.type === 'EMPTY'
+      && this.selectedTile.isInHand
+    ) {
       this.currentAction.actionType = new ActionType('PLACE');
+      this.currentAction.sourceTile = this.selectedTile;
+      this.currentAction.targetTile = clickedTile;
+      this.currentAction.player = this.players[this.currentPlayerTurn];
+      this.currentAction.commit();
+      this.cycleActions();
     }
 
-    if (clickedTile.tileType.type !== 'EMPTY' && clickedTile.tileType.type !== 'PLAYER_COLUMN') {
-      this.currentAction.actionType = new ActionType('ROTATE');
-    }
-
-    if (clickedTile.tileType.type === 'PLAYER_COLUMN') {
+    if (
+      clickedTile.tileType.type === 'PLAYER_COLUMN'
+      && this.selectedTile.tileType.type === 'PLAYER_COLUMN'
+      && clickedTile.uuid !== this.selectedTile.uuid
+    ) {
       this.currentAction.actionType = new ActionType('MOVE');
+      this.currentAction.sourceTile = this.selectedTile;
+      this.currentAction.targetTile = clickedTile;
+      this.currentAction.commit();
+      this.cycleActions();
     }
+
+    if (
+      clickedTile.tileType.type !== 'PLAYER_COLUMN'
+      && clickedTile.tileType.type !== 'EMPTY'
+      && clickedTile.uuid === this.selectedTile.uuid
+    ) {
+      this.selectedTile.showRotationControls
+      // enableRotationControls? then maybe return before deselecting?
+      // dont cycel action unless its on the grid
+    }
+
+    this.deselectTile();
+  }
+
+  handleMouseMove(e) {
+    if (!this.previewTile) return;
+
+    this.previewTile.canvasPosition = this.GameState.Controls.position;
   }
 
   findTileAtPosition(pos) {
@@ -145,19 +163,21 @@ export default class extends Level {
     return clickedTile;
   }
 
+  deselectTile() {
+    if(this.previewTile) this.GameState.Scene.remove(this.previewTile.uuid);
+    this.selectedTile = null;
+    this.lastSelectedTile = null;
+    this.previewTile = null;
+  }
+
   selectTile(tileToSelect) {
-    // Remember last tile selected
-    this.lastSelectedTile = this.selectedTile;
-
-    // Deselect all tiles in hand or on grid
-    this.grid.tiles.forEach(tile => tile.isSelected = false);
-    this.players.forEach(player => {
-      player.hand.tiles.forEach(tile => tile.isSelected = false);
-    });
-
-    //Select New tile
-    tileToSelect.isSelected = true;
     this.selectedTile = tileToSelect;
+
+    if (tileToSelect.isInHand || tileToSelect.tileType.type === 'PLAYER_COLUMN') {
+      this.previewTile = cloneClass(tileToSelect);
+      this.previewTile.alpha = 0.75;
+      this.GameState.Scene.add(this.previewTile);
+    }
   }
 
   cycleActions() {
@@ -171,10 +191,7 @@ export default class extends Level {
     }
 
     // Reset currrent action
-    this.currentAction = new Action({
-      callback : this.cycleActions.bind(this),
-      player   : this.players[this.currentPlayerTurn],
-    });
+    this.currentAction = new Action({});
   }
 
   cyclePlayerTurn() {

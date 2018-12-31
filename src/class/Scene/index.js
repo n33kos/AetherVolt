@@ -12,6 +12,7 @@ export default class {
     gameObject.uuid = uuidv4();
     gameObject.load();
     this.gameObjects.push(gameObject);
+    return gameObject.uuid;
   }
 
   remove(uuid) {

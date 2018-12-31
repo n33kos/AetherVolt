@@ -304,7 +304,9 @@ var _class = function (_Sprite) {
         _config$isInHand = config.isInHand,
         isInHand = _config$isInHand === undefined ? false : _config$isInHand,
         _config$isSelected = config.isSelected,
-        isSelected = _config$isSelected === undefined ? false : _config$isSelected;
+        isSelected = _config$isSelected === undefined ? false : _config$isSelected,
+        _config$dragPosition = config.dragPosition,
+        dragPosition = _config$dragPosition === undefined ? null : _config$dragPosition;
 
 
     _this.x = x;
@@ -314,6 +316,7 @@ var _class = function (_Sprite) {
     _this.player = player;
     _this.isInHand = isInHand;
     _this.isSelected = isSelected;
+    _this.dragPosition = dragPosition;
 
     _this.animations = {
       exist: {
@@ -375,14 +378,6 @@ var _class = function (_Sprite) {
       }
 
       return neighbors;
-    }
-  }, {
-    key: 'setExclusivePlayer',
-    value: function setExclusivePlayer(player) {
-      this.grid.forEach(function (cell) {
-        if (cell.player && cell.player.uuid === player.uuid) cell.player = null;
-      });
-      this.player = player;
     }
   }, {
     key: 'rotateCell',
@@ -936,7 +931,9 @@ var _class = function (_LoadedEntity) {
         _config$position = config.position,
         position = _config$position === undefined ? new _Vector2.default() : _config$position,
         _config$rotation = config.rotation,
-        rotation = _config$rotation === undefined ? 0 : _config$rotation;
+        rotation = _config$rotation === undefined ? 0 : _config$rotation,
+        _config$alpha = config.alpha,
+        alpha = _config$alpha === undefined ? 1 : _config$alpha;
 
 
     _this.absoluteOffset = new _Vector2.default();
@@ -949,6 +946,7 @@ var _class = function (_LoadedEntity) {
     _this.position = position;
     _this.rotation = rotation;
     _this.isVisible = true;
+    _this.alpha = alpha;
 
     _this.setPosition(position);
     return _this;
@@ -978,11 +976,13 @@ var _class = function (_LoadedEntity) {
       this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
       this.GameState.Canvas.ctx.rotate(this.rotation);
       this.GameState.Canvas.ctx.translate(this.absoluteOffset.x, this.absoluteOffset.y);
+      this.GameState.Canvas.ctx.globalAlpha = this.alpha;
 
       this.draw();
 
       // Reset transforms
       this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
+      this.GameState.Canvas.ctx.globalAlpha = 1;
     }
   }, {
     key: 'update',
@@ -1039,19 +1039,19 @@ var _GameState = __webpack_require__(18);
 
 var _GameState2 = _interopRequireDefault(_GameState);
 
-var _Render = __webpack_require__(30);
+var _Render = __webpack_require__(31);
 
 var _Render2 = _interopRequireDefault(_Render);
 
-var _Scene = __webpack_require__(31);
+var _Scene = __webpack_require__(32);
 
 var _Scene2 = _interopRequireDefault(_Scene);
 
-var _UI = __webpack_require__(32);
+var _UI = __webpack_require__(33);
 
 var _UI2 = _interopRequireDefault(_UI);
 
-var _Update = __webpack_require__(33);
+var _Update = __webpack_require__(34);
 
 var _Update2 = _interopRequireDefault(_Update);
 
@@ -1727,15 +1727,19 @@ var _Avatar = __webpack_require__(23);
 
 var _Avatar2 = _interopRequireDefault(_Avatar);
 
-var _Deck = __webpack_require__(25);
+var _cloneClass = __webpack_require__(25);
+
+var _cloneClass2 = _interopRequireDefault(_cloneClass);
+
+var _Deck = __webpack_require__(26);
 
 var _Deck2 = _interopRequireDefault(_Deck);
 
-var _Grid = __webpack_require__(26);
+var _Grid = __webpack_require__(27);
 
 var _Grid2 = _interopRequireDefault(_Grid);
 
-var _Hand = __webpack_require__(27);
+var _Hand = __webpack_require__(28);
 
 var _Hand2 = _interopRequireDefault(_Hand);
 
@@ -1743,7 +1747,7 @@ var _Level2 = __webpack_require__(5);
 
 var _Level3 = _interopRequireDefault(_Level2);
 
-var _Player = __webpack_require__(29);
+var _Player = __webpack_require__(30);
 
 var _Player2 = _interopRequireDefault(_Player);
 
@@ -1788,7 +1792,6 @@ var _class = function (_Level) {
     _this.columns = 6;
     _this.currentPlayerTurn = 0;
     _this.selectedTile = null;
-    _this.lastSelectedTile = null;
     _this.currentAction = null;
     return _this;
   }
@@ -1858,52 +1861,58 @@ var _class = function (_Level) {
       this.grid.init();
 
       // Init current action
-      this.currentAction = new _Action2.default({
-        callback: this.cycleActions.bind(this),
-        player: this.players[this.currentPlayerTurn]
-      });
+      this.currentAction = new _Action2.default({});
 
       // Init Controls
-      this.addControlsCallback('mouseUp', this.handleClick.bind(this));
+      this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
+      this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
       this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
+    }
+  }, {
+    key: 'handleMouseDown',
+    value: function handleMouseDown(e) {
+      var clickedTile = this.findTileAtPosition(this.GameState.Controls.position);
+      if (!clickedTile) return;
+
+      this.selectTile(clickedTile);
+    }
+  }, {
+    key: 'handleMouseUp',
+    value: function handleMouseUp(e) {
+      var clickedTile = this.findTileAtPosition(this.GameState.Controls.position);
+      if (!clickedTile) return;
+
+      if (clickedTile.tileType.type === 'EMPTY' && this.selectedTile.isInHand) {
+        this.currentAction.actionType = new _ActionType2.default('PLACE');
+        this.currentAction.sourceTile = this.selectedTile;
+        this.currentAction.targetTile = clickedTile;
+        this.currentAction.player = this.players[this.currentPlayerTurn];
+        this.currentAction.commit();
+        this.cycleActions();
+      }
+
+      if (clickedTile.tileType.type === 'PLAYER_COLUMN' && this.selectedTile.tileType.type === 'PLAYER_COLUMN' && clickedTile.uuid !== this.selectedTile.uuid) {
+        this.currentAction.actionType = new _ActionType2.default('MOVE');
+        this.currentAction.sourceTile = this.selectedTile;
+        this.currentAction.targetTile = clickedTile;
+        this.currentAction.commit();
+        this.cycleActions();
+      }
+
+      if (clickedTile.tileType.type !== 'PLAYER_COLUMN' && clickedTile.tileType.type !== 'EMPTY' && clickedTile.uuid === this.selectedTile.uuid) {
+        this.selectedTile.showRotationControls;
+        // enableRotationControls? then maybe return before deselecting?
+        // dont cycel action unless its on the grid
+      }
+
+      this.deselectTile();
     }
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(e) {
-      var _this3 = this;
+      if (!this.previewTile) return;
 
-      // Bail out if we didnt click a tile
-      this.hoveredTile = this.findTileAtPosition(this.GameState.Controls.position);
-      if (!this.hoveredTile) return;
-
-      // Set tile to hovered
-      this.grid.tiles.forEach(function (tile) {
-        tile.isHovered = false;
-        if (_this3.hoveredTile.id === tile.id) tile.isHovered = true;
-      });
-    }
-  }, {
-    key: 'handleClick',
-    value: function handleClick(e) {
-      //TODO: this function feels messy, figure out a better way to handle this logic
-      var clickedTile = this.findTileAtPosition(this.GameState.Controls.lastPosition);
-      if (!clickedTile) return;
-
-      this.selectTile(clickedTile);
-      this.currentAction.sourceTile = this.lastSelectedTile;
-      this.currentAction.targetTile = this.selectedTile;
-
-      if (clickedTile.tileType.type === 'EMPTY' && this.lastSelectedTile.isInHand) {
-        this.currentAction.actionType = new _ActionType2.default('PLACE');
-      }
-
-      if (clickedTile.tileType.type !== 'EMPTY' && clickedTile.tileType.type !== 'PLAYER_COLUMN') {
-        this.currentAction.actionType = new _ActionType2.default('ROTATE');
-      }
-
-      if (clickedTile.tileType.type === 'PLAYER_COLUMN') {
-        this.currentAction.actionType = new _ActionType2.default('MOVE');
-      }
+      this.previewTile.canvasPosition = this.GameState.Controls.position;
     }
   }, {
     key: 'findTileAtPosition',
@@ -1919,24 +1928,23 @@ var _class = function (_Level) {
       return clickedTile;
     }
   }, {
+    key: 'deselectTile',
+    value: function deselectTile() {
+      if (this.previewTile) this.GameState.Scene.remove(this.previewTile.uuid);
+      this.selectedTile = null;
+      this.lastSelectedTile = null;
+      this.previewTile = null;
+    }
+  }, {
     key: 'selectTile',
     value: function selectTile(tileToSelect) {
-      // Remember last tile selected
-      this.lastSelectedTile = this.selectedTile;
-
-      // Deselect all tiles in hand or on grid
-      this.grid.tiles.forEach(function (tile) {
-        return tile.isSelected = false;
-      });
-      this.players.forEach(function (player) {
-        player.hand.tiles.forEach(function (tile) {
-          return tile.isSelected = false;
-        });
-      });
-
-      //Select New tile
-      tileToSelect.isSelected = true;
       this.selectedTile = tileToSelect;
+
+      if (tileToSelect.isInHand || tileToSelect.tileType.type === 'PLAYER_COLUMN') {
+        this.previewTile = (0, _cloneClass2.default)(tileToSelect);
+        this.previewTile.alpha = 0.75;
+        this.GameState.Scene.add(this.previewTile);
+      }
     }
   }, {
     key: 'cycleActions',
@@ -1951,10 +1959,7 @@ var _class = function (_Level) {
       }
 
       // Reset currrent action
-      this.currentAction = new _Action2.default({
-        callback: this.cycleActions.bind(this),
-        player: this.players[this.currentPlayerTurn]
-      });
+      this.currentAction = new _Action2.default({});
     }
   }, {
     key: 'cyclePlayerTurn',
@@ -2008,9 +2013,7 @@ var _class = function () {
         _ref$sourceTile = _ref.sourceTile,
         sourceTile = _ref$sourceTile === undefined ? null : _ref$sourceTile,
         _ref$player = _ref.player,
-        player = _ref$player === undefined ? null : _ref$player,
-        _ref$callback = _ref.callback,
-        callback = _ref$callback === undefined ? null : _ref$callback;
+        player = _ref$player === undefined ? null : _ref$player;
 
     _classCallCheck(this, _class);
 
@@ -2018,7 +2021,6 @@ var _class = function () {
     this.targetTile = targetTile;
     this.sourceTile = sourceTile;
     this.player = player;
-    this.callback = callback;
   }
 
   _createClass(_class, [{
@@ -2036,8 +2038,9 @@ var _class = function () {
   }, {
     key: 'move',
     value: function move() {
-      this.targetTile.setExclusivePlayer(this.player);
-      this.player.setAvatarPosition(this.targetTile);
+      this.targetTile.player = this.sourceTile.player;
+      this.sourceTile.player = null;
+      this.targetTile.player.setAvatarPosition(this.targetTile);
     }
   }, {
     key: 'commit',
@@ -2053,7 +2056,6 @@ var _class = function () {
           this.rotate();
           break;
       }
-      this.callback();
     }
   }]);
 
@@ -2148,6 +2150,21 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+exports.default = function (orig) {
+  return Object.assign(Object.create(Object.getPrototypeOf(orig)), orig);
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _TileType = __webpack_require__(2);
@@ -2212,7 +2229,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2343,7 +2360,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2359,7 +2376,7 @@ var _Entity2 = __webpack_require__(9);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
-var _rectContains = __webpack_require__(28);
+var _rectContains = __webpack_require__(29);
 
 var _rectContains2 = _interopRequireDefault(_rectContains);
 
@@ -2470,7 +2487,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2485,7 +2502,7 @@ exports.default = function (point, rectPos, rectDim) {
 };
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2554,7 +2571,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2614,7 +2631,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2651,6 +2668,7 @@ var _class = function () {
       gameObject.uuid = (0, _v2.default)();
       gameObject.load();
       this.gameObjects.push(gameObject);
+      return gameObject.uuid;
     }
   }, {
     key: 'remove',
@@ -2676,7 +2694,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2697,7 +2715,6 @@ var _class = function () {
     this.GameState = GameState;
     this.screens = document.querySelectorAll('[data-screen]');
     this.buttons = {
-      commitAction: document.querySelectorAll('[data-gamestate-commit-action]'),
       fullscreen: document.querySelectorAll('[data-gamestate-fullscreen]'),
       initAudio: document.querySelectorAll('[data-gamestate-init-audio]'),
       level: document.querySelectorAll('[data-gamestate-change-level]'),
@@ -2787,13 +2804,6 @@ var _class = function () {
       Array.from(this.buttons.screens).forEach(function (button) {
         button.addEventListener('click', _this.initTransitions.bind(_this));
       });
-
-      // Commit action
-      Array.from(this.buttons.commitAction).forEach(function (button) {
-        button.addEventListener('click', function () {
-          _this.GameState.currentLevel.currentAction.commit();
-        });
-      });
     }
   }, {
     key: 'initTransitions',
@@ -2881,7 +2891,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

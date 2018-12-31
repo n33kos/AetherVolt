@@ -13,6 +13,7 @@ export default class extends Sprite {
       player, // Player object for avatar in this cell
       isInHand = false,
       isSelected = false,
+      dragPosition = null,
     } = config;
 
     this.x = x;
@@ -22,6 +23,7 @@ export default class extends Sprite {
     this.player = player;
     this.isInHand = isInHand;
     this.isSelected = isSelected;
+    this.dragPosition = dragPosition;
 
     this.animations = {
       exist: {
@@ -68,13 +70,6 @@ export default class extends Sprite {
     }
 
     return neighbors;
-  }
-
-  setExclusivePlayer(player) {
-    this.grid.forEach(cell => {
-      if (cell.player && cell.player.uuid === player.uuid) cell.player = null;
-    });
-    this.player = player;
   }
 
   rotateCell(direction) {
