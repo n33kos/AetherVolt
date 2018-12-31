@@ -124,6 +124,8 @@ export default class {
   }
 
   updatePlayerStats(players) {
+    if (!players) return;
+
     players.forEach((player, index) => {
       const name = document.querySelector(`[data-ui-player="${index+1}"] [data-ui="name"]`);
       const health = document.querySelector(`[data-ui-player="${index+1}"] [data-ui="health"]`);

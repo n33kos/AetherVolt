@@ -12,6 +12,7 @@ import Tile        from 'class/Tile';
 import TileType    from 'class/TileType';
 import uuidv4      from 'uuid/v4';
 import Vector2     from 'class/Vector2';
+import Pathfinder  from 'class/Pathfinder';
 
 export default class extends Level {
   constructor(config) {
@@ -64,19 +65,23 @@ export default class extends Level {
     ];
 
     // Init hands
-    this.players.forEach(player => {
+    this.players.forEach((player, index) => {
       const hand = new Hand({
         GameState : this.GameState,
         position: new Vector2(0, -this.GameState.Canvas.cy),
       });
+      // Draw tiles from deck
       for (let i = 0; i < player.handSize; i++) {
         hand.add(this.deck.draw());
       }
+
+      // Set visibility of hand
+      hand.setVisibility(false);
+      if (index === this.currentPlayerTurn) hand.setVisibility(true);
+
       player.hand = hand;
       this.GameState.Scene.add(hand);
     });
-    this.players[0].hand.setVisibility(true);
-    this.players[1].hand.setVisibility(false);
 
     // Init grid, it automatically adds the tiles to the scene
     this.grid = new Grid({
@@ -137,9 +142,12 @@ export default class extends Level {
       && clickedTile.tileType.type !== 'EMPTY'
       && clickedTile.uuid === this.selectedTile.uuid
     ) {
-      this.selectedTile.showRotationControls
-      // enableRotationControls? then maybe return before deselecting?
-      // dont cycel action unless its on the grid
+      // TODO: enable a rotation mode which shows icons to rotate left and right
+      this.currentAction.actionType = new ActionType('ROTATE');
+      this.currentAction.sourceTile = this.selectedTile;
+      this.currentAction.targetTile = clickedTile;
+      this.currentAction.commit();
+      if (!clickedTile.isInHand) this.cycleActions();
     }
 
     this.deselectTile();
@@ -181,6 +189,8 @@ export default class extends Level {
   }
 
   cycleActions() {
+    this.processDamage();
+
     // Decrement action
     this.players[this.currentPlayerTurn].actions -= 1;
     if (this.players[this.currentPlayerTurn].actions <= 0) {
@@ -192,6 +202,9 @@ export default class extends Level {
 
     // Reset currrent action
     this.currentAction = new Action({});
+
+    // Update UI
+    this.GameState.UI.updatePlayerStats(this.players);
   }
 
   cyclePlayerTurn() {
@@ -204,7 +217,19 @@ export default class extends Level {
 
     //Show new hand
     this.players[this.currentPlayerTurn].hand.setVisibility(true);
+
     // Draw new tile
-    this.players[this.currentPlayerTurn].hand.add(this.deck.draw());
+    if (this.deck.tiles.length > 0) this.players[this.currentPlayerTurn].hand.add(this.deck.draw());
+  }
+
+  processDamage() {
+    const startCell = this.grid.tiles.find(tile => {
+      return tile.player && tile.player.name === this.players[this.currentPlayerTurn].name;
+    });
+    const endCell = this.grid.tiles.find(tile => {
+      return tile.player && tile.player.name !== this.players[this.currentPlayerTurn].name;
+    });
+    const pathfinder = new Pathfinder(this.grid.tiles);
+    const path = pathfinder.findPath(startCell, endCell);
   }
 }

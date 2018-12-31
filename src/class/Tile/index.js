@@ -91,6 +91,7 @@ export default class extends Sprite {
   draw() {
     super.draw();
     this.drawOutline();
+    if (this.cameFrom) this.drawCameFrom();
   }
 
   setOutlineColor() {
@@ -114,6 +115,18 @@ export default class extends Sprite {
       this.dimensions.x * this.scale.x,
       this.dimensions.y * this.scale.y,
     );
+    this.GameState.Canvas.ctx.stroke();
+  }
+
+  drawCameFrom() {
+    this.GameState.Canvas.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.GameState.Canvas.ctx.beginPath();
+    this.GameState.Canvas.ctx.lineWidth = 3 * window.devicePixelRatio;
+    this.GameState.Canvas.ctx.strokeStyle = 'yellow';
+    // fix this after figuring out bug
+    if (this.player) this.GameState.Canvas.ctx.strokeStyle = this.player.color;
+    this.GameState.Canvas.ctx.moveTo(this.canvasPosition.x, this.player ? this.canvasPosition.y + 5 :  this.canvasPosition.y);
+    this.GameState.Canvas.ctx.lineTo(this.cameFrom.canvasPosition.x, this.player ? this.canvasPosition.y + 5 :  this.canvasPosition.y);
     this.GameState.Canvas.ctx.stroke();
   }
 }

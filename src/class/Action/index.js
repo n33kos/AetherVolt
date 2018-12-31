@@ -20,6 +20,8 @@ export default class {
   place() {
     this.targetTile.setType(this.sourceTile.tileType);
     this.targetTile.rotation = this.sourceTile.rotation;
+    this.targetTile.neighborPattern = this.sourceTile.neighborPattern;
+    this.targetTile.neighbors = this.targetTile.getNeighbors();
     this.player.hand.remove(this.sourceTile.uuid);
   }
 
