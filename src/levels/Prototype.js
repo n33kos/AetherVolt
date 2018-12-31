@@ -111,7 +111,10 @@ export default class extends Level {
 
   handleMouseUp(e) {
     const clickedTile = this.findTileAtPosition(this.GameState.Controls.position)
-    if (!clickedTile) return;
+    if (!clickedTile) {
+      this.deselectTile();
+      return;
+    }
 
     this.currentAction.targetTile = clickedTile;
 
@@ -137,7 +140,8 @@ export default class extends Level {
     if (
       clickedTile.tileType.type !== 'PLAYER_COLUMN'
       && clickedTile.tileType.type !== 'EMPTY'
-      && clickedTile.uuid === this.selectedTile.uuid
+      && this.selectedTile
+      && this.selectedTile.uuid === clickedTile.uuid
     ) {
       // TODO: enable a rotation mode which shows icons to rotate left and right
       this.currentAction.actionType = new ActionType('ROTATE');

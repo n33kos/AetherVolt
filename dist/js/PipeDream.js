@@ -1891,7 +1891,10 @@ var _class = function (_Level) {
     key: 'handleMouseUp',
     value: function handleMouseUp(e) {
       var clickedTile = this.findTileAtPosition(this.GameState.Controls.position);
-      if (!clickedTile) return;
+      if (!clickedTile) {
+        this.deselectTile();
+        return;
+      }
 
       this.currentAction.targetTile = clickedTile;
 
@@ -1907,7 +1910,7 @@ var _class = function (_Level) {
         this.cycleActions();
       }
 
-      if (clickedTile.tileType.type !== 'PLAYER_COLUMN' && clickedTile.tileType.type !== 'EMPTY' && clickedTile.uuid === this.selectedTile.uuid) {
+      if (clickedTile.tileType.type !== 'PLAYER_COLUMN' && clickedTile.tileType.type !== 'EMPTY' && this.selectedTile && this.selectedTile.uuid === clickedTile.uuid) {
         // TODO: enable a rotation mode which shows icons to rotate left and right
         this.currentAction.actionType = new _ActionType2.default('ROTATE');
         this.currentAction.commit();
