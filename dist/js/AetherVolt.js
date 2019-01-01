@@ -2179,13 +2179,13 @@ var _class = function (_Level) {
       // Add background
       var bg = new _Background2.default({
         GameState: this.GameState,
-        dimensions: new _Vector2.default(this.GameState.Canvas.width, this.GameState.Canvas.height),
+        dimensions: new _Vector2.default(this.GameState.Canvas.width, this.GameState.Canvas.height * 2),
         offset: new _Vector2.default(0, 0),
         imageUrl: './img/sky.png',
         repeat: 'repeat',
-        scale: new _Vector2.default(1, 40)
+        scale: new _Vector2.default(this.GameState.Canvas.height / 128, this.GameState.Canvas.height / 128)
       });
-      bg.canvasPosition = new _Vector2.default(0, 0);
+      bg.canvasPosition = new _Vector2.default(0, -this.GameState.Canvas.height);
       this.GameState.Scene.add(bg);
 
       // Init deck
@@ -2656,6 +2656,7 @@ var _class = function (_Entity) {
     _this.repeat = repeat;
     _this.scale = scale;
 
+    _this.moveSpeed = 0.1;
     _this.pattern = null;
     return _this;
   }
@@ -2680,11 +2681,19 @@ var _class = function (_Entity) {
   }, {
     key: 'draw',
     value: function draw() {
+      this.handleMovement();
       this.GameState.Canvas.ctx.beginPath();
       this.GameState.Canvas.ctx.rect(0, 0, this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y);
       this.GameState.Canvas.ctx.fillStyle = this.pattern;
       this.GameState.Canvas.ctx.scale(this.scale.x, this.scale.y);
       this.GameState.Canvas.ctx.fill();
+    }
+  }, {
+    key: 'handleMovement',
+    value: function handleMovement() {
+      var newY = this.canvasPosition.y + this.moveSpeed * this.GameState.deltaTime;
+      if (newY >= 0) newY = -this.GameState.Canvas.height;
+      this.canvasPosition.y = newY;
     }
   }]);
 

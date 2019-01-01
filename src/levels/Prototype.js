@@ -40,13 +40,16 @@ export default class extends Level {
     // Add background
     const bg = new Background({
       GameState: this.GameState,
-      dimensions: new Vector2(this.GameState.Canvas.width, this.GameState.Canvas.height),
+      dimensions: new Vector2(this.GameState.Canvas.width, this.GameState.Canvas.height * 2),
       offset: new Vector2(0, 0),
       imageUrl: './img/sky.png',
       repeat: 'repeat',
-      scale: new Vector2(1, 40),
+      scale: new Vector2(
+        this.GameState.Canvas.height / 128,
+        this.GameState.Canvas.height / 128,
+      ),
     });
-    bg.canvasPosition = new Vector2(0, 0);
+    bg.canvasPosition = new Vector2(0, -this.GameState.Canvas.height);
     this.GameState.Scene.add(bg);
 
     // Init deck

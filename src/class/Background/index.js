@@ -15,6 +15,7 @@ export default class extends Entity {
     this.repeat = repeat;
     this.scale = scale;
 
+    this.moveSpeed = 0.1;
     this.pattern = null;
   }
 
@@ -35,6 +36,7 @@ export default class extends Entity {
   }
 
   draw() {
+    this.handleMovement();
     this.GameState.Canvas.ctx.beginPath();
     this.GameState.Canvas.ctx.rect(
       0,
@@ -45,5 +47,11 @@ export default class extends Entity {
     this.GameState.Canvas.ctx.fillStyle = this.pattern;
     this.GameState.Canvas.ctx.scale(this.scale.x, this.scale.y);
     this.GameState.Canvas.ctx.fill();
+  }
+
+  handleMovement() {
+    let newY = this.canvasPosition.y + (this.moveSpeed * this.GameState.deltaTime);
+    if (newY >= 0) newY = -this.GameState.Canvas.height;
+    this.canvasPosition.y = newY;
   }
 }
