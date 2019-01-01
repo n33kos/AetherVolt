@@ -76,7 +76,7 @@ canvas {
   top: 40px;
   left: 10px;
   font-size: 20px;
-  color: white;
+  color: black;
 }
 .PlayerStats:last-of-type {
   left: auto;

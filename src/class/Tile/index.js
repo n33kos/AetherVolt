@@ -26,7 +26,7 @@ export default class extends Sprite {
 
     this.animations = {
       exist: {
-        frames        : 8,
+        frames        : 1,
         spriteSheet   : './img/Pipes_Empty.png',
         ticksPerFrame : 5,
         loop          : false,
@@ -99,14 +99,14 @@ export default class extends Sprite {
   }
 
   setOutlineColor() {
-    this.GameState.Canvas.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
     if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
-    if (this.isHovered || this.isInHand) {
-      this.GameState.Canvas.ctx.strokeStyle = this.GameState.currentLevel.players[
-        this.GameState.currentLevel.currentPlayerTurn
-      ].color;
-    }
-    if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = this.placedBy.color;
+    // if (this.isHovered || this.isInHand) {
+    //   this.GameState.Canvas.ctx.strokeStyle = this.GameState.currentLevel.players[
+    //     this.GameState.currentLevel.currentPlayerTurn
+    //   ].color;
+    // }
+    // if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = this.placedBy.color;
   }
 
   drawOutline() {

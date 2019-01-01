@@ -34,12 +34,12 @@ export default class {
 
   getSpriteSheet(id) {
     const sprites = {
-      1 : './img/Pipes_Empty.png',
-      2 : './img/Pipes_Empty.png',
-      3 : './img/Pipes_Straight.png',
-      4 : './img/Pipes_Bend.png',
-      5 : './img/Pipes_Triple.png',
-      6 : './img/Pipes_Quad.png',
+      1 : './img/Conduit_Empty.png',
+      2 : './img/Conduit_Empty.png',
+      3 : './img/Conduit_Straight.png',
+      4 : './img/Conduit_Bend.png',
+      5 : './img/Conduit_Triple.png',
+      6 : './img/Conduit_Quad.png',
     };
 
     return sprites[id];

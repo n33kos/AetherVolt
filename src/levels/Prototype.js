@@ -1,6 +1,7 @@
 import Action       from 'class/Action';
 import ActionType   from 'class/ActionType';
 import Avatar       from 'class/Avatar';
+import Background   from 'class/Background';
 import Deck         from 'class/Deck';
 import Grid         from 'class/Grid';
 import Hand         from 'class/Hand';
@@ -34,6 +35,18 @@ export default class extends Level {
 
   load() {
     this.GameState.Scene.clear();
+
+    // Add background
+    const bg = new Background({
+      GameState: this.GameState,
+      dimensions: new Vector2(this.GameState.Canvas.width, this.GameState.Canvas.height),
+      offset: new Vector2(0, 0),
+      imageUrl: './img/sky.png',
+      repeat: 'repeat',
+      scale: new Vector2(15, 15),
+    });
+    bg.canvasPosition = new Vector2(0, 0);
+    this.GameState.Scene.add(bg);
 
     // Init deck
     this.deck = new Deck({
