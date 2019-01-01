@@ -157,6 +157,7 @@ export default class extends Level {
     if (
       clickedTile.tileType.type === 'PLAYER_COLUMN'
       && clickedTile.player
+      && clickedTile.player.name === this.players[this.currentPlayerTurn].name
       && this.currentAction.sourceTile
       && this.currentAction.sourceTile.tileType.type === 'PLAYER_COLUMN'
     ) {
@@ -261,6 +262,7 @@ export default class extends Level {
 
     if (gameOver) {
       this.winner = this.players.find(player => player.health > 0);
+      this.GameState.isPaused = true;
       this.GameState.UI.updateScoreScreen();
       this.GameState.UI.setScreen('score');
     }

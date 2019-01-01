@@ -518,6 +518,7 @@ var _class = function (_Sprite) {
     _this.player = player;
     _this.isInHand = isInHand;
     _this.dragPosition = dragPosition;
+    _this.targetRotation = 0;
 
     _this.animations = {
       exist: {
@@ -585,10 +586,8 @@ var _class = function (_Sprite) {
   }, {
     key: 'rotateCell',
     value: function rotateCell(direction) {
-      var newRotation = this.rotation + Math.PI / (2 * direction);
-      if (newRotation >= Math.PI * 2) newRotation = 0;
-      if (newRotation < 0) newRotation = Math.PI * 1.5;
-      this.rotation = newRotation;
+      var newRotation = this.targetRotation + Math.PI / 2 * direction;
+      this.targetRotation = newRotation;
 
       this.neighborPattern = this.neighborPattern.map(function (id) {
         id += direction;
@@ -600,8 +599,15 @@ var _class = function (_Sprite) {
       this.neighbors = this.getNeighbors();
     }
   }, {
+    key: 'handleRotation',
+    value: function handleRotation() {
+      var rotationDiff = this.targetRotation - this.rotation;
+      this.rotation += rotationDiff * 0.01 * this.GameState.deltaTime;
+    }
+  }, {
     key: 'draw',
     value: function draw() {
+      this.handleRotation();
       _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'draw', this).call(this);
       this.drawOutline();
     }
@@ -975,7 +981,7 @@ var _class = function (_LoadedEntity) {
 
       // Move canvas, rotate, then add offset.
       this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
-      this.GameState.Canvas.ctx.rotate(this.rotation);
+      this.GameState.Canvas.ctx.rotate(this.rotation % (Math.PI * 2));
       this.GameState.Canvas.ctx.translate(this.absoluteOffset.x, this.absoluteOffset.y);
       this.GameState.Canvas.ctx.globalAlpha = this.alpha;
 
@@ -2245,7 +2251,7 @@ var _class = function (_Level) {
       }
 
       //----MOVE ACTION----
-      if (clickedTile.tileType.type === 'PLAYER_COLUMN' && clickedTile.player && this.currentAction.sourceTile && this.currentAction.sourceTile.tileType.type === 'PLAYER_COLUMN') {
+      if (clickedTile.tileType.type === 'PLAYER_COLUMN' && clickedTile.player && clickedTile.player.name === this.players[this.currentPlayerTurn].name && this.currentAction.sourceTile && this.currentAction.sourceTile.tileType.type === 'PLAYER_COLUMN') {
         this.tileHelper.initMove(clickedTile, this.currentAction, this.cycleActions.bind(this));
       }
 
@@ -2351,6 +2357,7 @@ var _class = function (_Level) {
         this.winner = this.players.find(function (player) {
           return player.health > 0;
         });
+        this.GameState.isPaused = true;
         this.GameState.UI.updateScoreScreen();
         this.GameState.UI.setScreen('score');
       }
@@ -2414,6 +2421,7 @@ var _class = function () {
     key: 'place',
     value: function place() {
       this.targetTile.setType(this.sourceTile.tileType);
+      this.targetTile.targetRotation = this.sourceTile.targetRotation;
       this.targetTile.rotation = this.sourceTile.rotation;
       this.targetTile.neighborPattern = this.sourceTile.neighborPattern;
       this.targetTile.neighbors = this.targetTile.getNeighbors();

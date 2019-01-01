@@ -22,6 +22,7 @@ export default class extends Sprite {
     this.player = player;
     this.isInHand = isInHand;
     this.dragPosition = dragPosition;
+    this.targetRotation = 0;
 
     this.animations = {
       exist: {
@@ -73,10 +74,8 @@ export default class extends Sprite {
   }
 
   rotateCell(direction) {
-    let newRotation = this.rotation + Math.PI / (2 * direction);
-    if (newRotation >= Math.PI * 2) newRotation = 0;
-    if (newRotation < 0) newRotation = Math.PI * 1.5;
-    this.rotation = newRotation;
+    let newRotation = this.targetRotation + (Math.PI / 2 * direction);
+    this.targetRotation = newRotation;
 
     this.neighborPattern = this.neighborPattern.map(id => {
       id += direction;
@@ -88,7 +87,13 @@ export default class extends Sprite {
     this.neighbors = this.getNeighbors();
   }
 
+  handleRotation() {
+    const rotationDiff = this.targetRotation - this.rotation;
+    this.rotation += rotationDiff * 0.01 * this.GameState.deltaTime;
+  }
+
   draw() {
+    this.handleRotation()
     super.draw();
     this.drawOutline();
   }

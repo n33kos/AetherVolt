@@ -22,6 +22,7 @@ export default class {
 
   place() {
     this.targetTile.setType(this.sourceTile.tileType);
+    this.targetTile.targetRotation = this.sourceTile.targetRotation;
     this.targetTile.rotation = this.sourceTile.rotation;
     this.targetTile.neighborPattern = this.sourceTile.neighborPattern;
     this.targetTile.neighbors = this.targetTile.getNeighbors();

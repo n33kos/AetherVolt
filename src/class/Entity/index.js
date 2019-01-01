@@ -52,7 +52,7 @@ export default class extends LoadedEntity {
 
     // Move canvas, rotate, then add offset.
     this.GameState.Canvas.ctx.translate(this.canvasPosition.x, this.canvasPosition.y);
-    this.GameState.Canvas.ctx.rotate(this.rotation);
+    this.GameState.Canvas.ctx.rotate(this.rotation % (Math.PI * 2));
     this.GameState.Canvas.ctx.translate(this.absoluteOffset.x, this.absoluteOffset.y);
     this.GameState.Canvas.ctx.globalAlpha = this.alpha;
 
