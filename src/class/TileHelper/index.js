@@ -110,6 +110,8 @@ export default class {
     this.callback = callback;
     this.isMoving = true;
 
+    const avatar = this.currentAction.sourceTile.player.avatar;
+
     const upButton = new SpriteButton({
       callback : this.moveUp.bind(this),
       mouseDownSprite : './img/move.png',
@@ -119,11 +121,8 @@ export default class {
       order: -20,
     });
     upButton.canvasPosition = new Vector2(
-      tile.canvasPosition.x,
-      tile.canvasPosition.y - (
-        this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].avatar.dimensions.y
-        * this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].avatar.scale.y
-      ) / 2
+      avatar.canvasPosition.x,
+      avatar.canvasPosition.y - (avatar.dimensions.y * avatar.scale.y) / 2
     );
     upButton.calculateOffset();
 
@@ -137,11 +136,8 @@ export default class {
       order: -20,
     });
     downButton.canvasPosition = new Vector2(
-      tile.canvasPosition.x,
-      tile.canvasPosition.y + (
-        this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].avatar.dimensions.y
-        * this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].avatar.scale.y
-      ) / 2
+      avatar.canvasPosition.x,
+      avatar.canvasPosition.y + (avatar.dimensions.y * avatar.scale.y) / 2
     );
     downButton.calculateOffset();
 

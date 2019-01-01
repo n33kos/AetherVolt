@@ -13,6 +13,8 @@ export default class extends Sprite {
       player, // Player object for avatar in this cell
       isInHand = false,
       dragPosition = null,
+      targetPosition = null,
+      outline = null,
     } = config;
 
     this.x = x;
@@ -23,6 +25,9 @@ export default class extends Sprite {
     this.isInHand = isInHand;
     this.dragPosition = dragPosition;
     this.targetRotation = 0;
+    this.targetPosition = targetPosition;
+    this.canvasPosition = targetPosition;
+    this.outline = outline;
 
     this.animations = {
       exist: {
@@ -36,6 +41,9 @@ export default class extends Sprite {
     this.neighborPattern = [];
     this.isHovered = false;
     this.placedBy = false;
+
+    this.turbulenceSpeed = 0.02;
+    this.turbulenceRange = new Vector2(5, 5);
 
     this.setType(type);
     this.calculateOffset();
@@ -92,33 +100,27 @@ export default class extends Sprite {
     this.rotation += rotationDiff * 0.01 * this.GameState.deltaTime;
   }
 
+  drawEntity() {
+    if (this.outline) {
+      this.outline.canvasPosition = this.targetPosition;
+      this.outline.calculateOffset();
+      this.setOutlineColor();
+      this.outline.drawEntity();
+    }
+    super.drawEntity();
+  }
+
   draw() {
-    this.handleRotation()
+    // Rotation and movement smoothing
+    if (!this.isInHand) this.handleTurbulence();
+    this.handleRotation();
+
     super.draw();
-    this.drawOutline();
   }
 
   setOutlineColor() {
-    this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+    this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
     if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
-    // if (this.isHovered || this.isInHand) {
-    //   this.GameState.Canvas.ctx.strokeStyle = this.GameState.currentLevel.players[
-    //     this.GameState.currentLevel.currentPlayerTurn
-    //   ].color;
-    // }
-    // if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = this.placedBy.color;
-  }
-
-  drawOutline() {
-    this.GameState.Canvas.ctx.beginPath();
-    this.GameState.Canvas.ctx.lineWidth = 1 * window.devicePixelRatio;
-    this.setOutlineColor();
-    this.GameState.Canvas.ctx.rect(
-      0,
-      0,
-      this.dimensions.x * this.scale.x,
-      this.dimensions.y * this.scale.y,
-    );
-    this.GameState.Canvas.ctx.stroke();
+    if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = `rgb(${this.placedBy.color}, 0.5`;
   }
 }

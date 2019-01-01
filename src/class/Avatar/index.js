@@ -7,6 +7,15 @@ export default class extends SpriteButton {
 
     const {
       sprite,
+      targetPosition = null,
     } = config;
+
+    this.targetPosition = targetPosition;
+    this.canvasPosition = targetPosition;
+  }
+
+  draw() {
+    this.handleTurbulence();
+    super.draw();
   }
 }

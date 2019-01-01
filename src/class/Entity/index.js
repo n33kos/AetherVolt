@@ -30,6 +30,11 @@ export default class extends LoadedEntity {
     this.isVisible = true;
     this.alpha = alpha;
 
+    this.turbulenceSpeed = 0.05;
+    this.turbulence = new Vector2(0, 0);
+    this.turbulenceRange = new Vector2(1, 15);
+    this.turbulenceStep = Math.random() * Math.PI * 2;
+
     this.setPosition(position);
   }
 
@@ -69,5 +74,31 @@ export default class extends LoadedEntity {
 
   draw() {
     // Override this function for the entity's draw loop
+  }
+
+  handleTurbulence() {
+    if(!this.targetPosition) return;
+
+    this.addTurbulence();
+
+    const positionDiff = new Vector2(
+      this.targetPosition.x - this.canvasPosition.x - this.turbulence.x,
+      this.targetPosition.y - this.canvasPosition.y - this.turbulence.y,
+    );
+    this.canvasPosition = new Vector2(
+      this.canvasPosition.x + positionDiff.x * 0.005 * this.GameState.deltaTime,
+      this.canvasPosition.y + positionDiff.y * 0.005 * this.GameState.deltaTime,
+    )
+    this.calculateOffset();
+  }
+
+  addTurbulence() {
+    this.turbulenceStep += this.turbulenceSpeed;
+    if (this.turbulenceStep >= Math.PI*2) this.turbulenceStep = 0;
+
+    this.turbulence = new Vector2(
+      Math.cos(this.turbulenceStep) * this.turbulenceRange.x,
+      Math.sin(this.turbulenceStep) * this.turbulenceRange.y,
+    );
   }
 }

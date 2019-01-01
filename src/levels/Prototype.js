@@ -60,7 +60,7 @@ export default class extends Level {
         GameState : this.GameState,
         name : 'Player 1',
         uuid : uuidv4(),
-        color: 'blue',
+        color: '0,0,255',
         avatar: new Avatar({
           GameState : this.GameState,
           dimensions: new Vector2(64, 128),
@@ -69,13 +69,17 @@ export default class extends Level {
           callback: this.clickAvatar.bind(this, 'Player 1'),
           mouseDownSprite : './img/Ship.png',
           mouseUpSprite : './img/Ship.png',
+          targetPosition : new Vector2(
+            -256,
+            this.GameState.Canvas.cy,
+          ),
         })
       }),
       new Player({
         GameState : this.GameState,
         name : 'Player 2',
         uuid : uuidv4(),
-        color: 'red',
+        color: '255,0,0',
         avatar: new Avatar({
           GameState : this.GameState,
           dimensions: new Vector2(64, 128),
@@ -84,6 +88,10 @@ export default class extends Level {
           callback: this.clickAvatar.bind(this, 'Player 2'),
           mouseDownSprite : './img/Ship.png',
           mouseUpSprite : './img/Ship.png',
+          targetPosition : new Vector2(
+            this.GameState.Canvas.width + 256,
+            this.GameState.Canvas.cy,
+          ),
           mirrorX: true,
         })
       }),

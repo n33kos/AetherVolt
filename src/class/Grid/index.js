@@ -1,7 +1,8 @@
-import randomRange  from 'lib/randomRange';
-import Tile         from 'class/Tile';
-import TileType     from 'class/TileType';
-import Vector2      from 'class/Vector2';
+import randomRange from 'lib/randomRange';
+import Tile        from 'class/Tile';
+import TileOutline from 'class/TileOutline';
+import TileType    from 'class/TileType';
+import Vector2     from 'class/Vector2';
 
 export default class {
   constructor(config) {
@@ -34,7 +35,7 @@ export default class {
       (this.GameState.Canvas.height - this.cellSize * this.rows) / 2,
     );
 
-    // Build grid
+    // Build grid tiles
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.columns; x++) {
         let type = new TileType('EMPTY');
@@ -43,23 +44,22 @@ export default class {
       }
     }
 
+    // Init cells
+    this.tiles.forEach(cell => {
+      cell.init(this.tiles);
+    });
+
     // Position avatars
+    this.positionAvatars();
+  }
+
+  positionAvatars() {
     this.players.forEach((player, index) => {
       const tileID = `${index === 0 ? 0 : this.columns - 1}_${Math.floor(randomRange(0, this.rows - 1))}`;
       const tile = this.tiles.find(tile => tile.id === tileID);
 
       tile.player = player;
       player.setAvatarPosition(tile);
-    });
-
-    // Init cells
-    this.tiles.forEach(cell => {
-      cell.init(this.tiles);
-    });
-
-    //Position and init Avatars
-    this.players.forEach(player => {
-      player.setAvatarPosition(player.avatar, player.avatar.x, player.avatar.y);
       this.GameState.Scene.add(player.avatar);
     });
   }
@@ -74,11 +74,18 @@ export default class {
       x,
       y,
       type,
+      outline: new TileOutline({ GameState: this.GameState }),
     });
     cell.canvasPosition = new Vector2(
       (x * this.cellSize) + this.padding.x + (this.cellSize/2),
       (y * this.cellSize) + this.padding.y + (this.cellSize/2),
     );
+    cell.targetPosition = cell.canvasPosition;
+
+    // Set outline values
+    cell.outline.canvasPosition = cell.targetPosition;
+    cell.outline.scale = cell.scale;
+    cell.outline.dimensions = cell.dimensions;
 
     this.GameState.Scene.add(cell);
     this.tiles.push(cell);

@@ -1,3 +1,5 @@
+import Vector2 from 'class/Vector2';
+
 export default class {
   constructor({
     GameState,
@@ -28,7 +30,10 @@ export default class {
   }
 
   setAvatarPosition(tile) {
-    this.avatar.canvasPosition = tile.canvasPosition;
-    this.avatar.calculateOffset();
+    const playerSide = (this.name === 'Player 1' ? -1 : 1);
+    this.avatar.targetPosition = new Vector2(
+      tile.canvasPosition.x + (tile.dimensions.x * tile.scale.x) / 2 * playerSide,
+      tile.canvasPosition.y,
+    );
   }
 }
