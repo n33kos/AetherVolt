@@ -11,10 +11,11 @@ export default class {
     this.targetTile = targetTile;
     this.sourceTile = sourceTile;
     this.player = player;
+    this.rotationDirection = 1;
   }
 
   rotate() {
-    this.targetTile.rotateCell(1);
+    this.targetTile.rotateCell(this.rotationDirection);
     // Change ownership of tile on rotate
     this.targetTile.placedBy = this.player;
   }

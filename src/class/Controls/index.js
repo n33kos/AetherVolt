@@ -16,14 +16,23 @@ export default class {
     this.callbacks = config.callbacks;
   }
 
-  addCallback(eventKey, callBack) {
+  addCallback(eventKey, callBack, order = 0) {
     const newUUID = uuidv4();
     this.callbacks[eventKey].push({
-      uuid: newUUID,
       callBack,
+      order,
+      uuid: newUUID,
     });
 
+    this.sortCallbacks();
+
     return newUUID;
+  }
+
+  sortCallbacks() {
+    Object.keys(this.callbacks).forEach(eventKey => {
+      this.callbacks[eventKey].sort((a, b) => a.order - b.order);
+    });
   }
 
   clearCallbacks() {
@@ -59,20 +68,30 @@ export default class {
     this.lastPosition = this.position;
     this.isMouseDown = true;
 
-    this.callbacks['touchStart'].forEach(({ callBack }) => callBack(e));
+    for (let entry of this.callbacks['touchStart']) {
+      const breakAfterCallback = entry.callBack(e);
+      if (breakAfterCallback) break;
+    }
   }
 
   handleTouchEnd(e) {
     this.lastPosition = this.position;
     this.isMouseDown = false;
 
-    this.callbacks['touchEnd'].forEach(({ callBack }) => callBack(e));
+    for (let entry of this.callbacks['touchEnd']) {
+      const breakAfterCallback = entry.callBack(e);
+      if (breakAfterCallback) break;
+    }
   }
 
   handleTouchMove(e) {
     e.preventDefault();
     this.setPosition(e);
-    this.callbacks['touchMove'].forEach(({ callBack }) => callBack(e));
+
+    for (let entry of this.callbacks['touchMove']) {
+      const breakAfterCallback = entry.callBack(e);
+      if (breakAfterCallback) break;
+    }
   }
 
   // -----Mouse-----
@@ -80,33 +99,49 @@ export default class {
     this.lastPosition = this.position;
     this.isMouseDown = true;
 
-    this.callbacks['mouseDown'].forEach(({ callBack }) => callBack(e));
+    for (let entry of this.callbacks['mouseDown']) {
+      const breakAfterCallback = entry.callBack(e);
+      if (breakAfterCallback) break;
+    }
   }
 
   handleMouseUp(e) {
     this.lastPosition = this.position;
     this.isMouseDown = false;
 
-    this.callbacks['mouseUp'].forEach(({ callBack }) => callBack(e));
+    for (let entry of this.callbacks['mouseUp']) {
+      const breakAfterCallback = entry.callBack(e);
+      if (breakAfterCallback) break;
+    }
   }
 
   handleMouseMove(e) {
     this.setPosition(e);
-    this.callbacks['mouseMove'].forEach(({ callBack }) => callBack(e));
+
+    for (let entry of this.callbacks['mouseMove']) {
+      const breakAfterCallback = entry.callBack(e);
+      if (breakAfterCallback) break;
+    }
   }
 
   // -----Keypresses------
   handleKeyDown(e) {
     if (!this.pressedKeys.includes(e.keyCode)) this.pressedKeys.push(e.keyCode);
 
-    this.callbacks['keyDown'].forEach(({ callBack }) => callBack(e));
+    for (let entry of this.callbacks['keyDown']) {
+      const breakAfterCallback = entry.callBack(e);
+      if (breakAfterCallback) break;
+    }
   }
 
   handleKeyUp(e) {
     const index = this.pressedKeys.indexOf(e.keyCode);
     if (index > -1) this.pressedKeys.splice(index, 1);
 
-    this.callbacks['keyUp'].forEach(({ callBack }) => callBack(e));
+    for (let entry of this.callbacks['keyUp']) {
+      const breakAfterCallback = entry.callBack(e);
+      if (breakAfterCallback) break;
+    }
   }
 
   setPosition(e) {

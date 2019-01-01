@@ -24,9 +24,9 @@ export default class {
     this.controlCallbackIds = [];
   }
 
-  addControlsCallback(eventKey, callback) {
+  addControlsCallback(eventKey, callback, order = 0) {
     this.controlCallbackIds.push(
-      this.GameState.Controls.addCallback(eventKey, callback),
+      this.GameState.Controls.addCallback(eventKey, callback, order),
     );
   }
 

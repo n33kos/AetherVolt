@@ -1,18 +1,19 @@
-import Action      from 'class/Action';
-import ActionType  from 'class/ActionType';
-import Avatar      from 'class/Avatar';
-import cloneClass  from 'lib/cloneClass';
-import Deck        from 'class/Deck';
-import Grid        from 'class/Grid';
-import Hand        from 'class/Hand';
-import Level       from 'class/Level';
-import Player      from 'class/Player';
-import randomRange from 'lib/randomRange';
-import Tile        from 'class/Tile';
-import TileType    from 'class/TileType';
-import uuidv4      from 'uuid/v4';
-import Vector2     from 'class/Vector2';
-import Pathfinder  from 'class/Pathfinder';
+import Action       from 'class/Action';
+import ActionType   from 'class/ActionType';
+import Avatar       from 'class/Avatar';
+import cloneClass   from 'lib/cloneClass';
+import Deck         from 'class/Deck';
+import Grid         from 'class/Grid';
+import Hand         from 'class/Hand';
+import Level        from 'class/Level';
+import Pathfinder   from 'class/Pathfinder';
+import Player       from 'class/Player';
+import randomRange  from 'lib/randomRange';
+import SpriteButton from 'class/SpriteButton';
+import Tile         from 'class/Tile';
+import TileType     from 'class/TileType';
+import uuidv4       from 'uuid/v4';
+import Vector2      from 'class/Vector2';
 
 export default class extends Level {
   constructor(config) {
@@ -24,6 +25,8 @@ export default class extends Level {
     this.currentPlayerTurn = 0;
     this.selectedTile = null;
     this.currentAction = null;
+    this.rotationModeTile = false;
+    this.rotationHelperUUIDs = [];
   }
 
   load() {
@@ -111,13 +114,18 @@ export default class extends Level {
 
   handleMouseUp(e) {
     const clickedTile = this.findTileAtPosition(this.GameState.Controls.position)
+
+    // If no tile clicked, deselect and disable rotation mode
     if (!clickedTile) {
+      this.disableRotationMode();
       this.deselectTile();
       return;
     }
 
+    // Set target tile in action
     this.currentAction.targetTile = clickedTile;
 
+    //----PLACE ACTION----
     if (
       clickedTile.tileType.type === 'EMPTY'
       && this.selectedTile.isInHand
@@ -127,6 +135,7 @@ export default class extends Level {
       this.cycleActions();
     }
 
+    //----MOVE ACTION----
     if (
       clickedTile.tileType.type === 'PLAYER_COLUMN'
       && this.selectedTile.tileType.type === 'PLAYER_COLUMN'
@@ -137,18 +146,26 @@ export default class extends Level {
       this.cycleActions();
     }
 
+    //----ROTATE ACTION----
     if (
       clickedTile.tileType.type !== 'PLAYER_COLUMN'
       && clickedTile.tileType.type !== 'EMPTY'
       && this.selectedTile
       && this.selectedTile.uuid === clickedTile.uuid
     ) {
-      // TODO: enable a rotation mode which shows icons to rotate left and right
-      this.currentAction.actionType = new ActionType('ROTATE');
-      this.currentAction.commit();
-      if (!clickedTile.isInHand) this.cycleActions();
+      if (this.rotationModeTile) {
+        this.disableRotationMode();
+      }else {
+        this.enableRotationMode(clickedTile);
+      }
     }
 
+    // Disable rotation mode circumstances
+    if (clickedTile.tileType.type === 'EMPTY' || clickedTile.tileType.type === 'PLAYER_COLUMN') {
+      this.disableRotationMode();
+    }
+
+    // Deselect tile after mouse up
     this.deselectTile();
   }
 
@@ -186,6 +203,62 @@ export default class extends Level {
       this.previewTile.alpha = 0.75;
       this.GameState.Scene.add(this.previewTile);
     }
+  }
+
+  enableRotationMode(tile) {
+    this.rotationModeTile = tile;
+
+    const leftButton = new SpriteButton({
+      callback : this.rotateLeft.bind(this),
+      mouseDownSprite : './img/rotate.png',
+      mouseUpSprite : './img/rotate.png',
+      scale : tile.scale,
+      dimensions : new Vector2(64, 64),
+      mirrorX : true,
+    });
+    leftButton.canvasPosition = new Vector2(
+      tile.canvasPosition.x - (tile.dimensions.x * tile.scale.x),
+      tile.canvasPosition.y,
+    );
+    leftButton.calculateOffset();
+
+    const rightButton = new SpriteButton({
+      callback : this.rotateRight.bind(this),
+      mouseDownSprite : './img/rotate.png',
+      mouseUpSprite : './img/rotate.png',
+      scale : tile.scale,
+      dimensions : new Vector2(64, 64),
+    });
+    rightButton.canvasPosition = new Vector2(
+      tile.canvasPosition.x + (tile.dimensions.x * tile.scale.x),
+      tile.canvasPosition.y,
+    );
+    rightButton.calculateOffset();
+
+    this.rotationHelperUUIDs = [
+      this.GameState.Scene.add(leftButton),
+      this.GameState.Scene.add(rightButton),
+    ]
+  }
+
+  disableRotationMode() {
+    this.rotationHelperUUIDs.forEach(uuid => this.GameState.Scene.remove(uuid))
+    this.rotationHelperUUIDs = [];
+    this.rotationModeTile = null;
+  }
+
+  rotateLeft() {
+    this.currentAction.rotationDirection = 1;
+    this.currentAction.targetTile = this.rotationModeTile;
+    this.currentAction.commit();
+    if (!this.rotationModeTile.isInHand) this.cycleActions();
+  }
+
+  rotateRight() {
+    this.currentAction.rotationDirection = -1;
+    this.currentAction.targetTile = this.rotationModeTile;
+    this.currentAction.commit();
+    if (!this.rotationModeTile.isInHand) this.cycleActions();
   }
 
   cycleActions() {

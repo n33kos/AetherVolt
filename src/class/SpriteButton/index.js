@@ -36,16 +36,26 @@ export default class extends Sprite {
     }
     this.currentAnimation = 'mouseUp';
 
-    this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
-    this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
+    this.addControlsCallback(
+      'mouseDown',
+      this.handleMouseDown.bind(this),
+      -10 // lower GUI order so it processes first and can break the loop for buttons below
+    );
+    this.addControlsCallback(
+      'mouseUp',
+      this.handleMouseUp.bind(this),
+      -10 // lower GUI order so it processes first and can break the loop for buttons below
+    );
   }
 
   isPositionInButton(position) {
     return rectContains(
       position,
       new Vector2(
-        this.canvasPosition.x - this.absoluteOffset.x,
-        this.canvasPosition.y - this.absoluteOffset.y,
+        // We multiply by the mirror value again because of how scaling flips the canvasPosition
+        // Still doesn't work right if offset isn't (0.5, 0.5) 🤷
+        this.canvasPosition.x + (this.absoluteOffset.x * (this.mirrorX ? -1 : 1)),
+        this.canvasPosition.y + (this.absoluteOffset.y * (this.mirrorY ? -1 : 1)),
       ),
       new Vector2(
         this.dimensions.x * this.scale.x,
@@ -58,6 +68,7 @@ export default class extends Sprite {
     if (this.isPositionInButton(this.GameState.Controls.position)) {
       this.currentAnimation = 'mouseDown';
       this.currentFrame = 0;
+      return true;
     }
   }
 
@@ -67,6 +78,7 @@ export default class extends Sprite {
 
     if (this.isPositionInButton(this.GameState.Controls.position)) {
       this.callback();
+      return true;
     }
   }
 }
