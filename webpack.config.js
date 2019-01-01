@@ -5,8 +5,8 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 module.exports = [
   {
     entry: {
-      "PipeDream": "./src/loader.js",
-      "PipeDream.min": "./src/loader.js",
+      "AetherVolt": "./src/loader.js",
+      "AetherVolt.min": "./src/loader.js",
     },
     mode: 'production',
     module: {
@@ -23,7 +23,7 @@ module.exports = [
     output: {
       path: path.resolve(__dirname, 'dist/js'),
       filename: "[name].js",
-      library: 'PipeDream',
+      library: 'AetherVolt',
       libraryTarget: 'umd',
       umdNamedDefine: true
     },

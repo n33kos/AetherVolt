@@ -1,9 +1,9 @@
 {
-  "name": "PipeDream",
+  "name": "AetherVolt",
   "version": "0.0.1",
   "private": true,
-  "description": "A template for PipeDream",
-  "main": "dist/js/PipeDream.min.js",
+  "description": "A template for AetherVolt",
+  "main": "dist/js/AetherVolt.min.js",
   "scripts": {
     "deploy": "webpack && npm run styles",
     "build": "webpack",
