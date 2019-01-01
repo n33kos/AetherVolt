@@ -1,7 +1,6 @@
 import Action       from 'class/Action';
 import ActionType   from 'class/ActionType';
 import Avatar       from 'class/Avatar';
-import cloneClass   from 'lib/cloneClass';
 import Deck         from 'class/Deck';
 import Grid         from 'class/Grid';
 import Hand         from 'class/Hand';
@@ -11,6 +10,7 @@ import Player       from 'class/Player';
 import randomRange  from 'lib/randomRange';
 import SpriteButton from 'class/SpriteButton';
 import Tile         from 'class/Tile';
+import TileHelper   from 'class/TileHelper';
 import TileType     from 'class/TileType';
 import uuidv4       from 'uuid/v4';
 import Vector2      from 'class/Vector2';
@@ -19,14 +19,17 @@ export default class extends Level {
   constructor(config) {
     super(config);
 
+    const {
+      GameState,
+    } = config;
+
     this.name = "Prototype Level";
     this.rows = 6;
     this.columns = 6;
     this.currentPlayerTurn = 0;
     this.selectedTile = null;
     this.currentAction = null;
-    this.rotationModeTile = false;
-    this.rotationHelperUUIDs = [];
+    this.tileHelper = new TileHelper(GameState);
   }
 
   load() {
@@ -109,16 +112,31 @@ export default class extends Level {
     const clickedTile = this.findTileAtPosition(this.GameState.Controls.position)
     if (!clickedTile) return;
 
-    this.selectTile(clickedTile);
+    // Set source tile in current action
+    this.currentAction.sourceTile = clickedTile;
+
+    if (clickedTile.isInHand) {
+      this.tileHelper.initDrag(clickedTile, this.currentAction, this.cycleActions.bind(this));
+    }
+  }
+
+  handleMouseMove(e) {
+    if (this.tileHelper.isDragging && this.tileHelper.tile) {
+      this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
+    }
   }
 
   handleMouseUp(e) {
-    const clickedTile = this.findTileAtPosition(this.GameState.Controls.position)
+    const clickedTile = this.findTileAtPosition(this.GameState.Controls.position);
 
-    // If no tile clicked, deselect and disable rotation mode
-    if (!clickedTile) {
-      this.disableRotationMode();
-      this.deselectTile();
+    // ----EMPTY TILE ACTION----
+    if (
+      !clickedTile
+      || (clickedTile.tileType.type === 'EMPTY' && !this.tileHelper.isDragging)
+    ) {
+      this.currentAction.sourceTile = null;
+      this.currentAction.targetTile = null;
+      this.tileHelper.clear();
       return;
     }
 
@@ -128,51 +146,32 @@ export default class extends Level {
     //----PLACE ACTION----
     if (
       clickedTile.tileType.type === 'EMPTY'
-      && this.selectedTile.isInHand
+      && this.currentAction.sourceTile
+      && this.currentAction.sourceTile.isInHand
     ) {
-      this.currentAction.actionType = new ActionType('PLACE');
-      this.currentAction.commit();
-      this.cycleActions();
+      this.tileHelper.placeDraggedCell();
+      this.tileHelper.clear();
     }
 
     //----MOVE ACTION----
     if (
       clickedTile.tileType.type === 'PLAYER_COLUMN'
-      && this.selectedTile.tileType.type === 'PLAYER_COLUMN'
-      && clickedTile.uuid !== this.selectedTile.uuid
+      && clickedTile.player
+      && this.currentAction.sourceTile
+      && this.currentAction.sourceTile.tileType.type === 'PLAYER_COLUMN'
     ) {
-      this.currentAction.actionType = new ActionType('MOVE');
-      this.currentAction.commit();
-      this.cycleActions();
+      this.tileHelper.initMove(clickedTile, this.currentAction, this.cycleActions.bind(this));
     }
 
     //----ROTATE ACTION----
     if (
       clickedTile.tileType.type !== 'PLAYER_COLUMN'
       && clickedTile.tileType.type !== 'EMPTY'
-      && this.selectedTile
-      && this.selectedTile.uuid === clickedTile.uuid
+      && this.currentAction.sourceTile
+      && this.currentAction.sourceTile.uuid === clickedTile.uuid
     ) {
-      if (this.rotationModeTile) {
-        this.disableRotationMode();
-      }else {
-        this.enableRotationMode(clickedTile);
-      }
+      this.tileHelper.initRotation(clickedTile, this.currentAction, this.cycleActions.bind(this));
     }
-
-    // Disable rotation mode circumstances
-    if (clickedTile.tileType.type === 'EMPTY' || clickedTile.tileType.type === 'PLAYER_COLUMN') {
-      this.disableRotationMode();
-    }
-
-    // Deselect tile after mouse up
-    this.deselectTile();
-  }
-
-  handleMouseMove(e) {
-    if (!this.previewTile) return;
-
-    this.previewTile.canvasPosition = this.GameState.Controls.position;
   }
 
   findTileAtPosition(pos) {
@@ -185,80 +184,6 @@ export default class extends Level {
     }
 
     return clickedTile;
-  }
-
-  deselectTile() {
-    if(this.previewTile) this.GameState.Scene.remove(this.previewTile.uuid);
-    this.selectedTile = null;
-    this.lastSelectedTile = null;
-    this.previewTile = null;
-  }
-
-  selectTile(tileToSelect) {
-    this.selectedTile = tileToSelect;
-    this.currentAction.sourceTile = this.selectedTile;
-
-    if (tileToSelect.isInHand || tileToSelect.tileType.type === 'PLAYER_COLUMN') {
-      this.previewTile = cloneClass(tileToSelect);
-      this.previewTile.alpha = 0.75;
-      this.GameState.Scene.add(this.previewTile);
-    }
-  }
-
-  enableRotationMode(tile) {
-    this.rotationModeTile = tile;
-
-    const leftButton = new SpriteButton({
-      callback : this.rotateLeft.bind(this),
-      mouseDownSprite : './img/rotate.png',
-      mouseUpSprite : './img/rotate.png',
-      scale : tile.scale,
-      dimensions : new Vector2(64, 64),
-      mirrorX : true,
-    });
-    leftButton.canvasPosition = new Vector2(
-      tile.canvasPosition.x - (tile.dimensions.x * tile.scale.x),
-      tile.canvasPosition.y,
-    );
-    leftButton.calculateOffset();
-
-    const rightButton = new SpriteButton({
-      callback : this.rotateRight.bind(this),
-      mouseDownSprite : './img/rotate.png',
-      mouseUpSprite : './img/rotate.png',
-      scale : tile.scale,
-      dimensions : new Vector2(64, 64),
-    });
-    rightButton.canvasPosition = new Vector2(
-      tile.canvasPosition.x + (tile.dimensions.x * tile.scale.x),
-      tile.canvasPosition.y,
-    );
-    rightButton.calculateOffset();
-
-    this.rotationHelperUUIDs = [
-      this.GameState.Scene.add(leftButton),
-      this.GameState.Scene.add(rightButton),
-    ]
-  }
-
-  disableRotationMode() {
-    this.rotationHelperUUIDs.forEach(uuid => this.GameState.Scene.remove(uuid))
-    this.rotationHelperUUIDs = [];
-    this.rotationModeTile = null;
-  }
-
-  rotateLeft() {
-    this.currentAction.rotationDirection = 1;
-    this.currentAction.targetTile = this.rotationModeTile;
-    this.currentAction.commit();
-    if (!this.rotationModeTile.isInHand) this.cycleActions();
-  }
-
-  rotateRight() {
-    this.currentAction.rotationDirection = -1;
-    this.currentAction.targetTile = this.rotationModeTile;
-    this.currentAction.commit();
-    if (!this.rotationModeTile.isInHand) this.cycleActions();
   }
 
   cycleActions() {
