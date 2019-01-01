@@ -969,6 +969,8 @@ var _class = function (_Sprite) {
 
     _this.addControlsCallback('mouseDown', _this.handleMouseDown.bind(_this), order);
     _this.addControlsCallback('mouseUp', _this.handleMouseUp.bind(_this), order);
+    _this.addControlsCallback('touchStart', _this.handleMouseDown.bind(_this), order);
+    _this.addControlsCallback('touchEnd', _this.handleMouseUp.bind(_this), order);
     return _this;
   }
 
@@ -2265,6 +2267,10 @@ var _class = function (_Level) {
       this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
       this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
       this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
+
+      this.addControlsCallback('touchStart', this.handleMouseDown.bind(this));
+      this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this));
+      this.addControlsCallback('touchMove', this.handleMouseMove.bind(this));
     }
   }, {
     key: 'handleMouseDown',
@@ -2656,7 +2662,7 @@ var _class = function (_Entity) {
     _this.repeat = repeat;
     _this.scale = scale;
 
-    _this.moveSpeed = 0.1;
+    _this.moveSpeed = 0.35;
     _this.pattern = null;
     return _this;
   }

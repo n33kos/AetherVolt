@@ -39,6 +39,8 @@ export default class extends Sprite {
 
     this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this), order);
     this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this), order);
+    this.addControlsCallback('touchStart', this.handleMouseDown.bind(this), order);
+    this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this), order);
   }
 
   isPositionInButton(position) {

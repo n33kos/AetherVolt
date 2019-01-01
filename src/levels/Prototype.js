@@ -138,6 +138,10 @@ export default class extends Level {
     this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
     this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
     this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
+
+    this.addControlsCallback('touchStart', this.handleMouseDown.bind(this));
+    this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this));
+    this.addControlsCallback('touchMove', this.handleMouseMove.bind(this));
   }
 
   handleMouseDown(e) {
