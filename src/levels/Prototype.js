@@ -9,7 +9,6 @@ import Level        from 'class/Level';
 import Pathfinder   from 'class/Pathfinder';
 import Player       from 'class/Player';
 import randomRange  from 'lib/randomRange';
-import SpriteButton from 'class/SpriteButton';
 import Tile         from 'class/Tile';
 import TileHelper   from 'class/TileHelper';
 import TileType     from 'class/TileType';
@@ -26,11 +25,13 @@ export default class extends Level {
 
     this.name = "Prototype Level";
     this.rows = 6;
-    this.columns = 6;
+    this.columns = 8;
     this.currentPlayerTurn = 0;
     this.selectedTile = null;
     this.currentAction = null;
     this.tileHelper = new TileHelper(GameState);
+    this.attackingPlayer = null;
+    this.defendingPlayer = null;
   }
 
   load() {
@@ -43,7 +44,7 @@ export default class extends Level {
       offset: new Vector2(0, 0),
       imageUrl: './img/sky.png',
       repeat: 'repeat',
-      scale: new Vector2(15, 15),
+      scale: new Vector2(1, 40),
     });
     bg.canvasPosition = new Vector2(0, 0);
     this.GameState.Scene.add(bg);
@@ -62,10 +63,12 @@ export default class extends Level {
         color: 'blue',
         avatar: new Avatar({
           GameState : this.GameState,
-          dimensions: new Vector2(64, 64),
-          scale: new Vector2(2, 2),
+          dimensions: new Vector2(64, 128),
+          scale: new Vector2(4, 4),
           offset: new Vector2(0.5, 0.5),
-          sprite: './img/Avatar_Test.png',
+          callback: this.clickAvatar.bind(this, 'Player 1'),
+          mouseDownSprite : './img/Ship.png',
+          mouseUpSprite : './img/Ship.png',
         })
       }),
       new Player({
@@ -75,13 +78,18 @@ export default class extends Level {
         color: 'red',
         avatar: new Avatar({
           GameState : this.GameState,
-          dimensions: new Vector2(64, 64),
-          scale: new Vector2(2, 2),
+          dimensions: new Vector2(64, 128),
+          scale: new Vector2(4, 4),
           offset: new Vector2(0.5, 0.5),
-          sprite: './img/Avatar_Test_2.png',
+          callback: this.clickAvatar.bind(this, 'Player 2'),
+          mouseDownSprite : './img/Ship.png',
+          mouseUpSprite : './img/Ship.png',
+          mirrorX: true,
         })
       }),
     ];
+    this.attackingPlayer = this.players[0];
+    this.defendingPlayer = this.players[1];
 
     // Init hands
     this.players.forEach((player, index) => {
@@ -113,7 +121,7 @@ export default class extends Level {
     this.grid.init();
 
     // Init current action
-    this.currentAction = new Action({ player : this.players[this.currentPlayerTurn] });
+    this.currentAction = new Action({ player : this.attackingPlayer });
 
     // Init Controls
     this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
@@ -166,17 +174,6 @@ export default class extends Level {
       this.tileHelper.clear();
     }
 
-    //----MOVE ACTION----
-    if (
-      clickedTile.tileType.type === 'PLAYER_COLUMN'
-      && clickedTile.player
-      && clickedTile.player.name === this.players[this.currentPlayerTurn].name
-      && this.currentAction.sourceTile
-      && this.currentAction.sourceTile.tileType.type === 'PLAYER_COLUMN'
-    ) {
-      this.tileHelper.initMove(clickedTile, this.currentAction, this.cycleActions.bind(this));
-    }
-
     //----ROTATE ACTION----
     if (
       clickedTile.tileType.type !== 'PLAYER_COLUMN'
@@ -188,13 +185,26 @@ export default class extends Level {
     }
   }
 
+  clickAvatar(playerName) {
+    // Cant move if it isnt your turn
+    if (!this.attackingPlayer.name === playerName) return;
+
+    const playerTile = this.getTileWithPlayerName(playerName);
+    this.currentAction.sourceTile = playerTile;
+    this.tileHelper.initMove(
+      playerTile,
+      this.currentAction,
+      this.cycleActions.bind(this),
+    );
+  }
+
   findTileAtPosition(pos) {
     // Search grid
     let clickedTile = this.grid.getCellAtCanvasPosition(pos);
 
     // Then search hand
     if (!clickedTile) {
-      clickedTile = this.players[this.currentPlayerTurn].hand.getCellAtCanvasPosition(pos);
+      clickedTile = this.attackingPlayer.hand.getCellAtCanvasPosition(pos);
     }
 
     return clickedTile;
@@ -204,45 +214,52 @@ export default class extends Level {
     this.processConnection();
 
     // Decrement action
-    this.players[this.currentPlayerTurn].actions -= 1;
-    if (this.players[this.currentPlayerTurn].actions <= 0) {
+    this.attackingPlayer.actions -= 1;
+    if (this.attackingPlayer.actions <= 0) {
       // Reset player actions to max
-      this.players[this.currentPlayerTurn].actions = this.players[this.currentPlayerTurn].maxActions;
+      this.attackingPlayer.actions = this.attackingPlayer.maxActions;
       // Cycle turns
       this.cyclePlayerTurn();
     }
 
     // Reset currrent action
-    this.currentAction = new Action({ player : this.players[this.currentPlayerTurn] });
+    this.currentAction = new Action({ player : this.attackingPlayer });
 
     // Update UI
     this.GameState.UI.updatePlayerStats(this.players);
   }
 
   cyclePlayerTurn() {
+    // Set defending player
+    this.defendingPlayer = this.players[this.currentPlayerTurn];
+
     // Hide old hand
-    this.players[this.currentPlayerTurn].hand.setVisibility(false);
+    this.defendingPlayer.hand.setVisibility(false);
 
     // Increment turn
     this.currentPlayerTurn++;
     if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
 
+    // set attacking player
+    this.attackingPlayer = this.players[this.currentPlayerTurn];
+
     //Show new hand
-    this.players[this.currentPlayerTurn].hand.setVisibility(true);
+    this.attackingPlayer.hand.setVisibility(true);
 
     // Draw new tile
-    if (this.deck.tiles.length > 0) this.players[this.currentPlayerTurn].hand.add(this.deck.draw());
+    if (this.deck.tiles.length > 0) this.attackingPlayer.hand.add(this.deck.draw());
+  }
+
+  getTileWithPlayerName(name) {
+    return this.grid.tiles.find(tile => {
+      return tile.player && tile.player.name === name;
+    });
   }
 
   processConnection() {
-    // vvv There must be a better way to get these cells vvv
-    const startCell = this.grid.tiles.find(tile => {
-      return tile.player && tile.player.name === this.players[this.currentPlayerTurn].name;
-    });
-    const endCell = this.grid.tiles.find(tile => {
-      return tile.player && tile.player.name !== this.players[this.currentPlayerTurn].name;
-    });
     const pathfinder = new Pathfinder(this.grid.tiles);
+    const startCell = this.getTileWithPlayerName(this.attackingPlayer.name);
+    const endCell = this.getTileWithPlayerName(this.defendingPlayer.name);
     const path = pathfinder.findPath(startCell, endCell);
 
     if (path.length > 0) {

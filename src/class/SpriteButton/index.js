@@ -11,6 +11,7 @@ export default class extends Sprite {
       callback = () => {},
       mouseDownSprite = '',
       mouseUpSprite = '',
+      order = -10, // default to low GUI order so it processes first and can break the loop for buttons below
     } = config;
 
     this.callback = callback;
@@ -36,16 +37,8 @@ export default class extends Sprite {
     }
     this.currentAnimation = 'mouseUp';
 
-    this.addControlsCallback(
-      'mouseDown',
-      this.handleMouseDown.bind(this),
-      -10 // lower GUI order so it processes first and can break the loop for buttons below
-    );
-    this.addControlsCallback(
-      'mouseUp',
-      this.handleMouseUp.bind(this),
-      -10 // lower GUI order so it processes first and can break the loop for buttons below
-    );
+    this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this), order);
+    this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this), order);
   }
 
   isPositionInButton(position) {

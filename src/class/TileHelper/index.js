@@ -30,6 +30,7 @@ export default class {
       scale : tile.scale,
       dimensions : new Vector2(64, 64),
       mirrorX : true,
+      order: -20,
     });
     leftButton.canvasPosition = new Vector2(
       tile.canvasPosition.x - (tile.dimensions.x * tile.scale.x),
@@ -43,6 +44,7 @@ export default class {
       mouseUpSprite : './img/rotate.png',
       scale : tile.scale,
       dimensions : new Vector2(64, 64),
+      order: -20,
     });
     rightButton.canvasPosition = new Vector2(
       tile.canvasPosition.x + (tile.dimensions.x * tile.scale.x),
@@ -114,10 +116,14 @@ export default class {
       mouseUpSprite : './img/move.png',
       scale : tile.scale,
       dimensions : new Vector2(64, 64),
+      order: -20,
     });
     upButton.canvasPosition = new Vector2(
       tile.canvasPosition.x,
-      tile.canvasPosition.y - (tile.dimensions.y * tile.scale.y),
+      tile.canvasPosition.y - (
+        this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].avatar.dimensions.y
+        * this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].avatar.scale.y
+      ) / 2
     );
     upButton.calculateOffset();
 
@@ -128,10 +134,14 @@ export default class {
       scale : tile.scale,
       dimensions : new Vector2(64, 64),
       mirrorY : true,
+      order: -20,
     });
     downButton.canvasPosition = new Vector2(
       tile.canvasPosition.x,
-      tile.canvasPosition.y + (tile.dimensions.y * tile.scale.y),
+      tile.canvasPosition.y + (
+        this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].avatar.dimensions.y
+        * this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn].avatar.scale.y
+      ) / 2
     );
     downButton.calculateOffset();
 
