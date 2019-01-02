@@ -15,7 +15,7 @@ export default class extends Entity {
     this.repeat = repeat;
     this.scale = scale;
 
-    this.moveSpeed = 0.35;
+    this.moveSpeed = 2;
     this.pattern = null;
   }
 

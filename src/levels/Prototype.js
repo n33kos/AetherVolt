@@ -76,6 +76,20 @@ export default class extends Level {
             -256,
             this.GameState.Canvas.cy,
           ),
+          animations : {
+            mouseDown : {
+              frames        : 12,
+              loop          : true,
+              spriteSheet   : './img/Ship.png',
+              ticksPerFrame : 5,
+            },
+            mouseUp : {
+              frames        : 12,
+              loop          : true,
+              spriteSheet   : './img/Ship.png',
+              ticksPerFrame : 5,
+            }
+          },
         })
       }),
       new Player({
@@ -96,6 +110,20 @@ export default class extends Level {
             this.GameState.Canvas.cy,
           ),
           mirrorX: true,
+          animations : {
+            mouseDown : {
+              frames        : 12,
+              loop          : true,
+              spriteSheet   : './img/Ship.png',
+              ticksPerFrame : 5,
+            },
+            mouseUp : {
+              frames        : 12,
+              loop          : true,
+              spriteSheet   : './img/Ship.png',
+              ticksPerFrame : 5,
+            }
+          },
         })
       }),
     ];

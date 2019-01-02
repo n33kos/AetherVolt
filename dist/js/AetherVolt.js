@@ -2209,7 +2209,21 @@ var _class = function (_Level) {
           callback: this.clickAvatar.bind(this, 'Player 1'),
           mouseDownSprite: './img/Ship.png',
           mouseUpSprite: './img/Ship.png',
-          targetPosition: new _Vector2.default(-256, this.GameState.Canvas.cy)
+          targetPosition: new _Vector2.default(-256, this.GameState.Canvas.cy),
+          animations: {
+            mouseDown: {
+              frames: 12,
+              loop: true,
+              spriteSheet: './img/Ship.png',
+              ticksPerFrame: 5
+            },
+            mouseUp: {
+              frames: 12,
+              loop: true,
+              spriteSheet: './img/Ship.png',
+              ticksPerFrame: 5
+            }
+          }
         })
       }), new _Player2.default({
         GameState: this.GameState,
@@ -2225,7 +2239,21 @@ var _class = function (_Level) {
           mouseDownSprite: './img/Ship.png',
           mouseUpSprite: './img/Ship.png',
           targetPosition: new _Vector2.default(this.GameState.Canvas.width + 256, this.GameState.Canvas.cy),
-          mirrorX: true
+          mirrorX: true,
+          animations: {
+            mouseDown: {
+              frames: 12,
+              loop: true,
+              spriteSheet: './img/Ship.png',
+              ticksPerFrame: 5
+            },
+            mouseUp: {
+              frames: 12,
+              loop: true,
+              spriteSheet: './img/Ship.png',
+              ticksPerFrame: 5
+            }
+          }
         })
       })];
       this.attackingPlayer = this.players[0];
@@ -2662,7 +2690,7 @@ var _class = function (_Entity) {
     _this.repeat = repeat;
     _this.scale = scale;
 
-    _this.moveSpeed = 0.35;
+    _this.moveSpeed = 2;
     _this.pattern = null;
     return _this;
   }
