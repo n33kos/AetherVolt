@@ -10,9 +10,9 @@ export default class {
     this.pathFound = false;
     this.hasSearched = {};
 
-    this.grid.forEach(tile => {
-      delete tile.cameFrom;
-    });
+    // this.grid.forEach(tile => {
+    //   delete tile.cameFrom;
+    // });
   }
 
   findPath(startCell, endCell) {
@@ -81,6 +81,8 @@ export default class {
 
       const newestEntry = path[path.length - 1].cameFrom;
       if (!newestEntry) break;
+
+      if (this.startCell.uuid === newestEntry.uuid) pathBuilt = true;
 
       path.push(newestEntry);
     }

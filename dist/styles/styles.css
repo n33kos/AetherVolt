@@ -8,7 +8,7 @@ html {
 body {
   -webkit-overflow-scrolling: touch;
   background-color: darkgreen;
-  background-image: url("../img/Terrain.png");
+  background-image: url("../img/sky.png");
   background-repeat: repeat;
   background-size: cover;
   height: 100%;
@@ -88,4 +88,8 @@ canvas {
 
 [data-screen=game] {
   font-size: 20px;
+}
+
+[data-screen=score] {
+  font-size: 40px;
 }

@@ -7,12 +7,12 @@ export default class {
     avatar,
     color = 'blue',
     controller = 'human',
-    damage = 0,
+    damage = 2,
     hand = [],
     handSize = 4,
-    health = 20,
+    health = 100,
     maxActions = 2,
-    maxHealth = 20,
+    maxHealth = 100,
     name = 'Player 1',
   }) {
     this.GameState = GameState;

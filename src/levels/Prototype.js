@@ -1,19 +1,20 @@
-import Action       from 'class/Action';
-import ActionType   from 'class/ActionType';
-import Avatar       from 'class/Avatar';
-import Background   from 'class/Background';
-import Deck         from 'class/Deck';
-import Grid         from 'class/Grid';
-import Hand         from 'class/Hand';
-import Level        from 'class/Level';
-import Pathfinder   from 'class/Pathfinder';
-import Player       from 'class/Player';
-import randomRange  from 'lib/randomRange';
-import Tile         from 'class/Tile';
-import TileHelper   from 'class/TileHelper';
-import TileType     from 'class/TileType';
-import uuidv4       from 'uuid/v4';
-import Vector2      from 'class/Vector2';
+import Action      from 'class/Action';
+import ActionType  from 'class/ActionType';
+import Avatar      from 'class/Avatar';
+import Background  from 'class/Background';
+import Deck        from 'class/Deck';
+import Grid        from 'class/Grid';
+import Hand        from 'class/Hand';
+import Level       from 'class/Level';
+import Lightning   from 'class/Lightning';
+import Pathfinder  from 'class/Pathfinder';
+import Player      from 'class/Player';
+import randomRange from 'lib/randomRange';
+import Tile        from 'class/Tile';
+import TileHelper  from 'class/TileHelper';
+import TileType    from 'class/TileType';
+import uuidv4      from 'uuid/v4';
+import Vector2     from 'class/Vector2';
 
 export default class extends Level {
   constructor(config) {
@@ -88,7 +89,13 @@ export default class extends Level {
               loop          : true,
               spriteSheet   : './img/Ship.png',
               ticksPerFrame : 5,
-            }
+            },
+            damage : {
+              frames        : 8,
+              loop          : true,
+              spriteSheet   : './img/Ship_Damage.png',
+              ticksPerFrame : 1,
+            },
           },
         })
       }),
@@ -122,7 +129,13 @@ export default class extends Level {
               loop          : true,
               spriteSheet   : './img/Ship.png',
               ticksPerFrame : 5,
-            }
+            },
+            damage : {
+              frames        : 8,
+              loop          : true,
+              spriteSheet   : './img/Ship_Damage.png',
+              ticksPerFrame : 1,
+            },
           },
         })
       }),
@@ -170,6 +183,14 @@ export default class extends Level {
     this.addControlsCallback('touchStart', this.handleMouseDown.bind(this));
     this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this));
     this.addControlsCallback('touchMove', this.handleMouseMove.bind(this));
+
+    // TEST LIGHTING
+    // const path = [];
+    // for (var i = 5; i < 20; i++) {
+    //   this.grid.tiles[i].cameFrom = this.grid.tiles[i - 1];
+    //   path.push(this.grid.tiles[i]);
+    // }
+    // this.fireLightning(path);
   }
 
   handleMouseDown(e) {
@@ -308,19 +329,29 @@ export default class extends Level {
     if (path.length > 0) {
       let damageAmplifier = 0;
 
-      path.forEach(tile => {
-        // Animate Tiles in path by resetting frame to 0
-        tile.currentFrame = 0
-
-        //Increase Damage by 1 for every cell in path placed by the attacker
-        if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
-      });
+      // path.forEach(tile => {
+      //   //Increase Damage by 1 for every cell in path placed by the attacker
+      //   if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
+      // });
 
       // Apply Damage
       endCell.player.health -= (startCell.player.damage + damageAmplifier);
+      endCell.player.avatar.takeDamageAnimation();
+      this.fireLightning(path);
     }
 
     this.endGameLogic();
+  }
+
+  fireLightning(path) {
+    const lightning = new Lightning({
+      GameState: this.GameState,
+      path,
+    });
+    window.setTimeout(
+      () => this.GameState.Scene.remove(lightning.uuid),
+      750,
+    );
   }
 
   endGameLogic() {
@@ -334,10 +365,15 @@ export default class extends Level {
     });
 
     if (gameOver) {
-      this.winner = this.players.find(player => player.health > 0);
-      this.GameState.isPaused = true;
-      this.GameState.UI.updateScoreScreen();
-      this.GameState.UI.setScreen('score');
+      window.setTimeout(
+        () => {
+          this.winner = this.players.find(player => player.health > 0);
+          this.GameState.isPaused = true;
+          this.GameState.UI.updateScoreScreen();
+          this.GameState.UI.setScreen('score');
+        },
+        1500,
+      );
     }
   }
 }

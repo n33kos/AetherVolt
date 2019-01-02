@@ -18,4 +18,11 @@ export default class extends SpriteButton {
     this.handleTurbulence();
     super.draw();
   }
+
+  takeDamageAnimation() {
+    this.currentAnimation = 'damage';
+    window.setTimeout(() => {
+      this.currentAnimation = 'mouseUp';
+    }, 750);
+  }
 }
