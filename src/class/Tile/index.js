@@ -121,9 +121,9 @@ export default class extends Sprite {
   setOutlineColor() {
     this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
     if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
-    if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = `rgb(${this.placedBy.color}, 0.5`;
+    // if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = `rgb(${this.placedBy.color}, 0.2`;
     if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) {
-      this.GameState.Canvas.ctx.strokeStyle = `rgba(${this.GameState.currentLevel.attackingPlayer.color}, 0.6)`;
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
     }
   }
 }

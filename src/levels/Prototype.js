@@ -27,7 +27,7 @@ export default class extends Level {
 
     this.name = "Prototype Level";
     this.rows = 6;
-    this.columns = 8;
+    this.columns = 6;
     this.currentPlayerTurn = 0;
     this.selectedTile = null;
     this.currentAction = null;
@@ -68,8 +68,8 @@ export default class extends Level {
           GameState : this.GameState,
           dimensions: new Vector2(64, 128),
           scale: new Vector2(
-            this.GameState.Canvas.width / 460,
-            this.GameState.Canvas.width / 460,
+            Math.min(4, this.GameState.Canvas.width / 460),
+            Math.min(4, this.GameState.Canvas.width / 460),
           ),
           offset: new Vector2(0.5, 0.5),
           callback: this.clickAvatar.bind(this, 'Player 1'),
@@ -110,8 +110,8 @@ export default class extends Level {
           GameState : this.GameState,
           dimensions: new Vector2(64, 128),
           scale: new Vector2(
-            this.GameState.Canvas.width / 460,
-            this.GameState.Canvas.width / 460,
+            Math.min(4, this.GameState.Canvas.width / 460),
+            Math.min(4, this.GameState.Canvas.width / 460),
           ),
           offset: new Vector2(0.5, 0.5),
           callback: this.clickAvatar.bind(this, 'Player 2'),

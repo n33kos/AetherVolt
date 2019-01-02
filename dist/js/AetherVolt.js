@@ -645,9 +645,9 @@ var _class = function (_Sprite) {
     value: function setOutlineColor() {
       this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
       if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
-      if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = 'rgb(' + this.placedBy.color + ', 0.5';
+      // if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = `rgb(${this.placedBy.color}, 0.2`;
       if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) {
-        this.GameState.Canvas.ctx.strokeStyle = 'rgba(' + this.GameState.currentLevel.attackingPlayer.color + ', 0.6)';
+        this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
       }
     }
   }]);
@@ -781,12 +781,12 @@ var _class = function () {
     key: 'getSpriteSheet',
     value: function getSpriteSheet(id) {
       var sprites = {
-        1: './img/Brass_Empty.png',
-        2: './img/Brass_Empty.png',
-        3: './img/Brass_Straight.png',
-        4: './img/Brass_Bend.png',
-        5: './img/Brass_Triple.png',
-        6: './img/Brass_Quad.png'
+        1: './img/Better_Conductor_Empty.png',
+        2: './img/Better_Conductor_Empty.png',
+        3: './img/Better_Conductor_Straight.png',
+        4: './img/Better_Conductor_Bend.png',
+        5: './img/Better_Conductor_Triple.png',
+        6: './img/Better_Conductor_Quad.png'
       };
 
       return sprites[id];
@@ -2172,7 +2172,7 @@ var _class = function (_Level) {
 
     _this.name = "Prototype Level";
     _this.rows = 6;
-    _this.columns = 8;
+    _this.columns = 6;
     _this.currentPlayerTurn = 0;
     _this.selectedTile = null;
     _this.currentAction = null;
@@ -2213,7 +2213,7 @@ var _class = function (_Level) {
         avatar: new _Avatar2.default({
           GameState: this.GameState,
           dimensions: new _Vector2.default(64, 128),
-          scale: new _Vector2.default(this.GameState.Canvas.width / 460, this.GameState.Canvas.width / 460),
+          scale: new _Vector2.default(Math.min(4, this.GameState.Canvas.width / 460), Math.min(4, this.GameState.Canvas.width / 460)),
           offset: new _Vector2.default(0.5, 0.5),
           callback: this.clickAvatar.bind(this, 'Player 1'),
           mouseDownSprite: './img/Ship.png',
@@ -2248,7 +2248,7 @@ var _class = function (_Level) {
         avatar: new _Avatar2.default({
           GameState: this.GameState,
           dimensions: new _Vector2.default(64, 128),
-          scale: new _Vector2.default(this.GameState.Canvas.width / 460, this.GameState.Canvas.width / 460),
+          scale: new _Vector2.default(Math.min(4, this.GameState.Canvas.width / 460), Math.min(4, this.GameState.Canvas.width / 460)),
           offset: new _Vector2.default(0.5, 0.5),
           callback: this.clickAvatar.bind(this, 'Player 2'),
           mouseDownSprite: './img/Ship.png',
@@ -3423,14 +3423,14 @@ var _class = function (_Entity) {
     key: 'drawLine',
     value: function drawLine(from, to, iteration) {
       this.GameState.Canvas.ctx.beginPath();
-      this.GameState.Canvas.ctx.strokeStyle = 'rgba(' + this.color + ', 0.65)';
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(' + this.color + ', 0.685)';
       this.GameState.Canvas.ctx.lineWidth = Math.max(1, this.maxwidth - iteration);
       this.GameState.Canvas.ctx.moveTo(from.x, from.y);
       this.GameState.Canvas.ctx.lineTo(to.x, to.y);
       this.GameState.Canvas.ctx.stroke();
 
       this.GameState.Canvas.ctx.beginPath();
-      this.GameState.Canvas.ctx.strokeStyle = 'rgba(255,255,255, 0.65)';
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(255,255,255, 0.85)';
       this.GameState.Canvas.ctx.lineWidth = this.GameState.Canvas.ctx.lineWidth / 3;
       this.GameState.Canvas.ctx.moveTo(from.x, from.y);
       this.GameState.Canvas.ctx.lineTo(to.x, to.y);

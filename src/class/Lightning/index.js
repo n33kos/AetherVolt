@@ -71,14 +71,14 @@ export default class extends Entity {
 
   drawLine(from, to, iteration) {
     this.GameState.Canvas.ctx.beginPath();
-    this.GameState.Canvas.ctx.strokeStyle = `rgba(${this.color}, 0.65)`;
+    this.GameState.Canvas.ctx.strokeStyle = `rgba(${this.color}, 0.685)`;
     this.GameState.Canvas.ctx.lineWidth = Math.max(1, this.maxwidth - iteration);
     this.GameState.Canvas.ctx.moveTo(from.x, from.y);
     this.GameState.Canvas.ctx.lineTo(to.x, to.y);
     this.GameState.Canvas.ctx.stroke();
 
     this.GameState.Canvas.ctx.beginPath();
-    this.GameState.Canvas.ctx.strokeStyle = 'rgba(255,255,255, 0.65)';
+    this.GameState.Canvas.ctx.strokeStyle = 'rgba(255,255,255, 0.85)';
     this.GameState.Canvas.ctx.lineWidth = this.GameState.Canvas.ctx.lineWidth / 3;
     this.GameState.Canvas.ctx.moveTo(from.x, from.y);
     this.GameState.Canvas.ctx.lineTo(to.x, to.y);
