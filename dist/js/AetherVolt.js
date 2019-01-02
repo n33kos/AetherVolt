@@ -182,7 +182,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _LoadedEntity2 = __webpack_require__(9);
+var _LoadedEntity2 = __webpack_require__(10);
 
 var _LoadedEntity3 = _interopRequireDefault(_LoadedEntity2);
 
@@ -330,7 +330,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _Sprite2 = __webpack_require__(11);
+var _Sprite2 = __webpack_require__(6);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -491,9 +491,12 @@ var _class = function (_Sprite) {
   }, {
     key: 'setOutlineColor',
     value: function setOutlineColor() {
-      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
       if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
       if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = 'rgb(' + this.placedBy.color + ', 0.5';
+      if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) {
+        this.GameState.Canvas.ctx.strokeStyle = 'rgba(' + this.GameState.currentLevel.attackingPlayer.color + ', 0.6)';
+      }
     }
   }]);
 
@@ -571,461 +574,6 @@ exports.default = function (point, rectPos, rectDim) {
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class(type) {
-    _classCallCheck(this, _class);
-
-    this.id = this.getTypeId(type);
-    this.type = this.getTypeString(this.id);
-    this.spriteSheet = this.getSpriteSheet(this.id);
-    this.neighborPattern = this.getNeighborPattern(this.id);
-  }
-
-  _createClass(_class, [{
-    key: 'getTypeId',
-    value: function getTypeId(type) {
-      var ids = {
-        EMPTY: 1,
-        PLAYER_COLUMN: 2,
-        STRAIGHT: 3,
-        BEND: 4,
-        TRIPLE: 5,
-        QUAD: 6
-      };
-
-      return ids[type];
-    }
-  }, {
-    key: 'getTypeString',
-    value: function getTypeString(id) {
-      var types = {
-        1: 'EMPTY',
-        2: 'PLAYER_COLUMN',
-        3: 'STRAIGHT',
-        4: 'BEND',
-        5: 'TRIPLE',
-        6: 'QUAD'
-      };
-
-      return types[id];
-    }
-  }, {
-    key: 'getSpriteSheet',
-    value: function getSpriteSheet(id) {
-      var sprites = {
-        1: './img/Brass_Empty.png',
-        2: './img/Brass_Empty.png',
-        3: './img/Brass_Straight.png',
-        4: './img/Brass_Bend.png',
-        5: './img/Brass_Triple.png',
-        6: './img/Brass_Quad.png'
-      };
-
-      return sprites[id];
-    }
-  }, {
-    key: 'getNeighborPattern',
-    value: function getNeighborPattern(id) {
-      var patterns = {
-        1: [],
-        2: [0, 1, 2, 3],
-        3: [1, 3],
-        4: [0, 1],
-        5: [0, 1, 3],
-        6: [0, 1, 2, 3]
-      };
-
-      return patterns[id];
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-/* eslint-disable no-undefined,no-param-reassign,no-shadow */
-
-/**
- * Throttle execution of a function. Especially useful for rate limiting
- * execution of handlers on events like resize and scroll.
- *
- * @param  {Number}    delay          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
- * @param  {Boolean}   [noTrailing]   Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
- *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
- *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
- *                                    the internal counter is reset)
- * @param  {Function}  callback       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
- *                                    to `callback` when the throttled-function is executed.
- * @param  {Boolean}   [debounceMode] If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
- *                                    schedule `callback` to execute after `delay` ms.
- *
- * @return {Function}  A new, throttled, function.
- */
-function throttle(delay, noTrailing, callback, debounceMode) {
-
-	/*
-  * After wrapper has stopped being called, this timeout ensures that
-  * `callback` is executed at the proper times in `throttle` and `end`
-  * debounce modes.
-  */
-	var timeoutID;
-
-	// Keep track of the last time `callback` was executed.
-	var lastExec = 0;
-
-	// `noTrailing` defaults to falsy.
-	if (typeof noTrailing !== 'boolean') {
-		debounceMode = callback;
-		callback = noTrailing;
-		noTrailing = undefined;
-	}
-
-	/*
-  * The `wrapper` function encapsulates all of the throttling / debouncing
-  * functionality and when executed will limit the rate at which `callback`
-  * is executed.
-  */
-	function wrapper() {
-
-		var self = this;
-		var elapsed = Number(new Date()) - lastExec;
-		var args = arguments;
-
-		// Execute `callback` and update the `lastExec` timestamp.
-		function exec() {
-			lastExec = Number(new Date());
-			callback.apply(self, args);
-		}
-
-		/*
-   * If `debounceMode` is true (at begin) this is used to clear the flag
-   * to allow future `callback` executions.
-   */
-		function clear() {
-			timeoutID = undefined;
-		}
-
-		if (debounceMode && !timeoutID) {
-			/*
-    * Since `wrapper` is being called for the first time and
-    * `debounceMode` is true (at begin), execute `callback`.
-    */
-			exec();
-		}
-
-		// Clear any existing timeout.
-		if (timeoutID) {
-			clearTimeout(timeoutID);
-		}
-
-		if (debounceMode === undefined && elapsed > delay) {
-			/*
-    * In throttle mode, if `delay` time has been exceeded, execute
-    * `callback`.
-    */
-			exec();
-		} else if (noTrailing !== true) {
-			/*
-    * In trailing throttle mode, since `delay` time has not been
-    * exceeded, schedule `callback` to execute `delay` ms after most
-    * recent execution.
-    *
-    * If `debounceMode` is true (at begin), schedule `clear` to execute
-    * after `delay` ms.
-    *
-    * If `debounceMode` is false (at end), schedule `callback` to
-    * execute after `delay` ms.
-    */
-			timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
-		}
-	}
-
-	// Return the wrapper function.
-	return wrapper;
-}
-
-/* eslint-disable no-undefined */
-
-/**
- * Debounce execution of a function. Debouncing, unlike throttling,
- * guarantees that a function is only executed a single time, either at the
- * very beginning of a series of calls, or at the very end.
- *
- * @param  {Number}   delay         A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
- * @param  {Boolean}  [atBegin]     Optional, defaults to false. If atBegin is false or unspecified, callback will only be executed `delay` milliseconds
- *                                  after the last debounced-function call. If atBegin is true, callback will be executed only at the first debounced-function call.
- *                                  (After the throttled-function has not been called for `delay` milliseconds, the internal counter is reset).
- * @param  {Function} callback      A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
- *                                  to `callback` when the debounced-function is executed.
- *
- * @return {Function} A new, debounced function.
- */
-function debounce(delay, atBegin, callback) {
-	return callback === undefined ? throttle(delay, atBegin, false) : throttle(delay, callback, atBegin !== false);
-}
-
-exports.throttle = throttle;
-exports.debounce = debounce;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _LoadedEntity2 = __webpack_require__(9);
-
-var _LoadedEntity3 = _interopRequireDefault(_LoadedEntity2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _class = function (_LoadedEntity) {
-  _inherits(_class, _LoadedEntity);
-
-  function _class(config) {
-    _classCallCheck(this, _class);
-
-    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
-
-    _this.name = 'Default Level';
-    return _this;
-  }
-
-  _createClass(_class, [{
-    key: 'gameLogic',
-    value: function gameLogic() {
-      // Override this function to add level specific game logic
-    }
-  }]);
-
-  return _class;
-}(_LoadedEntity3.default);
-
-exports.default = _class;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class(_ref) {
-    var GameState = _ref.GameState;
-
-    _classCallCheck(this, _class);
-
-    this.GameState = GameState;
-    this.audioNodes = [];
-    this.controlCallbackIds = [];
-  }
-
-  _createClass(_class, [{
-    key: "load",
-    value: function load() {}
-  }, {
-    key: "unload",
-    value: function unload() {
-      var _this = this;
-
-      // Stop audio nodes
-      this.audioNodes.forEach(function (audioNode) {
-        audioNode.stop(0);
-      });
-      this.audioNodes = [];
-
-      // Remove control callbacks
-      this.controlCallbackIds.forEach(function (callbackId) {
-        _this.GameState.Controls.removeCallback(callbackId);
-      });
-      this.controlCallbackIds = [];
-    }
-  }, {
-    key: "addControlsCallback",
-    value: function addControlsCallback(eventKey, callback) {
-      var order = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-      this.controlCallbackIds.push(this.GameState.Controls.addCallback(eventKey, callback, order));
-    }
-  }, {
-    key: "addAudioNode",
-    value: function addAudioNode(audioNode) {
-      this.audioNodes.push(audioNode);
-      audioNode.load();
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _rectContains = __webpack_require__(5);
-
-var _rectContains2 = _interopRequireDefault(_rectContains);
-
-var _Sprite2 = __webpack_require__(11);
-
-var _Sprite3 = _interopRequireDefault(_Sprite2);
-
-var _Vector = __webpack_require__(0);
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _class = function (_Sprite) {
-  _inherits(_class, _Sprite);
-
-  function _class(config) {
-    _classCallCheck(this, _class);
-
-    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
-
-    var _config$animations = config.animations,
-        animations = _config$animations === undefined ? null : _config$animations,
-        _config$callback = config.callback,
-        callback = _config$callback === undefined ? function () {} : _config$callback,
-        _config$mouseDownSpri = config.mouseDownSprite,
-        mouseDownSprite = _config$mouseDownSpri === undefined ? '' : _config$mouseDownSpri,
-        _config$mouseUpSprite = config.mouseUpSprite,
-        mouseUpSprite = _config$mouseUpSprite === undefined ? '' : _config$mouseUpSprite,
-        _config$order = config.order,
-        order = _config$order === undefined ? -10 : _config$order;
-
-
-    _this.callback = callback;
-    _this.animations = animations;
-
-    // This class allows passing in a custom animations array for animated buttons if you like
-    // The default is a single frame for each mouseUp and mouseDown event
-    if (!animations) {
-      _this.animations = {
-        mouseDown: {
-          frames: 1,
-          loop: false,
-          spriteSheet: mouseDownSprite,
-          ticksPerFrame: 10
-        },
-        mouseUp: {
-          frames: 1,
-          loop: false,
-          spriteSheet: mouseUpSprite,
-          ticksPerFrame: 10
-        }
-      };
-    }
-    _this.currentAnimation = 'mouseUp';
-
-    _this.addControlsCallback('mouseDown', _this.handleMouseDown.bind(_this), order);
-    _this.addControlsCallback('mouseUp', _this.handleMouseUp.bind(_this), order);
-    _this.addControlsCallback('touchStart', _this.handleMouseDown.bind(_this), order);
-    _this.addControlsCallback('touchEnd', _this.handleMouseUp.bind(_this), order);
-    return _this;
-  }
-
-  _createClass(_class, [{
-    key: 'isPositionInButton',
-    value: function isPositionInButton(position) {
-      return (0, _rectContains2.default)(position, new _Vector2.default(
-      // We multiply by the mirror value again because of how scaling flips the canvasPosition
-      // Still doesn't work right if offset isn't (0.5, 0.5) 🤷
-      this.canvasPosition.x + this.absoluteOffset.x * (this.mirrorX ? -1 : 1), this.canvasPosition.y + this.absoluteOffset.y * (this.mirrorY ? -1 : 1)), new _Vector2.default(this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y));
-    }
-  }, {
-    key: 'handleMouseDown',
-    value: function handleMouseDown(e) {
-      if (this.isPositionInButton(this.GameState.Controls.position)) {
-        this.currentAnimation = 'mouseDown';
-        this.currentFrame = 0;
-        return true;
-      }
-    }
-  }, {
-    key: 'handleMouseUp',
-    value: function handleMouseUp() {
-      this.currentAnimation = 'mouseUp';
-      this.currentFrame = 0;
-
-      if (this.isPositionInButton(this.GameState.Controls.position)) {
-        this.callback();
-        return true;
-      }
-    }
-  }]);
-
-  return _class;
-}(_Sprite3.default);
-
-exports.default = _class;
-
-/***/ }),
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1177,6 +725,461 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class(type) {
+    _classCallCheck(this, _class);
+
+    this.id = this.getTypeId(type);
+    this.type = this.getTypeString(this.id);
+    this.spriteSheet = this.getSpriteSheet(this.id);
+    this.neighborPattern = this.getNeighborPattern(this.id);
+  }
+
+  _createClass(_class, [{
+    key: 'getTypeId',
+    value: function getTypeId(type) {
+      var ids = {
+        EMPTY: 1,
+        PLAYER_COLUMN: 2,
+        STRAIGHT: 3,
+        BEND: 4,
+        TRIPLE: 5,
+        QUAD: 6
+      };
+
+      return ids[type];
+    }
+  }, {
+    key: 'getTypeString',
+    value: function getTypeString(id) {
+      var types = {
+        1: 'EMPTY',
+        2: 'PLAYER_COLUMN',
+        3: 'STRAIGHT',
+        4: 'BEND',
+        5: 'TRIPLE',
+        6: 'QUAD'
+      };
+
+      return types[id];
+    }
+  }, {
+    key: 'getSpriteSheet',
+    value: function getSpriteSheet(id) {
+      var sprites = {
+        1: './img/Brass_Empty.png',
+        2: './img/Brass_Empty.png',
+        3: './img/Brass_Straight.png',
+        4: './img/Brass_Bend.png',
+        5: './img/Brass_Triple.png',
+        6: './img/Brass_Quad.png'
+      };
+
+      return sprites[id];
+    }
+  }, {
+    key: 'getNeighborPattern',
+    value: function getNeighborPattern(id) {
+      var patterns = {
+        1: [],
+        2: [0, 1, 2, 3],
+        3: [1, 3],
+        4: [0, 1],
+        5: [0, 1, 3],
+        6: [0, 1, 2, 3]
+      };
+
+      return patterns[id];
+    }
+  }]);
+
+  return _class;
+}();
+
+exports.default = _class;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+/* eslint-disable no-undefined,no-param-reassign,no-shadow */
+
+/**
+ * Throttle execution of a function. Especially useful for rate limiting
+ * execution of handlers on events like resize and scroll.
+ *
+ * @param  {Number}    delay          A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+ * @param  {Boolean}   [noTrailing]   Optional, defaults to false. If noTrailing is true, callback will only execute every `delay` milliseconds while the
+ *                                    throttled-function is being called. If noTrailing is false or unspecified, callback will be executed one final time
+ *                                    after the last throttled-function call. (After the throttled-function has not been called for `delay` milliseconds,
+ *                                    the internal counter is reset)
+ * @param  {Function}  callback       A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+ *                                    to `callback` when the throttled-function is executed.
+ * @param  {Boolean}   [debounceMode] If `debounceMode` is true (at begin), schedule `clear` to execute after `delay` ms. If `debounceMode` is false (at end),
+ *                                    schedule `callback` to execute after `delay` ms.
+ *
+ * @return {Function}  A new, throttled, function.
+ */
+function throttle(delay, noTrailing, callback, debounceMode) {
+
+	/*
+  * After wrapper has stopped being called, this timeout ensures that
+  * `callback` is executed at the proper times in `throttle` and `end`
+  * debounce modes.
+  */
+	var timeoutID;
+
+	// Keep track of the last time `callback` was executed.
+	var lastExec = 0;
+
+	// `noTrailing` defaults to falsy.
+	if (typeof noTrailing !== 'boolean') {
+		debounceMode = callback;
+		callback = noTrailing;
+		noTrailing = undefined;
+	}
+
+	/*
+  * The `wrapper` function encapsulates all of the throttling / debouncing
+  * functionality and when executed will limit the rate at which `callback`
+  * is executed.
+  */
+	function wrapper() {
+
+		var self = this;
+		var elapsed = Number(new Date()) - lastExec;
+		var args = arguments;
+
+		// Execute `callback` and update the `lastExec` timestamp.
+		function exec() {
+			lastExec = Number(new Date());
+			callback.apply(self, args);
+		}
+
+		/*
+   * If `debounceMode` is true (at begin) this is used to clear the flag
+   * to allow future `callback` executions.
+   */
+		function clear() {
+			timeoutID = undefined;
+		}
+
+		if (debounceMode && !timeoutID) {
+			/*
+    * Since `wrapper` is being called for the first time and
+    * `debounceMode` is true (at begin), execute `callback`.
+    */
+			exec();
+		}
+
+		// Clear any existing timeout.
+		if (timeoutID) {
+			clearTimeout(timeoutID);
+		}
+
+		if (debounceMode === undefined && elapsed > delay) {
+			/*
+    * In throttle mode, if `delay` time has been exceeded, execute
+    * `callback`.
+    */
+			exec();
+		} else if (noTrailing !== true) {
+			/*
+    * In trailing throttle mode, since `delay` time has not been
+    * exceeded, schedule `callback` to execute `delay` ms after most
+    * recent execution.
+    *
+    * If `debounceMode` is true (at begin), schedule `clear` to execute
+    * after `delay` ms.
+    *
+    * If `debounceMode` is false (at end), schedule `callback` to
+    * execute after `delay` ms.
+    */
+			timeoutID = setTimeout(debounceMode ? clear : exec, debounceMode === undefined ? delay - elapsed : delay);
+		}
+	}
+
+	// Return the wrapper function.
+	return wrapper;
+}
+
+/* eslint-disable no-undefined */
+
+/**
+ * Debounce execution of a function. Debouncing, unlike throttling,
+ * guarantees that a function is only executed a single time, either at the
+ * very beginning of a series of calls, or at the very end.
+ *
+ * @param  {Number}   delay         A zero-or-greater delay in milliseconds. For event callbacks, values around 100 or 250 (or even higher) are most useful.
+ * @param  {Boolean}  [atBegin]     Optional, defaults to false. If atBegin is false or unspecified, callback will only be executed `delay` milliseconds
+ *                                  after the last debounced-function call. If atBegin is true, callback will be executed only at the first debounced-function call.
+ *                                  (After the throttled-function has not been called for `delay` milliseconds, the internal counter is reset).
+ * @param  {Function} callback      A function to be executed after delay milliseconds. The `this` context and all arguments are passed through, as-is,
+ *                                  to `callback` when the debounced-function is executed.
+ *
+ * @return {Function} A new, debounced function.
+ */
+function debounce(delay, atBegin, callback) {
+	return callback === undefined ? throttle(delay, atBegin, false) : throttle(delay, callback, atBegin !== false);
+}
+
+exports.throttle = throttle;
+exports.debounce = debounce;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _LoadedEntity2 = __webpack_require__(10);
+
+var _LoadedEntity3 = _interopRequireDefault(_LoadedEntity2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _class = function (_LoadedEntity) {
+  _inherits(_class, _LoadedEntity);
+
+  function _class(config) {
+    _classCallCheck(this, _class);
+
+    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
+
+    _this.name = 'Default Level';
+    return _this;
+  }
+
+  _createClass(_class, [{
+    key: 'gameLogic',
+    value: function gameLogic() {
+      // Override this function to add level specific game logic
+    }
+  }]);
+
+  return _class;
+}(_LoadedEntity3.default);
+
+exports.default = _class;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class(_ref) {
+    var GameState = _ref.GameState;
+
+    _classCallCheck(this, _class);
+
+    this.GameState = GameState;
+    this.audioNodes = [];
+    this.controlCallbackIds = [];
+  }
+
+  _createClass(_class, [{
+    key: "load",
+    value: function load() {}
+  }, {
+    key: "unload",
+    value: function unload() {
+      var _this = this;
+
+      // Stop audio nodes
+      this.audioNodes.forEach(function (audioNode) {
+        audioNode.stop(0);
+      });
+      this.audioNodes = [];
+
+      // Remove control callbacks
+      this.controlCallbackIds.forEach(function (callbackId) {
+        _this.GameState.Controls.removeCallback(callbackId);
+      });
+      this.controlCallbackIds = [];
+    }
+  }, {
+    key: "addControlsCallback",
+    value: function addControlsCallback(eventKey, callback) {
+      var order = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+      this.controlCallbackIds.push(this.GameState.Controls.addCallback(eventKey, callback, order));
+    }
+  }, {
+    key: "addAudioNode",
+    value: function addAudioNode(audioNode) {
+      this.audioNodes.push(audioNode);
+      audioNode.load();
+    }
+  }]);
+
+  return _class;
+}();
+
+exports.default = _class;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _rectContains = __webpack_require__(5);
+
+var _rectContains2 = _interopRequireDefault(_rectContains);
+
+var _Sprite2 = __webpack_require__(6);
+
+var _Sprite3 = _interopRequireDefault(_Sprite2);
+
+var _Vector = __webpack_require__(0);
+
+var _Vector2 = _interopRequireDefault(_Vector);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _class = function (_Sprite) {
+  _inherits(_class, _Sprite);
+
+  function _class(config) {
+    _classCallCheck(this, _class);
+
+    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
+
+    var _config$animations = config.animations,
+        animations = _config$animations === undefined ? null : _config$animations,
+        _config$callback = config.callback,
+        callback = _config$callback === undefined ? function () {} : _config$callback,
+        _config$mouseDownSpri = config.mouseDownSprite,
+        mouseDownSprite = _config$mouseDownSpri === undefined ? '' : _config$mouseDownSpri,
+        _config$mouseUpSprite = config.mouseUpSprite,
+        mouseUpSprite = _config$mouseUpSprite === undefined ? '' : _config$mouseUpSprite,
+        _config$order = config.order,
+        order = _config$order === undefined ? -10 : _config$order;
+
+
+    _this.callback = callback;
+    _this.animations = animations;
+
+    // This class allows passing in a custom animations array for animated buttons if you like
+    // The default is a single frame for each mouseUp and mouseDown event
+    if (!animations) {
+      _this.animations = {
+        mouseDown: {
+          frames: 1,
+          loop: false,
+          spriteSheet: mouseDownSprite,
+          ticksPerFrame: 10
+        },
+        mouseUp: {
+          frames: 1,
+          loop: false,
+          spriteSheet: mouseUpSprite,
+          ticksPerFrame: 10
+        }
+      };
+    }
+    _this.currentAnimation = 'mouseUp';
+
+    _this.addControlsCallback('mouseDown', _this.handleMouseDown.bind(_this), order);
+    _this.addControlsCallback('mouseUp', _this.handleMouseUp.bind(_this), order);
+    _this.addControlsCallback('touchStart', _this.handleMouseDown.bind(_this), order);
+    _this.addControlsCallback('touchEnd', _this.handleMouseUp.bind(_this), order);
+    return _this;
+  }
+
+  _createClass(_class, [{
+    key: 'isPositionInButton',
+    value: function isPositionInButton(position) {
+      return (0, _rectContains2.default)(position, new _Vector2.default(
+      // We multiply by the mirror value again because of how scaling flips the canvasPosition
+      // Still doesn't work right if offset isn't (0.5, 0.5) 🤷
+      this.canvasPosition.x + this.absoluteOffset.x * (this.mirrorX ? -1 : 1), this.canvasPosition.y + this.absoluteOffset.y * (this.mirrorY ? -1 : 1)), new _Vector2.default(this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y));
+    }
+  }, {
+    key: 'handleMouseDown',
+    value: function handleMouseDown(e) {
+      if (this.isPositionInButton(this.GameState.Controls.position)) {
+        this.currentAnimation = 'mouseDown';
+        this.currentFrame = 0;
+        return true;
+      }
+    }
+  }, {
+    key: 'handleMouseUp',
+    value: function handleMouseUp() {
+      this.currentAnimation = 'mouseUp';
+      this.currentFrame = 0;
+
+      if (this.isPositionInButton(this.GameState.Controls.position)) {
+        this.callback();
+        return true;
+      }
+    }
+  }]);
+
+  return _class;
+}(_Sprite3.default);
+
+exports.default = _class;
+
+/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1214,19 +1217,19 @@ var _GameState = __webpack_require__(20);
 
 var _GameState2 = _interopRequireDefault(_GameState);
 
-var _Render = __webpack_require__(38);
+var _Render = __webpack_require__(39);
 
 var _Render2 = _interopRequireDefault(_Render);
 
-var _Scene = __webpack_require__(39);
+var _Scene = __webpack_require__(40);
 
 var _Scene2 = _interopRequireDefault(_Scene);
 
-var _UI = __webpack_require__(40);
+var _UI = __webpack_require__(41);
 
 var _UI2 = _interopRequireDefault(_UI);
 
-var _Update = __webpack_require__(41);
+var _Update = __webpack_require__(42);
 
 var _Update2 = _interopRequireDefault(_Update);
 
@@ -1339,7 +1342,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _throttleDebounce = __webpack_require__(7);
+var _throttleDebounce = __webpack_require__(8);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1425,7 +1428,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _throttleDebounce = __webpack_require__(7);
+var _throttleDebounce = __webpack_require__(8);
 
 var _controls = __webpack_require__(17);
 
@@ -1919,7 +1922,7 @@ var _gameState = __webpack_require__(21);
 
 var _gameState2 = _interopRequireDefault(_gameState);
 
-var _Level = __webpack_require__(8);
+var _Level = __webpack_require__(9);
 
 var _Level2 = _interopRequireDefault(_Level);
 
@@ -2092,31 +2095,35 @@ var _Background = __webpack_require__(27);
 
 var _Background2 = _interopRequireDefault(_Background);
 
-var _Deck = __webpack_require__(28);
+var _Cloud = __webpack_require__(28);
+
+var _Cloud2 = _interopRequireDefault(_Cloud);
+
+var _Deck = __webpack_require__(29);
 
 var _Deck2 = _interopRequireDefault(_Deck);
 
-var _Grid = __webpack_require__(29);
+var _Grid = __webpack_require__(30);
 
 var _Grid2 = _interopRequireDefault(_Grid);
 
-var _Hand = __webpack_require__(31);
+var _Hand = __webpack_require__(32);
 
 var _Hand2 = _interopRequireDefault(_Hand);
 
-var _Level2 = __webpack_require__(8);
+var _Level2 = __webpack_require__(9);
 
 var _Level3 = _interopRequireDefault(_Level2);
 
-var _Lightning = __webpack_require__(32);
+var _Lightning = __webpack_require__(33);
 
 var _Lightning2 = _interopRequireDefault(_Lightning);
 
-var _Pathfinder = __webpack_require__(33);
+var _Pathfinder = __webpack_require__(34);
 
 var _Pathfinder2 = _interopRequireDefault(_Pathfinder);
 
-var _Player = __webpack_require__(35);
+var _Player = __webpack_require__(36);
 
 var _Player2 = _interopRequireDefault(_Player);
 
@@ -2128,11 +2135,11 @@ var _Tile = __webpack_require__(3);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
-var _TileHelper = __webpack_require__(36);
+var _TileHelper = __webpack_require__(37);
 
 var _TileHelper2 = _interopRequireDefault(_TileHelper);
 
-var _TileType = __webpack_require__(6);
+var _TileType = __webpack_require__(7);
 
 var _TileType2 = _interopRequireDefault(_TileType);
 
@@ -2282,7 +2289,7 @@ var _class = function (_Level) {
           position: new _Vector2.default(0, -_this2.GameState.Canvas.cy)
         });
         // Draw tiles from deck
-        for (var i = 0; i < player.handSize - index; i++) {
+        for (var _i = 0; _i < player.handSize - index; _i++) {
           hand.add(_this2.deck.draw());
         }
 
@@ -2307,14 +2314,17 @@ var _class = function (_Level) {
       // Init current action
       this.currentAction = new _Action2.default({ player: this.attackingPlayer });
 
-      // Init Controls
-      this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
-      this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
-      this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
-
-      this.addControlsCallback('touchStart', this.handleMouseDown.bind(this));
-      this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this));
-      this.addControlsCallback('touchMove', this.handleMouseMove.bind(this));
+      // Add Clouds
+      for (var i = 0; i < 5; i++) {
+        var cloud = new _Cloud2.default({
+          GameState: this.GameState,
+          dimensions: new _Vector2.default(32, 32),
+          offset: new _Vector2.default(0.5, 0.5),
+          scale: new _Vector2.default(6 + Math.floor(Math.random() * 14), 6 + Math.floor(Math.random() * 14))
+        });
+        cloud.canvasPosition = new _Vector2.default(Math.random() * this.GameState.Canvas.width, Math.random() * this.GameState.Canvas.height);
+        this.GameState.Scene.add(cloud);
+      }
 
       // TEST LIGHTING
       // const path = [];
@@ -2323,6 +2333,15 @@ var _class = function (_Level) {
       //   path.push(this.grid.tiles[i]);
       // }
       // this.fireLightning(path);
+
+      // Init Controls
+      this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
+      this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
+      this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
+
+      this.addControlsCallback('touchStart', this.handleMouseDown.bind(this));
+      this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this));
+      this.addControlsCallback('touchMove', this.handleMouseMove.bind(this));
     }
   }, {
     key: 'handleMouseDown',
@@ -2343,6 +2362,7 @@ var _class = function (_Level) {
       if (this.tileHelper.isDragging && this.tileHelper.tile) {
         this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
       }
+      this.resetHover(this.GameState.Controls.position);
     }
   }, {
     key: 'handleMouseUp',
@@ -2380,6 +2400,17 @@ var _class = function (_Level) {
       var playerTile = this.getTileWithPlayerName(playerName);
       this.currentAction.sourceTile = playerTile;
       this.tileHelper.initMove(playerTile, this.currentAction, this.cycleActions.bind(this));
+    }
+  }, {
+    key: 'resetHover',
+    value: function resetHover(pos) {
+      var clickedTile = this.findTileAtPosition(pos);
+      if (!clickedTile) return;
+
+      this.grid.tiles.forEach(function (tile) {
+        return tile.isHovered = false;
+      });
+      clickedTile.isHovered = true;
     }
   }, {
     key: 'findTileAtPosition',
@@ -2454,27 +2485,28 @@ var _class = function (_Level) {
       if (path.length > 0) {
         var damageAmplifier = 0;
 
-        // path.forEach(tile => {
-        //   //Increase Damage by 1 for every cell in path placed by the attacker
-        //   if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
-        // });
+        path.forEach(function (tile) {
+          //Increase Damage by 1 for every cell in path placed by the attacker
+          if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
+        });
 
         // Apply Damage
         endCell.player.health -= startCell.player.damage + damageAmplifier;
         endCell.player.avatar.takeDamageAnimation();
-        this.fireLightning(path);
+        this.fireLightning(path, this.attackingPlayer.color);
       }
 
       this.endGameLogic();
     }
   }, {
     key: 'fireLightning',
-    value: function fireLightning(path) {
+    value: function fireLightning(path, color) {
       var _this3 = this;
 
       var lightning = new _Lightning2.default({
         GameState: this.GameState,
-        path: path
+        path: path,
+        color: color
       });
       window.setTimeout(function () {
         return _this3.GameState.Scene.remove(lightning.uuid);
@@ -2615,7 +2647,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _SpriteButton2 = __webpack_require__(10);
+var _SpriteButton2 = __webpack_require__(11);
 
 var _SpriteButton3 = _interopRequireDefault(_SpriteButton2);
 
@@ -2799,7 +2831,100 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _TileType = __webpack_require__(6);
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _Sprite2 = __webpack_require__(6);
+
+var _Sprite3 = _interopRequireDefault(_Sprite2);
+
+var _Vector = __webpack_require__(0);
+
+var _Vector2 = _interopRequireDefault(_Vector);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _class = function (_Sprite) {
+  _inherits(_class, _Sprite);
+
+  function _class(config) {
+    _classCallCheck(this, _class);
+
+    config.animations = {
+      exist: {
+        frames: 1,
+        loop: false,
+        spriteSheet: './img/cloud_1.png',
+        ticksPerFrame: 10
+      }
+    };
+    config.currentAnimation = 'exist';
+
+    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
+
+    var sprite = config.sprite,
+        _config$targetPositio = config.targetPosition,
+        targetPosition = _config$targetPositio === undefined ? null : _config$targetPositio;
+
+
+    _this.targetPosition = targetPosition;
+    _this.canvasPosition = targetPosition;
+    _this.moveSpeed = 5 + Math.floor(Math.random() * 5);
+    return _this;
+  }
+
+  _createClass(_class, [{
+    key: 'handleMovement',
+    value: function handleMovement() {
+      var newY = this.canvasPosition.y + this.moveSpeed * this.GameState.deltaTime;
+      if (newY >= this.GameState.Canvas.height * 2) {
+        this.canvasPosition = new _Vector2.default(Math.random() * this.GameState.Canvas.width, -this.GameState.Canvas.cy);
+      } else {
+        this.canvasPosition.y = newY;
+      }
+    }
+  }, {
+    key: 'drawEntity',
+    value: function drawEntity() {
+      this.handleMovement();
+      _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'drawEntity', this).call(this);
+    }
+  }, {
+    key: 'takeDamageAnimation',
+    value: function takeDamageAnimation() {
+      var _this2 = this;
+
+      this.currentAnimation = 'damage';
+      window.setTimeout(function () {
+        _this2.currentAnimation = 'mouseUp';
+      }, 750);
+    }
+  }]);
+
+  return _class;
+}(_Sprite3.default);
+
+exports.default = _class;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _TileType = __webpack_require__(7);
 
 var _TileType2 = _interopRequireDefault(_TileType);
 
@@ -2861,7 +2986,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2881,11 +3006,11 @@ var _Tile = __webpack_require__(3);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
-var _TileOutline = __webpack_require__(30);
+var _TileOutline = __webpack_require__(31);
 
 var _TileOutline2 = _interopRequireDefault(_TileOutline);
 
-var _TileType = __webpack_require__(6);
+var _TileType = __webpack_require__(7);
 
 var _TileType2 = _interopRequireDefault(_TileType);
 
@@ -3005,7 +3130,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3073,7 +3198,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3200,7 +3325,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3249,11 +3374,14 @@ var _class = function (_Entity) {
     var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
 
     var GameState = config.GameState,
-        path = config.path;
+        path = config.path,
+        _config$color = config.color,
+        color = _config$color === undefined ? '142,205,255' : _config$color;
 
 
     _this.GameState = GameState;
     _this.path = path;
+    _this.color = color;
     _this.elements = [];
     _this.offshoots = 20;
     _this.maxwidth = 15;
@@ -3261,8 +3389,6 @@ var _class = function (_Entity) {
 
     _this.GameState.Scene.add(_this);
     _this.createElements();
-
-    console.log(_this.path);
     return _this;
   }
 
@@ -3314,7 +3440,7 @@ var _class = function (_Entity) {
     key: 'drawLine',
     value: function drawLine(from, to, iteration) {
       this.GameState.Canvas.ctx.beginPath();
-      this.GameState.Canvas.ctx.strokeStyle = 'rgba(142,205,255, 0.65)';
+      this.GameState.Canvas.ctx.strokeStyle = 'rgba(' + this.color + ', 0.65)';
       this.GameState.Canvas.ctx.lineWidth = Math.max(1, this.maxwidth - iteration);
       this.GameState.Canvas.ctx.moveTo(from.x, from.y);
       this.GameState.Canvas.ctx.lineTo(to.x, to.y);
@@ -3335,7 +3461,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3347,7 +3473,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _PriorityQueue = __webpack_require__(34);
+var _PriorityQueue = __webpack_require__(35);
 
 var _PriorityQueue2 = _interopRequireDefault(_PriorityQueue);
 
@@ -3455,7 +3581,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3504,7 +3630,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3541,11 +3667,11 @@ var _class = function () {
         _ref$handSize = _ref.handSize,
         handSize = _ref$handSize === undefined ? 4 : _ref$handSize,
         _ref$health = _ref.health,
-        health = _ref$health === undefined ? 100 : _ref$health,
+        health = _ref$health === undefined ? 50 : _ref$health,
         _ref$maxActions = _ref.maxActions,
         maxActions = _ref$maxActions === undefined ? 2 : _ref$maxActions,
         _ref$maxHealth = _ref.maxHealth,
-        maxHealth = _ref$maxHealth === undefined ? 100 : _ref$maxHealth,
+        maxHealth = _ref$maxHealth === undefined ? 50 : _ref$maxHealth,
         _ref$name = _ref.name,
         name = _ref$name === undefined ? 'Player 1' : _ref$name;
 
@@ -3579,7 +3705,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3595,11 +3721,11 @@ var _ActionType = __webpack_require__(4);
 
 var _ActionType2 = _interopRequireDefault(_ActionType);
 
-var _cloneClass = __webpack_require__(37);
+var _cloneClass = __webpack_require__(38);
 
 var _cloneClass2 = _interopRequireDefault(_cloneClass);
 
-var _SpriteButton = __webpack_require__(10);
+var _SpriteButton = __webpack_require__(11);
 
 var _SpriteButton2 = _interopRequireDefault(_SpriteButton);
 
@@ -3803,7 +3929,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3818,7 +3944,7 @@ exports.default = function (orig) {
 };
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3878,7 +4004,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3941,7 +4067,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4149,7 +4275,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

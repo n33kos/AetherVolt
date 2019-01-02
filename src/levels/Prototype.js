@@ -2,6 +2,7 @@ import Action      from 'class/Action';
 import ActionType  from 'class/ActionType';
 import Avatar      from 'class/Avatar';
 import Background  from 'class/Background';
+import Cloud       from 'class/Cloud';
 import Deck        from 'class/Deck';
 import Grid        from 'class/Grid';
 import Hand        from 'class/Hand';
@@ -175,14 +176,23 @@ export default class extends Level {
     // Init current action
     this.currentAction = new Action({ player : this.attackingPlayer });
 
-    // Init Controls
-    this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
-    this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
-    this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
-
-    this.addControlsCallback('touchStart', this.handleMouseDown.bind(this));
-    this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this));
-    this.addControlsCallback('touchMove', this.handleMouseMove.bind(this));
+    // Add Clouds
+    for (var i = 0; i < 5; i++) {
+      const cloud = new Cloud({
+        GameState: this.GameState,
+        dimensions: new Vector2(32, 32),
+        offset: new Vector2(0.5, 0.5),
+        scale: new Vector2(
+          6 + Math.floor(Math.random() * 14),
+          6 + Math.floor(Math.random() * 14),
+        ),
+      });
+      cloud.canvasPosition = new Vector2(
+        Math.random() * this.GameState.Canvas.width,
+        Math.random() * this.GameState.Canvas.height,
+      );
+      this.GameState.Scene.add(cloud);
+    }
 
     // TEST LIGHTING
     // const path = [];
@@ -191,10 +201,19 @@ export default class extends Level {
     //   path.push(this.grid.tiles[i]);
     // }
     // this.fireLightning(path);
+
+    // Init Controls
+    this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
+    this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
+    this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this));
+
+    this.addControlsCallback('touchStart', this.handleMouseDown.bind(this));
+    this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this));
+    this.addControlsCallback('touchMove', this.handleMouseMove.bind(this));
   }
 
   handleMouseDown(e) {
-    const clickedTile = this.findTileAtPosition(this.GameState.Controls.position)
+    const clickedTile = this.findTileAtPosition(this.GameState.Controls.position);
     if (!clickedTile) return;
 
     // Set source tile in current action
@@ -209,6 +228,7 @@ export default class extends Level {
     if (this.tileHelper.isDragging && this.tileHelper.tile) {
       this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
     }
+    this.resetHover(this.GameState.Controls.position);
   }
 
   handleMouseUp(e) {
@@ -260,6 +280,14 @@ export default class extends Level {
       this.currentAction,
       this.cycleActions.bind(this),
     );
+  }
+
+  resetHover(pos) {
+    const clickedTile = this.findTileAtPosition(pos);
+    if (!clickedTile) return;
+
+    this.grid.tiles.forEach(tile => tile.isHovered = false)
+    clickedTile.isHovered = true;
   }
 
   findTileAtPosition(pos) {
@@ -329,24 +357,25 @@ export default class extends Level {
     if (path.length > 0) {
       let damageAmplifier = 0;
 
-      // path.forEach(tile => {
-      //   //Increase Damage by 1 for every cell in path placed by the attacker
-      //   if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
-      // });
+      path.forEach(tile => {
+        //Increase Damage by 1 for every cell in path placed by the attacker
+        if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
+      });
 
       // Apply Damage
       endCell.player.health -= (startCell.player.damage + damageAmplifier);
       endCell.player.avatar.takeDamageAnimation();
-      this.fireLightning(path);
+      this.fireLightning(path, this.attackingPlayer.color);
     }
 
     this.endGameLogic();
   }
 
-  fireLightning(path) {
+  fireLightning(path, color) {
     const lightning = new Lightning({
       GameState: this.GameState,
       path,
+      color,
     });
     window.setTimeout(
       () => this.GameState.Scene.remove(lightning.uuid),

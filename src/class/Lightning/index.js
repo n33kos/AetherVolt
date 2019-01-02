@@ -10,11 +10,13 @@ export default class extends Entity {
 
     const {
       GameState,
-      path
+      path,
+      color = '142,205,255',
     } = config;
 
     this.GameState = GameState;
     this.path = path;
+    this.color = color;
     this.elements = [];
     this.offshoots = 20;
     this.maxwidth = 15;
@@ -22,8 +24,6 @@ export default class extends Entity {
 
     this.GameState.Scene.add(this);
     this.createElements();
-
-    console.log(this.path);
   }
 
   createElements() {
@@ -71,7 +71,7 @@ export default class extends Entity {
 
   drawLine(from, to, iteration) {
     this.GameState.Canvas.ctx.beginPath();
-    this.GameState.Canvas.ctx.strokeStyle = 'rgba(142,205,255, 0.65)';
+    this.GameState.Canvas.ctx.strokeStyle = `rgba(${this.color}, 0.65)`;
     this.GameState.Canvas.ctx.lineWidth = Math.max(1, this.maxwidth - iteration);
     this.GameState.Canvas.ctx.moveTo(from.x, from.y);
     this.GameState.Canvas.ctx.lineTo(to.x, to.y);

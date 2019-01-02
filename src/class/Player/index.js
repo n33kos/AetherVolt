@@ -10,9 +10,9 @@ export default class {
     damage = 2,
     hand = [],
     handSize = 4,
-    health = 100,
+    health = 50,
     maxActions = 2,
-    maxHealth = 100,
+    maxHealth = 50,
     name = 'Player 1',
   }) {
     this.GameState = GameState;
