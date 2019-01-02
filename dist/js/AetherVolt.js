@@ -2361,13 +2361,15 @@ var _class = function (_Level) {
     value: function handleMouseMove(e) {
       if (this.tileHelper.isDragging && this.tileHelper.tile) {
         this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
+        this.resetHover();
+        this.setHover(this.GameState.Controls.position);
       }
-      this.resetHover(this.GameState.Controls.position);
     }
   }, {
     key: 'handleMouseUp',
     value: function handleMouseUp(e) {
       var clickedTile = this.findTileAtPosition(this.GameState.Controls.position);
+      this.resetHover();
 
       // ----EMPTY TILE ACTION----
       if (!clickedTile || clickedTile.tileType.type === 'EMPTY' && !this.tileHelper.isDragging) {
@@ -2403,13 +2405,16 @@ var _class = function (_Level) {
     }
   }, {
     key: 'resetHover',
-    value: function resetHover(pos) {
-      var clickedTile = this.findTileAtPosition(pos);
-      if (!clickedTile) return;
-
+    value: function resetHover() {
       this.grid.tiles.forEach(function (tile) {
         return tile.isHovered = false;
       });
+    }
+  }, {
+    key: 'setHover',
+    value: function setHover(pos) {
+      var clickedTile = this.findTileAtPosition(pos);
+      if (!clickedTile) return;
       clickedTile.isHovered = true;
     }
   }, {
@@ -2493,20 +2498,19 @@ var _class = function (_Level) {
         // Apply Damage
         endCell.player.health -= startCell.player.damage + damageAmplifier;
         endCell.player.avatar.takeDamageAnimation();
-        this.fireLightning(path, this.attackingPlayer.color);
+        this.fireLightning(path);
       }
 
       this.endGameLogic();
     }
   }, {
     key: 'fireLightning',
-    value: function fireLightning(path, color) {
+    value: function fireLightning(path) {
       var _this3 = this;
 
       var lightning = new _Lightning2.default({
         GameState: this.GameState,
-        path: path,
-        color: color
+        path: path
       });
       window.setTimeout(function () {
         return _this3.GameState.Scene.remove(lightning.uuid);
@@ -2689,10 +2693,11 @@ var _class = function (_SpriteButton) {
     }
   }, {
     key: 'takeDamageAnimation',
-    value: function takeDamageAnimation() {
+    value: function takeDamageAnimation(color) {
       var _this2 = this;
 
       this.currentAnimation = 'damage';
+
       window.setTimeout(function () {
         _this2.currentAnimation = 'mouseUp';
       }, 750);

@@ -227,12 +227,14 @@ export default class extends Level {
   handleMouseMove(e) {
     if (this.tileHelper.isDragging && this.tileHelper.tile) {
       this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
+      this.resetHover();
+      this.setHover(this.GameState.Controls.position);
     }
-    this.resetHover(this.GameState.Controls.position);
   }
 
   handleMouseUp(e) {
     const clickedTile = this.findTileAtPosition(this.GameState.Controls.position);
+    this.resetHover();
 
     // ----EMPTY TILE ACTION----
     if (
@@ -282,11 +284,13 @@ export default class extends Level {
     );
   }
 
-  resetHover(pos) {
+  resetHover() {
+    this.grid.tiles.forEach(tile => tile.isHovered = false);
+  }
+
+  setHover(pos) {
     const clickedTile = this.findTileAtPosition(pos);
     if (!clickedTile) return;
-
-    this.grid.tiles.forEach(tile => tile.isHovered = false)
     clickedTile.isHovered = true;
   }
 
@@ -365,17 +369,16 @@ export default class extends Level {
       // Apply Damage
       endCell.player.health -= (startCell.player.damage + damageAmplifier);
       endCell.player.avatar.takeDamageAnimation();
-      this.fireLightning(path, this.attackingPlayer.color);
+      this.fireLightning(path);
     }
 
     this.endGameLogic();
   }
 
-  fireLightning(path, color) {
+  fireLightning(path) {
     const lightning = new Lightning({
       GameState: this.GameState,
       path,
-      color,
     });
     window.setTimeout(
       () => this.GameState.Scene.remove(lightning.uuid),

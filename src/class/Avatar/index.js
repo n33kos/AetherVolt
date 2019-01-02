@@ -19,8 +19,9 @@ export default class extends SpriteButton {
     super.draw();
   }
 
-  takeDamageAnimation() {
+  takeDamageAnimation(color) {
     this.currentAnimation = 'damage';
+
     window.setTimeout(() => {
       this.currentAnimation = 'mouseUp';
     }, 750);
