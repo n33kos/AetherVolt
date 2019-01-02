@@ -2213,7 +2213,7 @@ var _class = function (_Level) {
         avatar: new _Avatar2.default({
           GameState: this.GameState,
           dimensions: new _Vector2.default(64, 128),
-          scale: new _Vector2.default(4, 4),
+          scale: new _Vector2.default(this.GameState.Canvas.width / 460, this.GameState.Canvas.width / 460),
           offset: new _Vector2.default(0.5, 0.5),
           callback: this.clickAvatar.bind(this, 'Player 1'),
           mouseDownSprite: './img/Ship.png',
@@ -2248,7 +2248,7 @@ var _class = function (_Level) {
         avatar: new _Avatar2.default({
           GameState: this.GameState,
           dimensions: new _Vector2.default(64, 128),
-          scale: new _Vector2.default(4, 4),
+          scale: new _Vector2.default(this.GameState.Canvas.width / 460, this.GameState.Canvas.width / 460),
           offset: new _Vector2.default(0.5, 0.5),
           callback: this.clickAvatar.bind(this, 'Player 2'),
           mouseDownSprite: './img/Ship.png',

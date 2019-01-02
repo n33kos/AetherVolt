@@ -67,7 +67,10 @@ export default class extends Level {
         avatar: new Avatar({
           GameState : this.GameState,
           dimensions: new Vector2(64, 128),
-          scale: new Vector2(4, 4),
+          scale: new Vector2(
+            this.GameState.Canvas.width / 460,
+            this.GameState.Canvas.width / 460,
+          ),
           offset: new Vector2(0.5, 0.5),
           callback: this.clickAvatar.bind(this, 'Player 1'),
           mouseDownSprite : './img/Ship.png',
@@ -106,7 +109,10 @@ export default class extends Level {
         avatar: new Avatar({
           GameState : this.GameState,
           dimensions: new Vector2(64, 128),
-          scale: new Vector2(4, 4),
+          scale: new Vector2(
+            this.GameState.Canvas.width / 460,
+            this.GameState.Canvas.width / 460,
+          ),
           offset: new Vector2(0.5, 0.5),
           callback: this.clickAvatar.bind(this, 'Player 2'),
           mouseDownSprite : './img/Ship.png',
