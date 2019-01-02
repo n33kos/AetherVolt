@@ -1,52 +1,26 @@
-import Entity  from 'class/Entity';
+import Sprite  from 'class/Sprite';
 import Vector2 from 'class/Vector2';
 
-export default class extends Entity {
+export default class extends Sprite {
   constructor(config) {
+    config.animations = {
+      exist : {
+        frames        : 1,
+        loop          : false,
+        spriteSheet   : './img/sky.png',
+        ticksPerFrame : 10,
+      }
+    };
+    config.currentAnimation = 'exist';
+
     super(config);
 
-    const {
-      imageUrl,
-      repeat,
-      scale = new Vector2(1, 1),
-    } = config;
-
-    this.imageUrl = imageUrl;
-    this.repeat = repeat;
-    this.scale = scale;
-
     this.moveSpeed = 2;
-    this.pattern = null;
-  }
-
-  load() {
-    const img = new Image();
-    img.onload = () => {
-      this.pattern = this.GameState.Canvas.ctx.createPattern(img, this.repeat);
-    };
-    img.src = this.imageUrl;
-  }
-
-  calculateOffset() {
-    if (!this.scale) return;
-    this.offset = new Vector2(
-      -(this.origin.x * this.dimensions.x * this.scale.x),
-      -(this.origin.y * this.dimensions.y * this.scale.y),
-    );
   }
 
   draw() {
     this.handleMovement();
-    this.GameState.Canvas.ctx.beginPath();
-    this.GameState.Canvas.ctx.rect(
-      0,
-      0,
-      this.dimensions.x * this.scale.x,
-      this.dimensions.y * this.scale.y,
-    );
-    this.GameState.Canvas.ctx.fillStyle = this.pattern;
-    this.GameState.Canvas.ctx.scale(this.scale.x, this.scale.y);
-    this.GameState.Canvas.ctx.fill();
+    super.draw();
   }
 
   handleMovement() {

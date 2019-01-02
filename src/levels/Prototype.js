@@ -42,12 +42,10 @@ export default class extends Level {
     // Add background
     const bg = new Background({
       GameState: this.GameState,
-      dimensions: new Vector2(this.GameState.Canvas.width, this.GameState.Canvas.height * 2),
+      dimensions: new Vector2(128, 256),
       offset: new Vector2(0, 0),
-      imageUrl: './img/sky.png',
-      repeat: 'repeat',
       scale: new Vector2(
-        this.GameState.Canvas.height / 128,
+        this.GameState.Canvas.width / 128,
         this.GameState.Canvas.height / 128,
       ),
     });
