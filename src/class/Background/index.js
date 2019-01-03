@@ -15,7 +15,7 @@ export default class extends Sprite {
 
     super(config);
 
-    this.moveSpeed = 2;
+    this.moveSpeed = 0.2;
   }
 
   draw() {

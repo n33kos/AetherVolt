@@ -11,6 +11,7 @@ export default class extends Sprite {
       id,
       type,
       player, // Player object for avatar in this cell
+      scale,
       isInHand = false,
       dragPosition = null,
       targetPosition = null,
@@ -27,6 +28,7 @@ export default class extends Sprite {
     this.targetRotation = 0;
     this.targetPosition = targetPosition;
     this.canvasPosition = targetPosition;
+    this.targetScale = scale;
     this.outline = outline;
 
     this.animations = {
@@ -42,8 +44,12 @@ export default class extends Sprite {
     this.isHovered = false;
     this.placedBy = false;
 
+    this.turbulence = new Vector2(0, 0);
+    this.turbulenceStep = Math.random() * Math.PI * 2;
     this.turbulenceSpeed = 0.02;
     this.turbulenceRange = new Vector2(5, 5);
+    this.turbulenceScale = 0;
+    this.turbulenceScaleRange = 0.1;
 
     this.setType(type);
     this.calculateOffset();
@@ -111,7 +117,6 @@ export default class extends Sprite {
   }
 
   draw() {
-    // Rotation and movement smoothing
     if (!this.isInHand) this.handleTurbulence();
     this.handleRotation();
 
@@ -125,5 +130,41 @@ export default class extends Sprite {
     if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) {
       this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
     }
+  }
+
+  handleTurbulence() {
+    if(!this.targetPosition) return;
+
+    this.addTurbulence();
+
+    // Set position away from target to cause correction
+    const positionDiff = new Vector2(
+      this.targetPosition.x - this.canvasPosition.x - this.turbulence.x,
+      this.targetPosition.y - this.canvasPosition.y - this.turbulence.y,
+    );
+    this.canvasPosition = new Vector2(
+      this.canvasPosition.x + positionDiff.x * 0.005 * this.GameState.deltaTime,
+      this.canvasPosition.y + positionDiff.y * 0.005 * this.GameState.deltaTime,
+    )
+
+    // Set scale away from target to cause correction
+    const scaleDiff = this.targetScale.x - this.scale.x - this.turbulenceScale;
+    this.scale = new Vector2(
+      this.scale.x + scaleDiff * 0.01 * this.GameState.deltaTime,
+      this.scale.x + scaleDiff * 0.01 * this.GameState.deltaTime,
+    );
+
+    this.calculateOffset();
+  }
+
+  addTurbulence() {
+    this.turbulenceStep += this.turbulenceSpeed;
+    if (this.turbulenceStep >= Math.PI*2) this.turbulenceStep = 0;
+
+    this.turbulence = new Vector2(
+      Math.cos(this.turbulenceStep) * this.turbulenceRange.x,
+      Math.sin(this.turbulenceStep) * this.turbulenceRange.y,
+    );
+    this.turbulenceScale = Math.cos(this.turbulenceStep) * this.turbulenceScaleRange;
   }
 }

@@ -390,11 +390,6 @@ var _class = function (_LoadedEntity) {
     _this.isVisible = true;
     _this.alpha = alpha;
 
-    _this.turbulenceSpeed = 0.05;
-    _this.turbulence = new _Vector2.default(0, 0);
-    _this.turbulenceRange = new _Vector2.default(1, 15);
-    _this.turbulenceStep = Math.random() * Math.PI * 2;
-
     _this.setPosition(position);
     return _this;
   }
@@ -440,25 +435,6 @@ var _class = function (_LoadedEntity) {
     key: 'draw',
     value: function draw() {
       // Override this function for the entity's draw loop
-    }
-  }, {
-    key: 'handleTurbulence',
-    value: function handleTurbulence() {
-      if (!this.targetPosition) return;
-
-      this.addTurbulence();
-
-      var positionDiff = new _Vector2.default(this.targetPosition.x - this.canvasPosition.x - this.turbulence.x, this.targetPosition.y - this.canvasPosition.y - this.turbulence.y);
-      this.canvasPosition = new _Vector2.default(this.canvasPosition.x + positionDiff.x * 0.005 * this.GameState.deltaTime, this.canvasPosition.y + positionDiff.y * 0.005 * this.GameState.deltaTime);
-      this.calculateOffset();
-    }
-  }, {
-    key: 'addTurbulence',
-    value: function addTurbulence() {
-      this.turbulenceStep += this.turbulenceSpeed;
-      if (this.turbulenceStep >= Math.PI * 2) this.turbulenceStep = 0;
-
-      this.turbulence = new _Vector2.default(Math.cos(this.turbulenceStep) * this.turbulenceRange.x, Math.sin(this.turbulenceStep) * this.turbulenceRange.y);
     }
   }]);
 
@@ -511,6 +487,7 @@ var _class = function (_Sprite) {
         id = config.id,
         type = config.type,
         player = config.player,
+        scale = config.scale,
         _config$isInHand = config.isInHand,
         isInHand = _config$isInHand === undefined ? false : _config$isInHand,
         _config$dragPosition = config.dragPosition,
@@ -531,6 +508,7 @@ var _class = function (_Sprite) {
     _this.targetRotation = 0;
     _this.targetPosition = targetPosition;
     _this.canvasPosition = targetPosition;
+    _this.targetScale = scale;
     _this.outline = outline;
 
     _this.animations = {
@@ -546,8 +524,12 @@ var _class = function (_Sprite) {
     _this.isHovered = false;
     _this.placedBy = false;
 
+    _this.turbulence = new _Vector2.default(0, 0);
+    _this.turbulenceStep = Math.random() * Math.PI * 2;
     _this.turbulenceSpeed = 0.02;
     _this.turbulenceRange = new _Vector2.default(5, 5);
+    _this.turbulenceScale = 0;
+    _this.turbulenceScaleRange = 0.1;
 
     _this.setType(type);
     _this.calculateOffset();
@@ -634,7 +616,6 @@ var _class = function (_Sprite) {
   }, {
     key: 'draw',
     value: function draw() {
-      // Rotation and movement smoothing
       if (!this.isInHand) this.handleTurbulence();
       this.handleRotation();
 
@@ -649,6 +630,32 @@ var _class = function (_Sprite) {
       if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) {
         this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
       }
+    }
+  }, {
+    key: 'handleTurbulence',
+    value: function handleTurbulence() {
+      if (!this.targetPosition) return;
+
+      this.addTurbulence();
+
+      // Set position away from target to cause correction
+      var positionDiff = new _Vector2.default(this.targetPosition.x - this.canvasPosition.x - this.turbulence.x, this.targetPosition.y - this.canvasPosition.y - this.turbulence.y);
+      this.canvasPosition = new _Vector2.default(this.canvasPosition.x + positionDiff.x * 0.005 * this.GameState.deltaTime, this.canvasPosition.y + positionDiff.y * 0.005 * this.GameState.deltaTime);
+
+      // Set scale away from target to cause correction
+      var scaleDiff = this.targetScale.x - this.scale.x - this.turbulenceScale;
+      this.scale = new _Vector2.default(this.scale.x + scaleDiff * 0.01 * this.GameState.deltaTime, this.scale.x + scaleDiff * 0.01 * this.GameState.deltaTime);
+
+      this.calculateOffset();
+    }
+  }, {
+    key: 'addTurbulence',
+    value: function addTurbulence() {
+      this.turbulenceStep += this.turbulenceSpeed;
+      if (this.turbulenceStep >= Math.PI * 2) this.turbulenceStep = 0;
+
+      this.turbulence = new _Vector2.default(Math.cos(this.turbulenceStep) * this.turbulenceRange.x, Math.sin(this.turbulenceStep) * this.turbulenceRange.y);
+      this.turbulenceScale = Math.cos(this.turbulenceStep) * this.turbulenceScaleRange;
     }
   }]);
 
@@ -2171,8 +2178,8 @@ var _class = function (_Level) {
 
 
     _this.name = "Prototype Level";
-    _this.rows = 6;
-    _this.columns = 6;
+    _this.rows = 4;
+    _this.columns = 4;
     _this.currentPlayerTurn = 0;
     _this.selectedTile = null;
     _this.currentAction = null;
@@ -2324,14 +2331,6 @@ var _class = function (_Level) {
         this.GameState.Scene.add(cloud);
       }
 
-      // TEST LIGHTING
-      // const path = [];
-      // for (var i = 5; i < 20; i++) {
-      //   this.grid.tiles[i].cameFrom = this.grid.tiles[i - 1];
-      //   path.push(this.grid.tiles[i]);
-      // }
-      // this.fireLightning(path);
-
       // Init Controls
       this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
       this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
@@ -2431,8 +2430,6 @@ var _class = function (_Level) {
   }, {
     key: 'cycleActions',
     value: function cycleActions() {
-      this.processConnection();
-
       // Decrement action
       this.attackingPlayer.actions -= 1;
       if (this.attackingPlayer.actions <= 0) {
@@ -2451,6 +2448,8 @@ var _class = function (_Level) {
   }, {
     key: 'cyclePlayerTurn',
     value: function cyclePlayerTurn() {
+      this.processConnection();
+
       // Set defending player
       this.defendingPlayer = this.players[this.currentPlayerTurn];
 
@@ -2486,12 +2485,7 @@ var _class = function (_Level) {
       var path = pathfinder.findPath(startCell, endCell);
 
       if (path.length > 0) {
-        var damageAmplifier = 0;
-
-        path.forEach(function (tile) {
-          //Increase Damage by 1 for every cell in path placed by the attacker
-          if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
-        });
+        var damageAmplifier = path.length;
 
         // Apply Damage
         endCell.player.health -= startCell.player.damage + damageAmplifier;
@@ -2680,6 +2674,11 @@ var _class = function (_SpriteButton) {
 
     _this.targetPosition = targetPosition;
     _this.canvasPosition = targetPosition;
+
+    _this.turbulence = new _Vector2.default(0, 0);
+    _this.turbulenceStep = Math.random() * Math.PI * 2;
+    _this.turbulenceSpeed = 0.05;
+    _this.turbulenceRange = new _Vector2.default(1, 15);
     return _this;
   }
 
@@ -2688,6 +2687,25 @@ var _class = function (_SpriteButton) {
     value: function draw() {
       this.handleTurbulence();
       _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'draw', this).call(this);
+    }
+  }, {
+    key: 'handleTurbulence',
+    value: function handleTurbulence() {
+      if (!this.targetPosition) return;
+
+      this.addTurbulence();
+
+      var positionDiff = new _Vector2.default(this.targetPosition.x - this.canvasPosition.x - this.turbulence.x, this.targetPosition.y - this.canvasPosition.y - this.turbulence.y);
+      this.canvasPosition = new _Vector2.default(this.canvasPosition.x + positionDiff.x * 0.005 * this.GameState.deltaTime, this.canvasPosition.y + positionDiff.y * 0.005 * this.GameState.deltaTime);
+      this.calculateOffset();
+    }
+  }, {
+    key: 'addTurbulence',
+    value: function addTurbulence() {
+      this.turbulenceStep += this.turbulenceSpeed;
+      if (this.turbulenceStep >= Math.PI * 2) this.turbulenceStep = 0;
+
+      this.turbulence = new _Vector2.default(Math.cos(this.turbulenceStep) * this.turbulenceRange.x, Math.sin(this.turbulenceStep) * this.turbulenceRange.y);
     }
   }, {
     key: 'takeDamageAnimation',
@@ -2777,7 +2795,7 @@ var _class = function (_Sprite) {
 
     var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
 
-    _this.moveSpeed = 2;
+    _this.moveSpeed = 0.2;
     return _this;
   }
 
@@ -2857,7 +2875,7 @@ var _class = function (_Sprite) {
 
     _this.targetPosition = targetPosition;
     _this.canvasPosition = targetPosition;
-    _this.moveSpeed = 5 + Math.floor(Math.random() * 5);
+    _this.moveSpeed = 1 + Math.floor(Math.random() * 5);
     return _this;
   }
 

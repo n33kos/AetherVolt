@@ -26,8 +26,8 @@ export default class extends Level {
     } = config;
 
     this.name = "Prototype Level";
-    this.rows = 6;
-    this.columns = 6;
+    this.rows = 4;
+    this.columns = 4;
     this.currentPlayerTurn = 0;
     this.selectedTile = null;
     this.currentAction = null;
@@ -198,14 +198,6 @@ export default class extends Level {
       this.GameState.Scene.add(cloud);
     }
 
-    // TEST LIGHTING
-    // const path = [];
-    // for (var i = 5; i < 20; i++) {
-    //   this.grid.tiles[i].cameFrom = this.grid.tiles[i - 1];
-    //   path.push(this.grid.tiles[i]);
-    // }
-    // this.fireLightning(path);
-
     // Init Controls
     this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this));
     this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this));
@@ -311,8 +303,6 @@ export default class extends Level {
   }
 
   cycleActions() {
-    this.processConnection();
-
     // Decrement action
     this.attackingPlayer.actions -= 1;
     if (this.attackingPlayer.actions <= 0) {
@@ -330,6 +320,8 @@ export default class extends Level {
   }
 
   cyclePlayerTurn() {
+    this.processConnection();
+    
     // Set defending player
     this.defendingPlayer = this.players[this.currentPlayerTurn];
 
@@ -363,12 +355,7 @@ export default class extends Level {
     const path = pathfinder.findPath(startCell, endCell);
 
     if (path.length > 0) {
-      let damageAmplifier = 0;
-
-      path.forEach(tile => {
-        //Increase Damage by 1 for every cell in path placed by the attacker
-        if (tile.placedBy.name === startCell.player.name) damageAmplifier += 1;
-      });
+      const damageAmplifier = path.length;
 
       // Apply Damage
       endCell.player.health -= (startCell.player.damage + damageAmplifier);

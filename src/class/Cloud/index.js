@@ -22,7 +22,7 @@ export default class extends Sprite {
 
     this.targetPosition = targetPosition;
     this.canvasPosition = targetPosition;
-    this.moveSpeed = 5 + Math.floor(Math.random() * 5);
+    this.moveSpeed = 1 + Math.floor(Math.random() * 5);
   }
 
   handleMovement() {
