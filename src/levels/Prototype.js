@@ -34,6 +34,7 @@ export default class extends Level {
     this.tileHelper = new TileHelper(GameState);
     this.attackingPlayer = null;
     this.defendingPlayer = null;
+    this.hoveredTile = null;
   }
 
   load() {
@@ -72,9 +73,7 @@ export default class extends Level {
             Math.min(4, this.GameState.Canvas.width / 460),
           ),
           offset: new Vector2(0.5, 0.5),
-          callback: this.clickAvatar.bind(this, 'Player 1'),
-          mouseDownSprite : './img/Ship.png',
-          mouseUpSprite : './img/Ship.png',
+          onHover: this.hoverAvatar.bind(this, 'Player 1'),
           targetPosition : new Vector2(
             -256,
             this.GameState.Canvas.cy,
@@ -87,6 +86,12 @@ export default class extends Level {
               ticksPerFrame : 5,
             },
             mouseUp : {
+              frames        : 12,
+              loop          : true,
+              spriteSheet   : './img/Ship.png',
+              ticksPerFrame : 5,
+            },
+            hover : {
               frames        : 12,
               loop          : true,
               spriteSheet   : './img/Ship.png',
@@ -114,9 +119,7 @@ export default class extends Level {
             Math.min(4, this.GameState.Canvas.width / 460),
           ),
           offset: new Vector2(0.5, 0.5),
-          callback: this.clickAvatar.bind(this, 'Player 2'),
-          mouseDownSprite : './img/Ship.png',
-          mouseUpSprite : './img/Ship.png',
+          onHover: this.hoverAvatar.bind(this, 'Player 2'),
           targetPosition : new Vector2(
             this.GameState.Canvas.width + 256,
             this.GameState.Canvas.cy,
@@ -130,6 +133,12 @@ export default class extends Level {
               ticksPerFrame : 5,
             },
             mouseUp : {
+              frames        : 12,
+              loop          : true,
+              spriteSheet   : './img/Ship.png',
+              ticksPerFrame : 5,
+            },
+            hover : {
               frames        : 12,
               loop          : true,
               spriteSheet   : './img/Ship.png',
@@ -181,14 +190,14 @@ export default class extends Level {
     this.currentAction = new Action({ player : this.attackingPlayer });
 
     // Add Clouds
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 3; i++) {
       const cloud = new Cloud({
         GameState: this.GameState,
         dimensions: new Vector2(32, 32),
         offset: new Vector2(0.5, 0.5),
         scale: new Vector2(
-          6 + Math.floor(Math.random() * 14),
-          6 + Math.floor(Math.random() * 14),
+          15 + Math.floor(Math.random() * 15),
+          15 + Math.floor(Math.random() * 15),
         ),
       });
       cloud.canvasPosition = new Vector2(
@@ -221,11 +230,13 @@ export default class extends Level {
   }
 
   handleMouseMove(e) {
+    this.resetHover();
+
     if (this.tileHelper.isDragging && this.tileHelper.tile) {
       this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
-      this.resetHover();
-      this.setHover(this.GameState.Controls.position);
     }
+
+    this.setHover(this.GameState.Controls.position);
   }
 
   handleMouseUp(e) {
@@ -255,39 +266,32 @@ export default class extends Level {
       this.tileHelper.placeDraggedCell();
       this.tileHelper.clear();
     }
-
-    //----ROTATE ACTION----
-    if (
-      clickedTile.tileType.type !== 'PLAYER_COLUMN'
-      && clickedTile.tileType.type !== 'EMPTY'
-      && this.currentAction.sourceTile
-      && this.currentAction.sourceTile.uuid === clickedTile.uuid
-    ) {
-      this.tileHelper.initRotation(clickedTile, this.currentAction, this.cycleActions.bind(this));
-    }
-  }
-
-  clickAvatar(playerName) {
-    // Cant move if it isnt your turn
-    if (!this.attackingPlayer.name === playerName) return;
-
-    const playerTile = this.getTileWithPlayerName(playerName);
-    this.currentAction.sourceTile = playerTile;
-    this.tileHelper.initMove(
-      playerTile,
-      this.currentAction,
-      this.cycleActions.bind(this),
-    );
   }
 
   resetHover() {
     this.grid.tiles.forEach(tile => tile.isHovered = false);
+    this.hoveredTile = null;
   }
 
   setHover(pos) {
-    const clickedTile = this.findTileAtPosition(pos);
-    if (!clickedTile) return;
-    clickedTile.isHovered = true;
+    const hoveredTile = this.findTileAtPosition(pos);
+    if (!hoveredTile) return;
+
+    this.hoveredTile = hoveredTile;
+    this.hoveredTile.isHovered = true;
+
+    // ----ROTATE ACTION----
+    if (!this.tileHelper.isDragging) {
+      if (
+        hoveredTile.tileType.type !== 'EMPTY'
+        && hoveredTile.tileType.type !== 'PLAYER_COLUMN'
+        && !this.hoveredTile.isInHand
+      ) {
+        this.tileHelper.initRotation(hoveredTile, this.currentAction, this.cycleActions.bind(this));
+      }
+
+      if (hoveredTile.tileType.type === 'EMPTY') this.tileHelper.clear();
+    }
   }
 
   findTileAtPosition(pos) {
@@ -304,13 +308,7 @@ export default class extends Level {
 
   cycleActions() {
     // Decrement action
-    this.attackingPlayer.actions -= 1;
-    if (this.attackingPlayer.actions <= 0) {
-      // Reset player actions to max
-      this.attackingPlayer.actions = this.attackingPlayer.maxActions;
-      // Cycle turns
-      this.cyclePlayerTurn();
-    }
+    if (this.attackingPlayer.actions > 0) this.attackingPlayer.actions -= 1;
 
     // Reset currrent action
     this.currentAction = new Action({ player : this.attackingPlayer });
@@ -321,25 +319,54 @@ export default class extends Level {
 
   cyclePlayerTurn() {
     this.processConnection();
-    
+
     // Set defending player
     this.defendingPlayer = this.players[this.currentPlayerTurn];
 
     // Hide old hand
     this.defendingPlayer.hand.setVisibility(false);
 
+    // Reset old player's actions
+    this.defendingPlayer.actions = this.defendingPlayer.maxActions;
+
     // Increment turn
     this.currentPlayerTurn++;
     if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
 
-    // set attacking player
+    // Set new attacking player
     this.attackingPlayer = this.players[this.currentPlayerTurn];
 
-    //Show new hand
+    // Refresh deck if needed
+    if (this.deck.tiles.length <= 0) {
+      this.deck = new Deck({
+        deckSize : this.rows * this.columns,
+      });
+    }
+
+    // Draw a tile
+    this.attackingPlayer.hand.add(this.deck.draw());
+
+    // Show new hand
     this.attackingPlayer.hand.setVisibility(true);
 
-    // Draw new tile
-    if (this.deck.tiles.length > 0) this.attackingPlayer.hand.add(this.deck.draw());
+    // Reset action at turn end
+    this.currentAction = new Action({ player : this.attackingPlayer });
+
+    // Update UI
+    this.GameState.UI.updatePlayerStats(this.players);
+  }
+
+  hoverAvatar(playerName) {
+    // Cant move if it isnt your turn
+    if (!this.attackingPlayer.name === playerName) return;
+
+    const playerTile = this.getTileWithPlayerName(playerName);
+    this.currentAction.sourceTile = playerTile;
+    this.tileHelper.initMove(
+      playerTile,
+      this.currentAction,
+      this.cycleActions.bind(this),
+    );
   }
 
   getTileWithPlayerName(name) {

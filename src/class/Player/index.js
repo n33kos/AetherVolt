@@ -31,9 +31,6 @@ export default class {
 
   setAvatarPosition(tile) {
     const playerSide = (this.name === 'Player 1' ? -1 : 1);
-    this.avatar.targetPosition = new Vector2(
-      tile.canvasPosition.x + (tile.dimensions.x * tile.scale.x) / 2 * playerSide,
-      tile.canvasPosition.y,
-    );
+    this.avatar.targetPosition = tile.canvasPosition;
   }
 }

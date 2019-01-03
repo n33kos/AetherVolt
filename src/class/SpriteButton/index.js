@@ -8,13 +8,16 @@ export default class extends Sprite {
 
     const {
       animations = null,
-      callback = () => {},
-      mouseDownSprite = '',
-      mouseUpSprite = '',
+      onClick = () => {},
+      onHover = () => {},
+      mouseDownSprite = null,
+      mouseUpSprite = null,
+      hoverSprite = null,
       order = -10, // default to low GUI order so it processes first and can break the loop for buttons below
     } = config;
 
-    this.callback = callback;
+    this.onClick = onClick;
+    this.onHover = onHover;
     this.animations = animations;
 
     // This class allows passing in a custom animations array for animated buttons if you like
@@ -24,7 +27,7 @@ export default class extends Sprite {
         mouseDown : {
           frames        : 1,
           loop          : false,
-          spriteSheet   : mouseDownSprite,
+          spriteSheet   : mouseDownSprite || mouseUpSprite,
           ticksPerFrame : 10,
         },
         mouseUp : {
@@ -32,14 +35,22 @@ export default class extends Sprite {
           loop          : false,
           spriteSheet   : mouseUpSprite,
           ticksPerFrame : 10,
+        },
+        hover : {
+          frames        : 1,
+          loop          : false,
+          spriteSheet   : hoverSprite || mouseUpSprite,
+          ticksPerFrame : 10,
         }
       };
     }
     this.currentAnimation = 'mouseUp';
 
     this.addControlsCallback('mouseDown', this.handleMouseDown.bind(this), order);
+    this.addControlsCallback('mouseMove', this.handleMouseMove.bind(this), order);
     this.addControlsCallback('mouseUp', this.handleMouseUp.bind(this), order);
     this.addControlsCallback('touchStart', this.handleMouseDown.bind(this), order);
+    this.addControlsCallback('touchMove', this.handleMouseMove.bind(this), order);
     this.addControlsCallback('touchEnd', this.handleMouseUp.bind(this), order);
   }
 
@@ -59,21 +70,28 @@ export default class extends Sprite {
     );
   }
 
-  handleMouseDown(e) {
+  handleMouseMove() {
+    if (this.isPositionInButton(this.GameState.Controls.position)) {
+      this.currentAnimation = 'hover';
+      this.onHover();
+    } else {
+      this.currentAnimation = 'mouseUp';
+    }
+  }
+
+  handleMouseDown() {
     if (this.isPositionInButton(this.GameState.Controls.position)) {
       this.currentAnimation = 'mouseDown';
-      this.currentFrame = 0;
-      return true;
+      return true; // Returning true breaks execution of event processing loop, preventing other actions from firing
     }
   }
 
   handleMouseUp() {
     this.currentAnimation = 'mouseUp';
-    this.currentFrame = 0;
 
     if (this.isPositionInButton(this.GameState.Controls.position)) {
-      this.callback();
-      return true;
+      this.onClick();
+      return true; // Returning true breaks execution of event processing loop, preventing other actions from firing
     }
   }
 }

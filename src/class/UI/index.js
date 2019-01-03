@@ -12,6 +12,7 @@ export default class {
       quit       : document.querySelectorAll('[data-gamestate-quit]'),
       restart    : document.querySelectorAll('[data-gamestate-restart]'),
       screens    : document.querySelectorAll('[data-ui-target-screen]'),
+      endTurn    : document.querySelectorAll('[data-gamestate-end-turn]'),
     };
     this.isFullscreen = false;
   }
@@ -74,6 +75,13 @@ export default class {
     // UI Screen Transitions
     Array.from(this.buttons.screens).forEach(button => {
       button.addEventListener('click', this.initTransitions.bind(this));
+    });
+
+    // End turn button
+    Array.from(this.buttons.endTurn).forEach(button => {
+      button.addEventListener('click', () => {
+        this.GameState.currentLevel.cyclePlayerTurn();
+      });
     });
   }
 

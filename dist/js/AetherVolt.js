@@ -1111,17 +1111,22 @@ var _class = function (_Sprite) {
 
     var _config$animations = config.animations,
         animations = _config$animations === undefined ? null : _config$animations,
-        _config$callback = config.callback,
-        callback = _config$callback === undefined ? function () {} : _config$callback,
+        _config$onClick = config.onClick,
+        onClick = _config$onClick === undefined ? function () {} : _config$onClick,
+        _config$onHover = config.onHover,
+        onHover = _config$onHover === undefined ? function () {} : _config$onHover,
         _config$mouseDownSpri = config.mouseDownSprite,
-        mouseDownSprite = _config$mouseDownSpri === undefined ? '' : _config$mouseDownSpri,
+        mouseDownSprite = _config$mouseDownSpri === undefined ? null : _config$mouseDownSpri,
         _config$mouseUpSprite = config.mouseUpSprite,
-        mouseUpSprite = _config$mouseUpSprite === undefined ? '' : _config$mouseUpSprite,
+        mouseUpSprite = _config$mouseUpSprite === undefined ? null : _config$mouseUpSprite,
+        _config$hoverSprite = config.hoverSprite,
+        hoverSprite = _config$hoverSprite === undefined ? null : _config$hoverSprite,
         _config$order = config.order,
         order = _config$order === undefined ? -10 : _config$order;
 
 
-    _this.callback = callback;
+    _this.onClick = onClick;
+    _this.onHover = onHover;
     _this.animations = animations;
 
     // This class allows passing in a custom animations array for animated buttons if you like
@@ -1131,7 +1136,7 @@ var _class = function (_Sprite) {
         mouseDown: {
           frames: 1,
           loop: false,
-          spriteSheet: mouseDownSprite,
+          spriteSheet: mouseDownSprite || mouseUpSprite,
           ticksPerFrame: 10
         },
         mouseUp: {
@@ -1139,14 +1144,22 @@ var _class = function (_Sprite) {
           loop: false,
           spriteSheet: mouseUpSprite,
           ticksPerFrame: 10
+        },
+        hover: {
+          frames: 1,
+          loop: false,
+          spriteSheet: hoverSprite || mouseUpSprite,
+          ticksPerFrame: 10
         }
       };
     }
     _this.currentAnimation = 'mouseUp';
 
     _this.addControlsCallback('mouseDown', _this.handleMouseDown.bind(_this), order);
+    _this.addControlsCallback('mouseMove', _this.handleMouseMove.bind(_this), order);
     _this.addControlsCallback('mouseUp', _this.handleMouseUp.bind(_this), order);
     _this.addControlsCallback('touchStart', _this.handleMouseDown.bind(_this), order);
+    _this.addControlsCallback('touchMove', _this.handleMouseMove.bind(_this), order);
     _this.addControlsCallback('touchEnd', _this.handleMouseUp.bind(_this), order);
     return _this;
   }
@@ -1160,23 +1173,31 @@ var _class = function (_Sprite) {
       this.canvasPosition.x + this.absoluteOffset.x * (this.mirrorX ? -1 : 1), this.canvasPosition.y + this.absoluteOffset.y * (this.mirrorY ? -1 : 1)), new _Vector2.default(this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y));
     }
   }, {
+    key: 'handleMouseMove',
+    value: function handleMouseMove() {
+      if (this.isPositionInButton(this.GameState.Controls.position)) {
+        this.currentAnimation = 'hover';
+        this.onHover();
+      } else {
+        this.currentAnimation = 'mouseUp';
+      }
+    }
+  }, {
     key: 'handleMouseDown',
-    value: function handleMouseDown(e) {
+    value: function handleMouseDown() {
       if (this.isPositionInButton(this.GameState.Controls.position)) {
         this.currentAnimation = 'mouseDown';
-        this.currentFrame = 0;
-        return true;
+        return true; // Returning true breaks execution of event processing loop, preventing other actions from firing
       }
     }
   }, {
     key: 'handleMouseUp',
     value: function handleMouseUp() {
       this.currentAnimation = 'mouseUp';
-      this.currentFrame = 0;
 
       if (this.isPositionInButton(this.GameState.Controls.position)) {
-        this.callback();
-        return true;
+        this.onClick();
+        return true; // Returning true breaks execution of event processing loop, preventing other actions from firing
       }
     }
   }]);
@@ -2186,6 +2207,7 @@ var _class = function (_Level) {
     _this.tileHelper = new _TileHelper2.default(GameState);
     _this.attackingPlayer = null;
     _this.defendingPlayer = null;
+    _this.hoveredTile = null;
     return _this;
   }
 
@@ -2222,9 +2244,7 @@ var _class = function (_Level) {
           dimensions: new _Vector2.default(64, 128),
           scale: new _Vector2.default(Math.min(4, this.GameState.Canvas.width / 460), Math.min(4, this.GameState.Canvas.width / 460)),
           offset: new _Vector2.default(0.5, 0.5),
-          callback: this.clickAvatar.bind(this, 'Player 1'),
-          mouseDownSprite: './img/Ship.png',
-          mouseUpSprite: './img/Ship.png',
+          onHover: this.hoverAvatar.bind(this, 'Player 1'),
           targetPosition: new _Vector2.default(-256, this.GameState.Canvas.cy),
           animations: {
             mouseDown: {
@@ -2234,6 +2254,12 @@ var _class = function (_Level) {
               ticksPerFrame: 5
             },
             mouseUp: {
+              frames: 12,
+              loop: true,
+              spriteSheet: './img/Ship.png',
+              ticksPerFrame: 5
+            },
+            hover: {
               frames: 12,
               loop: true,
               spriteSheet: './img/Ship.png',
@@ -2257,9 +2283,7 @@ var _class = function (_Level) {
           dimensions: new _Vector2.default(64, 128),
           scale: new _Vector2.default(Math.min(4, this.GameState.Canvas.width / 460), Math.min(4, this.GameState.Canvas.width / 460)),
           offset: new _Vector2.default(0.5, 0.5),
-          callback: this.clickAvatar.bind(this, 'Player 2'),
-          mouseDownSprite: './img/Ship.png',
-          mouseUpSprite: './img/Ship.png',
+          onHover: this.hoverAvatar.bind(this, 'Player 2'),
           targetPosition: new _Vector2.default(this.GameState.Canvas.width + 256, this.GameState.Canvas.cy),
           mirrorX: true,
           animations: {
@@ -2270,6 +2294,12 @@ var _class = function (_Level) {
               ticksPerFrame: 5
             },
             mouseUp: {
+              frames: 12,
+              loop: true,
+              spriteSheet: './img/Ship.png',
+              ticksPerFrame: 5
+            },
+            hover: {
               frames: 12,
               loop: true,
               spriteSheet: './img/Ship.png',
@@ -2320,12 +2350,12 @@ var _class = function (_Level) {
       this.currentAction = new _Action2.default({ player: this.attackingPlayer });
 
       // Add Clouds
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < 3; i++) {
         var cloud = new _Cloud2.default({
           GameState: this.GameState,
           dimensions: new _Vector2.default(32, 32),
           offset: new _Vector2.default(0.5, 0.5),
-          scale: new _Vector2.default(6 + Math.floor(Math.random() * 14), 6 + Math.floor(Math.random() * 14))
+          scale: new _Vector2.default(15 + Math.floor(Math.random() * 15), 15 + Math.floor(Math.random() * 15))
         });
         cloud.canvasPosition = new _Vector2.default(Math.random() * this.GameState.Canvas.width, Math.random() * this.GameState.Canvas.height);
         this.GameState.Scene.add(cloud);
@@ -2356,11 +2386,13 @@ var _class = function (_Level) {
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(e) {
+      this.resetHover();
+
       if (this.tileHelper.isDragging && this.tileHelper.tile) {
         this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
-        this.resetHover();
-        this.setHover(this.GameState.Controls.position);
       }
+
+      this.setHover(this.GameState.Controls.position);
     }
   }, {
     key: 'handleMouseUp',
@@ -2384,21 +2416,6 @@ var _class = function (_Level) {
         this.tileHelper.placeDraggedCell();
         this.tileHelper.clear();
       }
-
-      //----ROTATE ACTION----
-      if (clickedTile.tileType.type !== 'PLAYER_COLUMN' && clickedTile.tileType.type !== 'EMPTY' && this.currentAction.sourceTile && this.currentAction.sourceTile.uuid === clickedTile.uuid) {
-        this.tileHelper.initRotation(clickedTile, this.currentAction, this.cycleActions.bind(this));
-      }
-    }
-  }, {
-    key: 'clickAvatar',
-    value: function clickAvatar(playerName) {
-      // Cant move if it isnt your turn
-      if (!this.attackingPlayer.name === playerName) return;
-
-      var playerTile = this.getTileWithPlayerName(playerName);
-      this.currentAction.sourceTile = playerTile;
-      this.tileHelper.initMove(playerTile, this.currentAction, this.cycleActions.bind(this));
     }
   }, {
     key: 'resetHover',
@@ -2406,13 +2423,25 @@ var _class = function (_Level) {
       this.grid.tiles.forEach(function (tile) {
         return tile.isHovered = false;
       });
+      this.hoveredTile = null;
     }
   }, {
     key: 'setHover',
     value: function setHover(pos) {
-      var clickedTile = this.findTileAtPosition(pos);
-      if (!clickedTile) return;
-      clickedTile.isHovered = true;
+      var hoveredTile = this.findTileAtPosition(pos);
+      if (!hoveredTile) return;
+
+      this.hoveredTile = hoveredTile;
+      this.hoveredTile.isHovered = true;
+
+      // ----ROTATE ACTION----
+      if (!this.tileHelper.isDragging) {
+        if (hoveredTile.tileType.type !== 'EMPTY' && hoveredTile.tileType.type !== 'PLAYER_COLUMN' && !this.hoveredTile.isInHand) {
+          this.tileHelper.initRotation(hoveredTile, this.currentAction, this.cycleActions.bind(this));
+        }
+
+        if (hoveredTile.tileType.type === 'EMPTY') this.tileHelper.clear();
+      }
     }
   }, {
     key: 'findTileAtPosition',
@@ -2431,13 +2460,7 @@ var _class = function (_Level) {
     key: 'cycleActions',
     value: function cycleActions() {
       // Decrement action
-      this.attackingPlayer.actions -= 1;
-      if (this.attackingPlayer.actions <= 0) {
-        // Reset player actions to max
-        this.attackingPlayer.actions = this.attackingPlayer.maxActions;
-        // Cycle turns
-        this.cyclePlayerTurn();
-      }
+      if (this.attackingPlayer.actions > 0) this.attackingPlayer.actions -= 1;
 
       // Reset currrent action
       this.currentAction = new _Action2.default({ player: this.attackingPlayer });
@@ -2456,18 +2479,44 @@ var _class = function (_Level) {
       // Hide old hand
       this.defendingPlayer.hand.setVisibility(false);
 
+      // Reset old player's actions
+      this.defendingPlayer.actions = this.defendingPlayer.maxActions;
+
       // Increment turn
       this.currentPlayerTurn++;
       if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
 
-      // set attacking player
+      // Set new attacking player
       this.attackingPlayer = this.players[this.currentPlayerTurn];
 
-      //Show new hand
+      // Refresh deck if needed
+      if (this.deck.tiles.length <= 0) {
+        this.deck = new _Deck2.default({
+          deckSize: this.rows * this.columns
+        });
+      }
+
+      // Draw a tile
+      this.attackingPlayer.hand.add(this.deck.draw());
+
+      // Show new hand
       this.attackingPlayer.hand.setVisibility(true);
 
-      // Draw new tile
-      if (this.deck.tiles.length > 0) this.attackingPlayer.hand.add(this.deck.draw());
+      // Reset action at turn end
+      this.currentAction = new _Action2.default({ player: this.attackingPlayer });
+
+      // Update UI
+      this.GameState.UI.updatePlayerStats(this.players);
+    }
+  }, {
+    key: 'hoverAvatar',
+    value: function hoverAvatar(playerName) {
+      // Cant move if it isnt your turn
+      if (!this.attackingPlayer.name === playerName) return;
+
+      var playerTile = this.getTileWithPlayerName(playerName);
+      this.currentAction.sourceTile = playerTile;
+      this.tileHelper.initMove(playerTile, this.currentAction, this.cycleActions.bind(this));
     }
   }, {
     key: 'getTileWithPlayerName',
@@ -2606,9 +2655,16 @@ var _class = function () {
       this.sourceTile.player = null;
       this.targetTile.player.setAvatarPosition(this.targetTile);
     }
+
+    // TODO: Add a function to get the allowed/required actions
+
   }, {
     key: 'commit',
     value: function commit() {
+      if (this.player.actions <= 0) return;
+
+      // TODO: Add move enforcement here, get 1 free move per turn, must move.
+
       switch (this.actionType.type) {
         case 'MOVE':
           this.move();
@@ -2875,7 +2931,7 @@ var _class = function (_Sprite) {
 
     _this.targetPosition = targetPosition;
     _this.canvasPosition = targetPosition;
-    _this.moveSpeed = 1 + Math.floor(Math.random() * 5);
+    _this.moveSpeed = 1;
     return _this;
   }
 
@@ -3696,7 +3752,7 @@ var _class = function () {
     key: 'setAvatarPosition',
     value: function setAvatarPosition(tile) {
       var playerSide = this.name === 'Player 1' ? -1 : 1;
-      this.avatar.targetPosition = new _Vector2.default(tile.canvasPosition.x + tile.dimensions.x * tile.scale.x / 2 * playerSide, tile.canvasPosition.y);
+      this.avatar.targetPosition = tile.canvasPosition;
     }
   }]);
 
@@ -3763,26 +3819,27 @@ var _class = function () {
       this.isRotating = true;
 
       var leftButton = new _SpriteButton2.default({
-        callback: this.rotateLeft.bind(this),
-        mouseDownSprite: './img/rotate.png',
-        mouseUpSprite: './img/rotate.png',
+        onClick: this.rotateLeft.bind(this),
+        mouseDownSprite: './img/Rotate_Left.png',
+        mouseUpSprite: './img/Rotate_Left.png',
+        hoverSprite: './img/Rotate_Left.png',
         scale: tile.scale,
         dimensions: new _Vector2.default(64, 64),
-        mirrorX: true,
         order: -20
       });
-      leftButton.canvasPosition = new _Vector2.default(tile.canvasPosition.x - tile.dimensions.x * tile.scale.x, tile.canvasPosition.y);
+      leftButton.canvasPosition = new _Vector2.default(tile.canvasPosition.x + tile.dimensions.x * tile.scale.x / 2, tile.canvasPosition.y);
       leftButton.calculateOffset();
 
       var rightButton = new _SpriteButton2.default({
-        callback: this.rotateRight.bind(this),
-        mouseDownSprite: './img/rotate.png',
-        mouseUpSprite: './img/rotate.png',
+        onClick: this.rotateRight.bind(this),
+        mouseDownSprite: './img/Rotate_Right.png',
+        mouseUpSprite: './img/Rotate_Right.png',
+        hoverSprite: './img/Rotate_Right.png',
         scale: tile.scale,
         dimensions: new _Vector2.default(64, 64),
         order: -20
       });
-      rightButton.canvasPosition = new _Vector2.default(tile.canvasPosition.x + tile.dimensions.x * tile.scale.x, tile.canvasPosition.y);
+      rightButton.canvasPosition = new _Vector2.default(tile.canvasPosition.x - tile.dimensions.x * tile.scale.x / 2, tile.canvasPosition.y);
       rightButton.calculateOffset();
 
       this.helperUUIDs = [this.GameState.Scene.add(leftButton), this.GameState.Scene.add(rightButton)];
@@ -3791,7 +3848,7 @@ var _class = function () {
     key: 'rotateLeft',
     value: function rotateLeft() {
       this.currentAction.actionType = new _ActionType2.default('ROTATE');
-      this.currentAction.rotationDirection = 1;
+      this.currentAction.rotationDirection = -1;
       this.currentAction.targetTile = this.tile;
       this.currentAction.commit();
       if (!this.tile.isInHand) {
@@ -3803,7 +3860,7 @@ var _class = function () {
     key: 'rotateRight',
     value: function rotateRight() {
       this.currentAction.actionType = new _ActionType2.default('ROTATE');
-      this.currentAction.rotationDirection = -1;
+      this.currentAction.rotationDirection = 1;
       this.currentAction.targetTile = this.tile;
       this.currentAction.commit();
       if (!this.tile.isInHand) {
@@ -3848,9 +3905,10 @@ var _class = function () {
       var avatar = this.currentAction.sourceTile.player.avatar;
 
       var upButton = new _SpriteButton2.default({
-        callback: this.moveUp.bind(this),
-        mouseDownSprite: './img/move.png',
-        mouseUpSprite: './img/move.png',
+        onClick: this.moveUp.bind(this),
+        mouseDownSprite: './img/Move_Up.png',
+        mouseUpSprite: './img/Move_Up.png',
+        hoverSprite: './img/Move_Up.png',
         scale: tile.scale,
         dimensions: new _Vector2.default(64, 64),
         order: -20
@@ -3859,12 +3917,12 @@ var _class = function () {
       upButton.calculateOffset();
 
       var downButton = new _SpriteButton2.default({
-        callback: this.moveDown.bind(this),
-        mouseDownSprite: './img/move.png',
-        mouseUpSprite: './img/move.png',
+        onClick: this.moveDown.bind(this),
+        mouseDownSprite: './img/Move_Down.png',
+        mouseUpSprite: './img/Move_Down.png',
+        hoverSprite: './img/Move_Down.png',
         scale: tile.scale,
         dimensions: new _Vector2.default(64, 64),
-        mirrorY: true,
         order: -20
       });
       downButton.canvasPosition = new _Vector2.default(avatar.canvasPosition.x, avatar.canvasPosition.y + avatar.dimensions.y * avatar.scale.y / 2);
@@ -4097,7 +4155,8 @@ var _class = function () {
       play: document.querySelectorAll('[data-gamestate-play]'),
       quit: document.querySelectorAll('[data-gamestate-quit]'),
       restart: document.querySelectorAll('[data-gamestate-restart]'),
-      screens: document.querySelectorAll('[data-ui-target-screen]')
+      screens: document.querySelectorAll('[data-ui-target-screen]'),
+      endTurn: document.querySelectorAll('[data-gamestate-end-turn]')
     };
     this.isFullscreen = false;
   }
@@ -4177,6 +4236,13 @@ var _class = function () {
       // UI Screen Transitions
       Array.from(this.buttons.screens).forEach(function (button) {
         button.addEventListener('click', _this.initTransitions.bind(_this));
+      });
+
+      // End turn button
+      Array.from(this.buttons.endTurn).forEach(function (button) {
+        button.addEventListener('click', function () {
+          _this.GameState.currentLevel.cyclePlayerTurn();
+        });
       });
     }
   }, {

@@ -24,30 +24,31 @@ export default class {
     this.isRotating = true;
 
     const leftButton = new SpriteButton({
-      callback : this.rotateLeft.bind(this),
-      mouseDownSprite : './img/rotate.png',
-      mouseUpSprite : './img/rotate.png',
+      onClick : this.rotateLeft.bind(this),
+      mouseDownSprite : './img/Rotate_Left.png',
+      mouseUpSprite : './img/Rotate_Left.png',
+      hoverSprite : './img/Rotate_Left.png',
       scale : tile.scale,
       dimensions : new Vector2(64, 64),
-      mirrorX : true,
       order: -20,
     });
     leftButton.canvasPosition = new Vector2(
-      tile.canvasPosition.x - (tile.dimensions.x * tile.scale.x),
+      tile.canvasPosition.x + (tile.dimensions.x * tile.scale.x / 2),
       tile.canvasPosition.y,
     );
     leftButton.calculateOffset();
 
     const rightButton = new SpriteButton({
-      callback : this.rotateRight.bind(this),
-      mouseDownSprite : './img/rotate.png',
-      mouseUpSprite : './img/rotate.png',
+      onClick : this.rotateRight.bind(this),
+      mouseDownSprite : './img/Rotate_Right.png',
+      mouseUpSprite : './img/Rotate_Right.png',
+      hoverSprite : './img/Rotate_Right.png',
       scale : tile.scale,
       dimensions : new Vector2(64, 64),
       order: -20,
     });
     rightButton.canvasPosition = new Vector2(
-      tile.canvasPosition.x + (tile.dimensions.x * tile.scale.x),
+      tile.canvasPosition.x - (tile.dimensions.x * tile.scale.x / 2),
       tile.canvasPosition.y,
     );
     rightButton.calculateOffset();
@@ -60,7 +61,7 @@ export default class {
 
   rotateLeft() {
     this.currentAction.actionType = new ActionType('ROTATE');
-    this.currentAction.rotationDirection = 1;
+    this.currentAction.rotationDirection = -1;
     this.currentAction.targetTile = this.tile;
     this.currentAction.commit();
     if (!this.tile.isInHand) {
@@ -71,7 +72,7 @@ export default class {
 
   rotateRight() {
     this.currentAction.actionType = new ActionType('ROTATE');
-    this.currentAction.rotationDirection = -1;
+    this.currentAction.rotationDirection = 1;
     this.currentAction.targetTile = this.tile;
     this.currentAction.commit();
     if (!this.tile.isInHand) {
@@ -113,9 +114,10 @@ export default class {
     const avatar = this.currentAction.sourceTile.player.avatar;
 
     const upButton = new SpriteButton({
-      callback : this.moveUp.bind(this),
-      mouseDownSprite : './img/move.png',
-      mouseUpSprite : './img/move.png',
+      onClick : this.moveUp.bind(this),
+      mouseDownSprite : './img/Move_Up.png',
+      mouseUpSprite : './img/Move_Up.png',
+      hoverSprite : './img/Move_Up.png',
       scale : tile.scale,
       dimensions : new Vector2(64, 64),
       order: -20,
@@ -127,12 +129,12 @@ export default class {
     upButton.calculateOffset();
 
     const downButton = new SpriteButton({
-      callback : this.moveDown.bind(this),
-      mouseDownSprite : './img/move.png',
-      mouseUpSprite : './img/move.png',
+      onClick : this.moveDown.bind(this),
+      mouseDownSprite : './img/Move_Down.png',
+      mouseUpSprite : './img/Move_Down.png',
+      hoverSprite : './img/Move_Down.png',
       scale : tile.scale,
       dimensions : new Vector2(64, 64),
-      mirrorY : true,
       order: -20,
     });
     downButton.canvasPosition = new Vector2(
