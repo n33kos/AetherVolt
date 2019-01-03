@@ -13,6 +13,8 @@ export default class {
     health = 50,
     maxActions = 2,
     maxHealth = 50,
+    maxMoves = 1,
+    moves = 1,
     name = 'Player 1',
   }) {
     this.GameState = GameState;
@@ -26,6 +28,8 @@ export default class {
     this.health = health;
     this.maxActions = maxActions;
     this.maxHealth = maxHealth;
+    this.maxMoves = maxMoves;
+    this.moves = moves;
     this.name = name;
   }
 

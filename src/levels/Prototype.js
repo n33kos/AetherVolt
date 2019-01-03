@@ -308,7 +308,20 @@ export default class extends Level {
 
   cycleActions() {
     // Decrement action
-    if (this.attackingPlayer.actions > 0) this.attackingPlayer.actions -= 1;
+    if (
+      this.attackingPlayer.actions > 0
+      && this.currentAction.actionType.type !== 'MOVE'
+    ) {
+      this.attackingPlayer.actions -= 1;
+    }
+
+    // Decrement movement
+    if (
+      this.attackingPlayer.moves > 0
+      && this.currentAction.actionType.type === 'MOVE'
+    ) {
+        this.attackingPlayer.moves -= 1;
+    }
 
     // Reset currrent action
     this.currentAction = new Action({ player : this.attackingPlayer });
@@ -328,6 +341,9 @@ export default class extends Level {
 
     // Reset old player's actions
     this.defendingPlayer.actions = this.defendingPlayer.maxActions;
+
+    // Reset old players moves
+    this.defendingPlayer.moves = this.defendingPlayer.maxMoves;
 
     // Increment turn
     this.currentPlayerTurn++;
@@ -358,7 +374,7 @@ export default class extends Level {
 
   hoverAvatar(playerName) {
     // Cant move if it isnt your turn
-    if (!this.attackingPlayer.name === playerName) return;
+    if (this.attackingPlayer.name !== playerName) return;
 
     const playerTile = this.getTileWithPlayerName(playerName);
     this.currentAction.sourceTile = playerTile;

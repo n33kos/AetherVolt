@@ -2460,7 +2460,14 @@ var _class = function (_Level) {
     key: 'cycleActions',
     value: function cycleActions() {
       // Decrement action
-      if (this.attackingPlayer.actions > 0) this.attackingPlayer.actions -= 1;
+      if (this.attackingPlayer.actions > 0 && this.currentAction.actionType.type !== 'MOVE') {
+        this.attackingPlayer.actions -= 1;
+      }
+
+      // Decrement movement
+      if (this.attackingPlayer.moves > 0 && this.currentAction.actionType.type === 'MOVE') {
+        this.attackingPlayer.moves -= 1;
+      }
 
       // Reset currrent action
       this.currentAction = new _Action2.default({ player: this.attackingPlayer });
@@ -2481,6 +2488,9 @@ var _class = function (_Level) {
 
       // Reset old player's actions
       this.defendingPlayer.actions = this.defendingPlayer.maxActions;
+
+      // Reset old players moves
+      this.defendingPlayer.moves = this.defendingPlayer.maxMoves;
 
       // Increment turn
       this.currentPlayerTurn++;
@@ -2512,7 +2522,7 @@ var _class = function (_Level) {
     key: 'hoverAvatar',
     value: function hoverAvatar(playerName) {
       // Cant move if it isnt your turn
-      if (!this.attackingPlayer.name === playerName) return;
+      if (this.attackingPlayer.name !== playerName) return;
 
       var playerTile = this.getTileWithPlayerName(playerName);
       this.currentAction.sourceTile = playerTile;
@@ -2661,20 +2671,19 @@ var _class = function () {
   }, {
     key: 'commit',
     value: function commit() {
-      if (this.player.actions <= 0) return;
+      if (this.player.actions > 0) {
+        switch (this.actionType.type) {
+          case 'PLACE':
+            this.place();
+            break;
+          case 'ROTATE':
+            this.rotate();
+            break;
+        }
+      }
 
-      // TODO: Add move enforcement here, get 1 free move per turn, must move.
-
-      switch (this.actionType.type) {
-        case 'MOVE':
-          this.move();
-          break;
-        case 'PLACE':
-          this.place();
-          break;
-        case 'ROTATE':
-          this.rotate();
-          break;
+      if (this.player.moves > 0 && this.actionType.type === 'MOVE') {
+        this.move();
       }
     }
   }]);
@@ -3729,6 +3738,10 @@ var _class = function () {
         maxActions = _ref$maxActions === undefined ? 2 : _ref$maxActions,
         _ref$maxHealth = _ref.maxHealth,
         maxHealth = _ref$maxHealth === undefined ? 50 : _ref$maxHealth,
+        _ref$maxMoves = _ref.maxMoves,
+        maxMoves = _ref$maxMoves === undefined ? 1 : _ref$maxMoves,
+        _ref$moves = _ref.moves,
+        moves = _ref$moves === undefined ? 1 : _ref$moves,
         _ref$name = _ref.name,
         name = _ref$name === undefined ? 'Player 1' : _ref$name;
 
@@ -3745,6 +3758,8 @@ var _class = function () {
     this.health = health;
     this.maxActions = maxActions;
     this.maxHealth = maxHealth;
+    this.maxMoves = maxMoves;
+    this.moves = moves;
     this.name = name;
   }
 
@@ -4312,10 +4327,12 @@ var _class = function () {
         var health = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="health"]');
         var damage = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="damage"]');
         var actions = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="actions"]');
+        var moves = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="moves"]');
         name.innerHTML = '' + player.name + (_this2.GameState.currentLevel.currentPlayerTurn === index ? '*' : '');
         health.innerHTML = 'HP: ' + player.health + '/' + player.maxHealth;
         damage.innerHTML = 'DMG: ' + player.damage;
         actions.innerHTML = 'ACT: ' + player.actions + '/' + player.maxActions;
+        moves.innerHTML = 'MOV: ' + player.moves + '/' + player.maxMoves;
       });
     }
   }, {

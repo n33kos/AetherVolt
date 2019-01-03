@@ -39,20 +39,19 @@ export default class {
   // TODO: Add a function to get the allowed/required actions
 
   commit() {
-    if (this.player.actions <= 0) return;
+    if (this.player.actions > 0) {
+      switch (this.actionType.type) {
+        case 'PLACE':
+          this.place();
+          break;
+        case 'ROTATE':
+          this.rotate();
+          break;
+      }
+    }
 
-    // TODO: Add move enforcement here, get 1 free move per turn, must move.
-
-    switch (this.actionType.type) {
-      case 'MOVE':
-        this.move();
-        break;
-      case 'PLACE':
-        this.place();
-        break;
-      case 'ROTATE':
-        this.rotate();
-        break;
+    if (this.player.moves > 0 && this.actionType.type === 'MOVE') {
+      this.move();
     }
   }
 }
