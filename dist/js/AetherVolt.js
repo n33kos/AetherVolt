@@ -513,10 +513,10 @@ var _class = function (_Sprite) {
 
     _this.animations = {
       exist: {
-        frames: 1,
+        frames: 4,
         spriteSheet: './img/Pipes_Empty.png',
-        ticksPerFrame: 5,
-        loop: false
+        ticksPerFrame: 1,
+        loop: true
       }
     };
     _this.currentAnimation = 'exist';
@@ -793,7 +793,7 @@ var _class = function () {
         3: './img/Better_Conductor_Straight.png',
         4: './img/Better_Conductor_Bend.png',
         5: './img/Better_Conductor_Triple.png',
-        6: './img/Better_Conductor_Quad.png'
+        6: './img/Propeller_Conductor_Quad.png'
       };
 
       return sprites[id];

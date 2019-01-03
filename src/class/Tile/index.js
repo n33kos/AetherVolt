@@ -33,10 +33,10 @@ export default class extends Sprite {
 
     this.animations = {
       exist: {
-        frames        : 1,
+        frames        : 4,
         spriteSheet   : './img/Pipes_Empty.png',
-        ticksPerFrame : 5,
-        loop          : false,
+        ticksPerFrame : 1,
+        loop          : true,
       },
     };
     this.currentAnimation = 'exist';
