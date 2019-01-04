@@ -513,7 +513,7 @@ var _class = function (_Sprite) {
 
     _this.animations = {
       exist: {
-        frames: 4,
+        frames: 5,
         spriteSheet: './img/Pipes_Empty.png',
         ticksPerFrame: 1,
         loop: true
@@ -788,11 +788,11 @@ var _class = function () {
     key: 'getSpriteSheet',
     value: function getSpriteSheet(id) {
       var sprites = {
-        1: './img/Better_Conductor_Empty.png',
-        2: './img/Better_Conductor_Empty.png',
-        3: './img/Better_Conductor_Straight.png',
-        4: './img/Better_Conductor_Bend.png',
-        5: './img/Better_Conductor_Triple.png',
+        1: './img/Propeller_Conductor_Empty.png',
+        2: './img/Propeller_Conductor_Empty.png',
+        3: './img/Propeller_Conductor_Straight.png',
+        4: './img/Propeller_Conductor_Bend.png',
+        5: './img/Propeller_Conductor_Triple.png',
         6: './img/Propeller_Conductor_Quad.png'
       };
 
@@ -1178,8 +1178,6 @@ var _class = function (_Sprite) {
       if (this.isPositionInButton(this.GameState.Controls.position)) {
         this.currentAnimation = 'hover';
         this.onHover();
-      } else {
-        this.currentAnimation = 'mouseUp';
       }
     }
   }, {
@@ -2777,9 +2775,11 @@ var _class = function (_SpriteButton) {
     value: function takeDamageAnimation(color) {
       var _this2 = this;
 
+      console.log(this.currentAnimation);
       this.currentAnimation = 'damage';
 
       window.setTimeout(function () {
+        console.log(_this2.currentAnimation);
         _this2.currentAnimation = 'mouseUp';
       }, 750);
     }

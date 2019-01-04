@@ -74,8 +74,6 @@ export default class extends Sprite {
     if (this.isPositionInButton(this.GameState.Controls.position)) {
       this.currentAnimation = 'hover';
       this.onHover();
-    } else {
-      this.currentAnimation = 'mouseUp';
     }
   }
 
