@@ -51,11 +51,9 @@ export default class extends SpriteButton {
   }
 
   takeDamageAnimation(color) {
-    console.log(this.currentAnimation);
     this.currentAnimation = 'damage';
 
     window.setTimeout(() => {
-      console.log(this.currentAnimation);
       this.currentAnimation = 'mouseUp';
     }, 750);
   }

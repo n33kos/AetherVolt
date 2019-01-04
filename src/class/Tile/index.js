@@ -1,5 +1,7 @@
-import Sprite  from 'class/Sprite';
-import Vector2 from 'class/Vector2';
+import DismissedTile from 'class/DismissedTile';
+import Sprite        from 'class/Sprite';
+import TileType      from 'class/TileType';
+import Vector2       from 'class/Vector2';
 
 export default class extends Sprite {
   constructor(config) {
@@ -166,5 +168,21 @@ export default class extends Sprite {
       Math.sin(this.turbulenceStep) * this.turbulenceRange.y,
     );
     this.turbulenceScale = Math.cos(this.turbulenceStep) * this.turbulenceScaleRange;
+  }
+
+  emptyTile() {
+    const dismissedTile = new DismissedTile({
+      animations     : this.animations,
+      canvasPosition : this.canvasPosition,
+      dimensions     : this.dimensions,
+      GameState      : this.GameState,
+      offset         : this.offset,
+      scale          : this.scale,
+    });
+    this.GameState.Scene.add(dismissedTile);
+
+    this.setType(new TileType('EMPTY'));
+    this.placedBy = false;
+    this.init(this.grid);
   }
 }

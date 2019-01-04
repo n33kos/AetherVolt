@@ -1,21 +1,21 @@
-import Action      from 'class/Action';
-import ActionType  from 'class/ActionType';
-import Avatar      from 'class/Avatar';
-import Background  from 'class/Background';
-import Cloud       from 'class/Cloud';
-import Deck        from 'class/Deck';
-import Grid        from 'class/Grid';
-import Hand        from 'class/Hand';
-import Level       from 'class/Level';
-import Lightning   from 'class/Lightning';
-import Pathfinder  from 'class/Pathfinder';
-import Player      from 'class/Player';
-import randomRange from 'lib/randomRange';
-import Tile        from 'class/Tile';
-import TileHelper  from 'class/TileHelper';
-import TileType    from 'class/TileType';
-import uuidv4      from 'uuid/v4';
-import Vector2     from 'class/Vector2';
+import Action        from 'class/Action';
+import ActionType    from 'class/ActionType';
+import Avatar        from 'class/Avatar';
+import Background    from 'class/Background';
+import Cloud         from 'class/Cloud';
+import Deck          from 'class/Deck';
+import Grid          from 'class/Grid';
+import Hand          from 'class/Hand';
+import Level         from 'class/Level';
+import Lightning     from 'class/Lightning';
+import Pathfinder    from 'class/Pathfinder';
+import Player        from 'class/Player';
+import randomRange   from 'lib/randomRange';
+import Tile          from 'class/Tile';
+import TileHelper    from 'class/TileHelper';
+import TileType      from 'class/TileType';
+import uuidv4        from 'uuid/v4';
+import Vector2       from 'class/Vector2';
 
 export default class extends Level {
   constructor(config) {
@@ -246,7 +246,8 @@ export default class extends Level {
     // ----EMPTY TILE ACTION----
     if (
       !clickedTile
-      || (clickedTile.tileType.type === 'EMPTY' && !this.tileHelper.isDragging)
+      || (!this.tileHelper.isDragging && clickedTile.tileType.type === 'EMPTY')
+      || (this.tileHelper.isDragging && clickedTile === this.currentAction.sourceTile)
     ) {
       this.currentAction.sourceTile = null;
       this.currentAction.targetTile = null;
@@ -404,6 +405,9 @@ export default class extends Level {
       endCell.player.health -= (startCell.player.damage + damageAmplifier);
       endCell.player.avatar.takeDamageAnimation();
       this.fireLightning(path);
+
+      // Dismiss used tiles
+      path.forEach(tile => tile.emptyTile());
     }
 
     this.endGameLogic();

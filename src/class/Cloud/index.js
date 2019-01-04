@@ -41,11 +41,4 @@ export default class extends Sprite {
     this.handleMovement();
     super.drawEntity();
   }
-
-  takeDamageAnimation() {
-    this.currentAnimation = 'damage';
-    window.setTimeout(() => {
-      this.currentAnimation = 'mouseUp';
-    }, 750);
-  }
 }
