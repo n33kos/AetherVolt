@@ -1,3 +1,5 @@
+import cyclePlayerTurn from 'levels/lib/cyclePlayerTurn';
+
 export default class {
   constructor(GameState) {
     this.GameState = GameState;
@@ -80,7 +82,7 @@ export default class {
     // End turn button
     Array.from(this.buttons.endTurn).forEach(button => {
       button.addEventListener('click', () => {
-        this.GameState.currentLevel.cyclePlayerTurn();
+        cyclePlayerTurn.call(this.GameState.currentLevel);
       });
     });
   }
