@@ -3,24 +3,33 @@ import Vector2 from 'class/Vector2';
 
 export default class extends Sprite {
   constructor(config) {
+    config.animations = {
+      exist : {
+        frames        : 1,
+        loop          : false,
+        spriteSheet   : config.sprite,
+        ticksPerFrame : 10,
+      },
+    };
     config.currentAnimation = 'exist';
 
     super(config);
-
-    // TODO: This isn't rendering, figure out why, its probably something small and obvious
 
     this.canvasPosition = config.canvasPosition;
     this.targetPosition = new Vector2(
       config.canvasPosition.x,
       this.GameState.Canvas.height * 1.5,
     );
-    this.moveSpeed = 0.005;
+    this.moveSpeed = 2 + Math.random() * 3;
+    this.calculateOffset();
   }
 
   handleMovement() {
-    //let newY = this.canvasPosition.y + (this.moveSpeed * this.GameState.deltaTime);
-    //this.canvasPosition.y = newY;
-    //if (newY >= this.GameState.Canvas.height * 1.5) this.destroySelf();
+    let newY = this.canvasPosition.y + (this.moveSpeed * this.GameState.deltaTime);
+    this.canvasPosition.y = newY;
+    if (newY >= this.GameState.Canvas.height * 1.5) this.destroySelf();
+
+    this.rotation += 0.5 * this.GameState.deltaTime;
   }
 
   destroySelf() {

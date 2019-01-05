@@ -1,3 +1,4 @@
+import cloneClass    from 'lib/cloneClass';
 import DismissedTile from 'class/DismissedTile';
 import Sprite        from 'class/Sprite';
 import TileType      from 'class/TileType';
@@ -161,7 +162,7 @@ export default class extends Sprite {
 
   addTurbulence() {
     this.turbulenceStep += this.turbulenceSpeed;
-    if (this.turbulenceStep >= Math.PI*2) this.turbulenceStep = 0;
+    if (this.turbulenceStep >= Math.PI * 2) this.turbulenceStep = 0;
 
     this.turbulence = new Vector2(
       Math.cos(this.turbulenceStep) * this.turbulenceRange.x,
@@ -172,7 +173,7 @@ export default class extends Sprite {
 
   emptyTile() {
     const dismissedTile = new DismissedTile({
-      animations     : this.animations,
+      sprite         : this.animations.exist.spriteSheet,
       canvasPosition : this.canvasPosition,
       dimensions     : this.dimensions,
       GameState      : this.GameState,
