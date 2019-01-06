@@ -1,8 +1,29 @@
-import Action            from 'class/Action';
-import Deck              from 'class/Deck';
-import processConnection from './processConnection';
+import Action                     from 'class/Action';
+import ActionType                 from 'class/ActionType';
+import cycleActions               from './cycleActions';
+import Deck                       from 'class/Deck';
+import getRandomIntegerNotEqualTo from 'lib/getRandomIntegerNotEqualTo';
+import getTileWithPlayerName      from './getTileWithPlayerName';
+import processConnection          from './processConnection';
 
 export default function() {
+  // Move player to random cell if they did not move
+  if (this.attackingPlayer.moves > 0) {
+    const startingTile = getTileWithPlayerName.call(this, this.attackingPlayer.name);
+    const randomTile = getRandomIntegerNotEqualTo(startingTile.y, 0, this.columns);
+    const finalTile = this.grid.tiles.find(tile => tile.id === `${startingTile.x}_${randomTile}`);
+
+    if (startingTile && finalTile) {
+      this.currentAction.actionType = new ActionType('MOVE');
+      this.currentAction.sourceTile = startingTile;
+      this.currentAction.targetTile = finalTile;
+      this.currentAction.commit();
+      cycleActions.call(this);
+      this.tileHelper.clear();
+    }
+  }
+
+  // Process the connection
   processConnection.call(this);
 
   // Set defending player

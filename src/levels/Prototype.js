@@ -9,10 +9,10 @@ import Hand          from 'class/Hand';
 import Level         from 'class/Level';
 import Player        from 'class/Player';
 import TileHelper    from 'class/TileHelper';
-import uuidv4        from 'uuid/v4';
 import Vector2       from 'class/Vector2';
 
 // ----- Level Functions ----
+// VV These expect to be bound to the scope of this class, there is probably a better pattern than this VV
 import * as controls      from './lib/controls';
 import cycleActions       from './lib/cycleActions';
 import findTileAtPosition from './lib/findTileAtPosition';
@@ -65,7 +65,7 @@ export default class extends Level {
       new Player({
         GameState : this.GameState,
         name : 'Player 1',
-        uuid : uuidv4(),
+        id   : 0,
         color: '0,0,255',
         avatar: new Avatar({
           GameState : this.GameState,
@@ -111,7 +111,7 @@ export default class extends Level {
       new Player({
         GameState : this.GameState,
         name : 'Player 2',
-        uuid : uuidv4(),
+        id   : 1,
         color: '255,0,0',
         avatar: new Avatar({
           GameState : this.GameState,
