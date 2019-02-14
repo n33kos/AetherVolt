@@ -2662,6 +2662,19 @@ var _class = function (_Level) {
       bg.canvasPosition = new _Vector2.default(0, -this.GameState.Canvas.height);
       this.GameState.Scene.add(bg);
 
+      // Add Clouds
+      for (var i = 0; i < 10; i++) {
+        var cloud = new _Cloud2.default({
+          GameState: this.GameState,
+          dimensions: new _Vector2.default(32, 32),
+          offset: new _Vector2.default(0.5, 0.5),
+          scale: new _Vector2.default(15 + Math.floor(Math.random() * 15), 15 + Math.floor(Math.random() * 15))
+        });
+        cloud.canvasPosition = new _Vector2.default(Math.random() * this.GameState.Canvas.width, Math.random() * this.GameState.Canvas.height);
+
+        this.GameState.Scene.add(cloud);
+      }
+
       // Init deck
       this.deck = new _Deck2.default({
         deckSize: this.rows * this.columns
@@ -2782,19 +2795,6 @@ var _class = function (_Level) {
 
       // Init current action
       this.currentAction = new _Action2.default({ player: this.attackingPlayer });
-
-      // Add Clouds
-      for (var i = 0; i < 3; i++) {
-        var cloud = new _Cloud2.default({
-          GameState: this.GameState,
-          dimensions: new _Vector2.default(32, 32),
-          offset: new _Vector2.default(0.5, 0.5),
-          scale: new _Vector2.default(15 + Math.floor(Math.random() * 15), 15 + Math.floor(Math.random() * 15))
-        });
-        cloud.canvasPosition = new _Vector2.default(Math.random() * this.GameState.Canvas.width, Math.random() * this.GameState.Canvas.height);
-
-        // this.GameState.Scene.add(cloud);
-      }
 
       // Init Controls
       this.addControlsCallback('mouseDown', controls.handleMouseDown.bind(this));
