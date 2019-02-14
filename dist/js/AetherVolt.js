@@ -2654,9 +2654,10 @@ var _class = function (_Level) {
       // Add background
       var bg = new _Background2.default({
         GameState: this.GameState,
-        dimensions: new _Vector2.default(128, 256),
+        dimensions: new _Vector2.default(512, 1024),
+        image: './img/Trees-Test.png',
         offset: new _Vector2.default(0, 0),
-        scale: new _Vector2.default(this.GameState.Canvas.width / 128, this.GameState.Canvas.height / 128)
+        scale: new _Vector2.default(this.GameState.Canvas.width / 512, this.GameState.Canvas.width / 512)
       });
       bg.canvasPosition = new _Vector2.default(0, -this.GameState.Canvas.height);
       this.GameState.Scene.add(bg);
@@ -2791,7 +2792,8 @@ var _class = function (_Level) {
           scale: new _Vector2.default(15 + Math.floor(Math.random() * 15), 15 + Math.floor(Math.random() * 15))
         });
         cloud.canvasPosition = new _Vector2.default(Math.random() * this.GameState.Canvas.width, Math.random() * this.GameState.Canvas.height);
-        this.GameState.Scene.add(cloud);
+
+        // this.GameState.Scene.add(cloud);
       }
 
       // Init Controls
@@ -2969,7 +2971,7 @@ var _class = function (_Sprite) {
       exist: {
         frames: 1,
         loop: false,
-        spriteSheet: './img/sky.png',
+        spriteSheet: config.image,
         ticksPerFrame: 10
       }
     };

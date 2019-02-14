@@ -7,7 +7,7 @@ export default class extends Sprite {
       exist : {
         frames        : 1,
         loop          : false,
-        spriteSheet   : './img/sky.png',
+        spriteSheet   : config.image,
         ticksPerFrame : 10,
       }
     };
