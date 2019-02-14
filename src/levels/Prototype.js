@@ -13,11 +13,11 @@ import Vector2       from 'class/Vector2';
 
 // ----- Level Functions ----
 // VV These expect to be bound to the scope of this class, there is probably a better pattern than this VV
-import * as controls      from './lib/controls';
-import cycleActions       from './lib/cycleActions';
-import findTileAtPosition from './lib/findTileAtPosition';
-import hoverAvatar        from './lib/hoverAvatar';
-import processConnection  from './lib/processConnection';
+import * as controls      from 'lib/controls';
+import cycleActions       from 'lib/cycleActions';
+import findTileAtPosition from 'lib/findTileAtPosition';
+import hoverAvatar        from 'lib/hoverAvatar';
+import processConnection  from 'lib/processConnection';
 
 export default class extends Level {
   constructor(config) {

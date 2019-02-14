@@ -25,8 +25,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
   // Add gamestate to window so we can inspect it if we like
   window.GameState = GameState;
 
-  // Audio needs to be initialized after user input, refer to UI class for init() call
   GameState.Audio = new AetherVolt.Audio(GameState);
+  // Audio must be initialized after a user interacts somehow, this is a standard.
+  // As such, the Audio class is initialized from the UI class when a button is clicked instead of here.
 
   GameState.Canvas = new AetherVolt.Canvas(GameState);
   GameState.Canvas.init();

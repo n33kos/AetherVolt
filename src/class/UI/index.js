@@ -1,4 +1,4 @@
-import cyclePlayerTurn from 'levels/lib/cyclePlayerTurn';
+import cyclePlayerTurn from 'lib/cyclePlayerTurn';
 
 export default class {
   constructor(GameState) {
