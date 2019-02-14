@@ -7,10 +7,6 @@ html {
 
 body {
   -webkit-overflow-scrolling: touch;
-  background-color: darkgreen;
-  background-image: url("../img/sky.png");
-  background-repeat: repeat;
-  background-size: cover;
   height: 100%;
   -ms-interpolation-mode: nearest-neighbor;
       image-rendering: -moz-crisp-edges;
