@@ -1,22 +1,23 @@
 // ---- Classes ----
 import Action        from 'class/Action';
-import Avatar        from 'class/Avatar';
 import Background    from 'class/Background';
 import Cloud         from 'class/Cloud';
 import Deck          from 'class/Deck';
 import Grid          from 'class/Grid';
 import Hand          from 'class/Hand';
 import Level         from 'class/Level';
-import Player        from 'class/Player';
 import TileHelper    from 'class/TileHelper';
 import Vector2       from 'class/Vector2';
+
+// ----- Captains ----
+import jack from 'config/captains/jack';
+import kcaj from 'config/captains/kcaj';
 
 // ----- Level Functions ----
 // VV These expect to be bound to the scope of this class, there is probably a better pattern than this VV
 import * as controls      from 'lib/controls';
 import cycleActions       from 'lib/cycleActions';
 import findTileAtPosition from 'lib/findTileAtPosition';
-import hoverAvatar        from 'lib/hoverAvatar';
 import processConnection  from 'lib/processConnection';
 
 export default class extends Level {
@@ -82,99 +83,8 @@ export default class extends Level {
 
     // Init players
     this.players = [
-      new Player({
-        GameState : this.GameState,
-        name : 'Player 1',
-        id   : 0,
-        color: '0,0,255',
-        avatar: new Avatar({
-          GameState : this.GameState,
-          dimensions: new Vector2(64, 128),
-          scale: new Vector2(
-            Math.min(4, this.GameState.Canvas.width / 460),
-            Math.min(4, this.GameState.Canvas.width / 460),
-          ),
-          offset: new Vector2(0.5, 0.5),
-          onHover: hoverAvatar.bind(this, 'Player 1'),
-          targetPosition : new Vector2(
-            -256,
-            this.GameState.Canvas.cy,
-          ),
-          animations : {
-            mouseDown : {
-              frames        : 12,
-              loop          : true,
-              spriteSheet   : './img/Ship.png',
-              ticksPerFrame : 5,
-            },
-            mouseUp : {
-              frames        : 12,
-              loop          : true,
-              spriteSheet   : './img/Ship.png',
-              ticksPerFrame : 5,
-            },
-            hover : {
-              frames        : 12,
-              loop          : true,
-              spriteSheet   : './img/Ship.png',
-              ticksPerFrame : 5,
-            },
-            damage : {
-              frames        : 8,
-              loop          : true,
-              spriteSheet   : './img/Ship_Damage.png',
-              ticksPerFrame : 1,
-            },
-          },
-        })
-      }),
-      new Player({
-        GameState : this.GameState,
-        name : 'Player 2',
-        id   : 1,
-        color: '255,0,0',
-        avatar: new Avatar({
-          GameState : this.GameState,
-          dimensions: new Vector2(64, 128),
-          scale: new Vector2(
-            Math.min(4, this.GameState.Canvas.width / 460),
-            Math.min(4, this.GameState.Canvas.width / 460),
-          ),
-          offset: new Vector2(0.5, 0.5),
-          onHover: hoverAvatar.bind(this, 'Player 2'),
-          targetPosition : new Vector2(
-            this.GameState.Canvas.width + 256,
-            this.GameState.Canvas.cy,
-          ),
-          mirrorX: true,
-          animations : {
-            mouseDown : {
-              frames        : 12,
-              loop          : true,
-              spriteSheet   : './img/Ship.png',
-              ticksPerFrame : 5,
-            },
-            mouseUp : {
-              frames        : 12,
-              loop          : true,
-              spriteSheet   : './img/Ship.png',
-              ticksPerFrame : 5,
-            },
-            hover : {
-              frames        : 12,
-              loop          : true,
-              spriteSheet   : './img/Ship.png',
-              ticksPerFrame : 5,
-            },
-            damage : {
-              frames        : 8,
-              loop          : true,
-              spriteSheet   : './img/Ship_Damage.png',
-              ticksPerFrame : 1,
-            },
-          },
-        })
-      }),
+      kcaj.call(this),
+      jack.call(this),
     ];
     this.attackingPlayer = this.players[0];
     this.defendingPlayer = this.players[1];
