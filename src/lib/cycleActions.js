@@ -1,4 +1,4 @@
-import Action          from 'class/Action';
+import Action          from 'classes/Action';
 import cyclePlayerTurn from 'lib/cyclePlayerTurn';
 
 export default function() {

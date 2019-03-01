@@ -1,11 +1,11 @@
-import Audio     from 'class/Audio';
-import Canvas    from 'class/Canvas';
-import Controls  from 'class/Controls';
-import GameState from 'class/GameState';
-import Render    from 'class/Render';
-import Scene     from 'class/Scene';
-import UI        from 'class/UI';
-import Update    from 'class/Update';
+import Audio     from 'classes/Audio';
+import Canvas    from 'classes/Canvas';
+import Controls  from 'classes/Controls';
+import GameState from 'classes/GameState';
+import Render    from 'classes/Render';
+import Scene     from 'classes/Scene';
+import UI        from 'classes/UI';
+import Update    from 'classes/Update';
 
 const AetherVolt = {
   Audio,

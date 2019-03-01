@@ -1,4 +1,4 @@
-import Lightning from 'class/Lightning';
+import Lightning from 'classes/Lightning';
 
 export default function(path) {
   const lightning = new Lightning({

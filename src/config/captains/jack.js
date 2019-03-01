@@ -1,7 +1,7 @@
-import Avatar      from 'class/Avatar';
+import Avatar      from 'classes/Avatar';
 import hoverAvatar from 'lib/hoverAvatar';
-import Player      from 'class/Player';
-import Vector2     from 'class/Vector2';
+import Player      from 'classes/Player';
+import Vector2     from 'classes/Vector2';
 
 const captainName = 'Captain Jack';
 

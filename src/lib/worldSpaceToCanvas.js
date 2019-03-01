@@ -1,4 +1,4 @@
-import Vector2 from 'class/Vector2';
+import Vector2 from 'classes/Vector2';
 
 export default (GameState, position) => new Vector2(
   position.x + (GameState.Canvas.width / 2),

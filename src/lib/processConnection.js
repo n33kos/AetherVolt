@@ -1,7 +1,7 @@
 import endGame               from './endGame';
 import fireLightning         from './fireLightning';
 import getTileWithPlayerName from './getTileWithPlayerName';
-import Pathfinder            from 'class/Pathfinder';
+import Pathfinder            from 'classes/Pathfinder';
 
 export default function() {
   const pathfinder = new Pathfinder(this.grid.tiles);
