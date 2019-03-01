@@ -10,7 +10,7 @@ export default function() {
     GameState : this.GameState,
     name : captainName,
     id   : 0,
-    color: '0,0,255',
+    color: '100,100,255',
     avatar: new Avatar({
       GameState : this.GameState,
       dimensions: new Vector2(64, 128),

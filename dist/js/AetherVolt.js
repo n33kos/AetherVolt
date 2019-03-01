@@ -532,8 +532,6 @@ var _class = function () {
     key: 'rotate',
     value: function rotate() {
       this.targetTile.rotateCell(this.rotationDirection);
-      // Change ownership of tile on rotate
-      this.targetTile.placedBy = this.player;
     }
   }, {
     key: 'place',
@@ -689,16 +687,16 @@ var _class = function () {
   }, {
     key: 'getSpriteSheet',
     value: function getSpriteSheet(id) {
-      var sprites = {
-        1: './img/Propeller_Conductor_Empty.png',
-        2: './img/Propeller_Conductor_Empty.png',
-        3: './img/Propeller_Conductor_Straight.png',
-        4: './img/Propeller_Conductor_Bend.png',
-        5: './img/Propeller_Conductor_Triple.png',
-        6: './img/Propeller_Conductor_Quad.png'
+      var fallbackSprites = {
+        1: './img/Fallback_Empty.png',
+        2: './img/Fallback_Empty.png',
+        3: './img/Fallback_Straight.png',
+        4: './img/Fallback_Bend.png',
+        5: './img/Fallback_Triple.png',
+        6: './img/Fallback_Quad.png'
       };
 
-      return sprites[id];
+      return fallbackSprites[id];
     }
   }, {
     key: 'getNeighborPattern',
@@ -916,7 +914,7 @@ var _class = function (_Sprite) {
     value: function setOutlineColor() {
       this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
       if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
-      // if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = `rgb(${this.placedBy.color}, 0.2`;
+      if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = 'rgb(' + this.placedBy.color + ', 0.2';
       if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) {
         this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
       }
@@ -950,6 +948,7 @@ var _class = function (_Sprite) {
   }, {
     key: 'emptyTile',
     value: function emptyTile() {
+      // Add dismissed tile (floats away, may call this destroyed tile at some point)
       var dismissedTile = new _DismissedTile2.default({
         sprite: this.animations.exist.spriteSheet,
         canvasPosition: this.canvasPosition,
@@ -3796,7 +3795,7 @@ exports.default = function () {
     GameState: this.GameState,
     name: captainName,
     id: 0,
-    color: '0,0,255',
+    color: '100,100,255',
     avatar: new _Avatar2.default({
       GameState: this.GameState,
       dimensions: new _Vector2.default(64, 128),
@@ -4260,7 +4259,7 @@ exports.default = function () {
     GameState: this.GameState,
     name: captainName,
     id: 0,
-    color: '0,0,255',
+    color: '255,100,100',
     avatar: new _Avatar2.default({
       GameState: this.GameState,
       dimensions: new _Vector2.default(64, 128),
@@ -4294,7 +4293,8 @@ exports.default = function () {
           ticksPerFrame: 1
         }
       }
-    })
+    }),
+    tiles: {}
   });
 };
 

@@ -33,16 +33,16 @@ export default class {
   }
 
   getSpriteSheet(id) {
-    const sprites = {
-      1 : './img/Propeller_Conductor_Empty.png',
-      2 : './img/Propeller_Conductor_Empty.png',
-      3 : './img/Propeller_Conductor_Straight.png',
-      4 : './img/Propeller_Conductor_Bend.png',
-      5 : './img/Propeller_Conductor_Triple.png',
-      6 : './img/Propeller_Conductor_Quad.png',
+    const fallbackSprites = {
+      1 : './img/Fallback_Empty.png',
+      2 : './img/Fallback_Empty.png',
+      3 : './img/Fallback_Straight.png',
+      4 : './img/Fallback_Bend.png',
+      5 : './img/Fallback_Triple.png',
+      6 : './img/Fallback_Quad.png',
     };
 
-    return sprites[id];
+    return fallbackSprites[id];
   }
 
   getNeighborPattern(id) {

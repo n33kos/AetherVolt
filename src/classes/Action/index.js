@@ -16,8 +16,6 @@ export default class {
 
   rotate() {
     this.targetTile.rotateCell(this.rotationDirection);
-    // Change ownership of tile on rotate
-    this.targetTile.placedBy = this.player;
   }
 
   place() {
