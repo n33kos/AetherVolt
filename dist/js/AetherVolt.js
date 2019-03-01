@@ -309,7 +309,7 @@ exports.default = function () {
   // Reset currrent action
   this.currentAction = new _Action2.default({ player: this.attackingPlayer });
 
-  // Automatically change turn if not actions or moves left
+  // Automatically change turn if no actions or moves left
   if (this.attackingPlayer.actions === 0 && this.attackingPlayer.moves === 0) {
     _cyclePlayerTurn2.default.call(this.GameState.currentLevel);
   }
@@ -1645,7 +1645,6 @@ exports.default = function () {
       this.currentAction.sourceTile = startingTile;
       this.currentAction.targetTile = finalTile;
       this.currentAction.commit();
-      _cycleActions2.default.call(this);
       this.tileHelper.clear();
     }
   }

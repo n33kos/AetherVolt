@@ -21,7 +21,7 @@ export default function() {
   // Reset currrent action
   this.currentAction = new Action({ player : this.attackingPlayer });
 
-  // Automatically change turn if not actions or moves left
+  // Automatically change turn if no actions or moves left
   if (this.attackingPlayer.actions === 0 && this.attackingPlayer.moves === 0) {
     cyclePlayerTurn.call(this.GameState.currentLevel);
   }

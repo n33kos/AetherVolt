@@ -18,7 +18,6 @@ export default function() {
       this.currentAction.sourceTile = startingTile;
       this.currentAction.targetTile = finalTile;
       this.currentAction.commit();
-      cycleActions.call(this);
       this.tileHelper.clear();
     }
   }
