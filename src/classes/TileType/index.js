@@ -2,7 +2,6 @@ export default class {
   constructor(type) {
     this.id = this.getTypeId(type);
     this.type = this.getTypeString(this.id);
-    this.spriteSheet = this.getSpriteSheet(this.id);
     this.neighborPattern = this.getNeighborPattern(this.id);
   }
 
@@ -30,19 +29,6 @@ export default class {
     };
 
     return types[id];
-  }
-
-  getSpriteSheet(id) {
-    const fallbackSprites = {
-      1 : './img/Fallback_Empty.png',
-      2 : './img/Fallback_Empty.png',
-      3 : './img/Fallback_Straight.png',
-      4 : './img/Fallback_Bend.png',
-      5 : './img/Fallback_Triple.png',
-      6 : './img/Fallback_Quad.png',
-    };
-
-    return fallbackSprites[id];
   }
 
   getNeighborPattern(id) {

@@ -52,7 +52,13 @@ export default function() {
       },
     }),
     tiles: {
-
-    }
+      // These must match up with tileType IDs
+      1 : './img/captains/Kcaj/Propeller_Conductor_Empty.png',
+      2 : './img/captains/Kcaj/Propeller_Conductor_Empty.png',
+      3 : './img/captains/Kcaj/Propeller_Conductor_Straight.png',
+      4 : './img/captains/Kcaj/Propeller_Conductor_Bend.png',
+      5 : './img/captains/Kcaj/Propeller_Conductor_Triple.png',
+      6 : './img/captains/Kcaj/Propeller_Conductor_Quad.png',
+    },
   });
 }

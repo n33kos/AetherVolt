@@ -536,12 +536,13 @@ var _class = function () {
   }, {
     key: 'place',
     value: function place() {
+      this.targetTile.placedBy = this.player;
+      console.log(this.player.name);
       this.targetTile.setType(this.sourceTile.tileType);
       this.targetTile.targetRotation = this.sourceTile.targetRotation;
       this.targetTile.rotation = this.sourceTile.rotation;
       this.targetTile.neighborPattern = this.sourceTile.neighborPattern;
       this.targetTile.neighbors = this.targetTile.getNeighbors();
-      this.targetTile.placedBy = this.player;
       this.player.hand.remove(this.sourceTile.uuid);
     }
   }, {
@@ -652,7 +653,6 @@ var _class = function () {
 
     this.id = this.getTypeId(type);
     this.type = this.getTypeString(this.id);
-    this.spriteSheet = this.getSpriteSheet(this.id);
     this.neighborPattern = this.getNeighborPattern(this.id);
   }
 
@@ -683,20 +683,6 @@ var _class = function () {
       };
 
       return types[id];
-    }
-  }, {
-    key: 'getSpriteSheet',
-    value: function getSpriteSheet(id) {
-      var fallbackSprites = {
-        1: './img/Fallback_Empty.png',
-        2: './img/Fallback_Empty.png',
-        3: './img/Fallback_Straight.png',
-        4: './img/Fallback_Bend.png',
-        5: './img/Fallback_Triple.png',
-        6: './img/Fallback_Quad.png'
-      };
-
-      return fallbackSprites[id];
     }
   }, {
     key: 'getNeighborPattern',
@@ -775,6 +761,7 @@ var _class = function (_Sprite) {
         id = config.id,
         type = config.type,
         player = config.player,
+        placedBy = config.placedBy,
         scale = config.scale,
         _config$isInHand = config.isInHand,
         isInHand = _config$isInHand === undefined ? false : _config$isInHand,
@@ -802,7 +789,7 @@ var _class = function (_Sprite) {
     _this.animations = {
       exist: {
         frames: 5,
-        spriteSheet: './img/Pipes_Empty.png',
+        spriteSheet: _this.getSpriteSheet(),
         ticksPerFrame: 1,
         loop: true
       }
@@ -810,7 +797,7 @@ var _class = function (_Sprite) {
     _this.currentAnimation = 'exist';
     _this.neighborPattern = [];
     _this.isHovered = false;
-    _this.placedBy = false;
+    _this.placedBy = placedBy;
 
     _this.turbulence = new _Vector2.default(0, 0);
     _this.turbulenceStep = Math.random() * Math.PI * 2;
@@ -828,7 +815,7 @@ var _class = function (_Sprite) {
     key: 'setType',
     value: function setType(type) {
       this.tileType = type;
-      this.animations.exist.spriteSheet = type.spriteSheet;
+      this.animations.exist.spriteSheet = this.getSpriteSheet();
       this.neighborPattern = type.neighborPattern;
       this.load();
     }
@@ -837,6 +824,11 @@ var _class = function (_Sprite) {
     value: function init(grid) {
       this.grid = grid;
       this.neighbors = this.getNeighbors();
+    }
+  }, {
+    key: 'getSpriteSheet',
+    value: function getSpriteSheet() {
+      return this.placedBy ? this.placedBy.tiles[this.tileType.id] : '';
     }
   }, {
     key: 'getNeighbors',
@@ -960,6 +952,7 @@ var _class = function (_Sprite) {
       this.GameState.Scene.add(dismissedTile);
 
       this.setType(new _TileType2.default('EMPTY'));
+      this.player = false;
       this.placedBy = false;
       this.init(this.grid);
     }
@@ -1015,11 +1008,11 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (pos) {
   // Search grid
-  var clickedTile = this.grid.getCellAtCanvasPosition(pos);
+  var clickedTile = this.grid.getTileAtCanvasPosition(pos);
 
   // Then search hand
   if (!clickedTile) {
-    clickedTile = this.attackingPlayer.hand.getCellAtCanvasPosition(pos);
+    clickedTile = this.attackingPlayer.hand.getTileAtCanvasPosition(pos);
   }
 
   return clickedTile;
@@ -1829,7 +1822,9 @@ var _class = function () {
         _ref$moves = _ref.moves,
         moves = _ref$moves === undefined ? 1 : _ref$moves,
         _ref$name = _ref.name,
-        name = _ref$name === undefined ? 'Player 1' : _ref$name;
+        name = _ref$name === undefined ? 'Player 1' : _ref$name,
+        _ref$tiles = _ref.tiles,
+        tiles = _ref$tiles === undefined ? {} : _ref$tiles;
 
     _classCallCheck(this, _class);
 
@@ -1847,6 +1842,7 @@ var _class = function () {
     this.maxMoves = maxMoves;
     this.moves = moves;
     this.name = name;
+    this.tiles = tiles;
   }
 
   _createClass(_class, [{
@@ -2895,7 +2891,8 @@ var _class = function (_Level) {
       this.players.forEach(function (player, index) {
         var hand = new _Hand2.default({
           GameState: _this2.GameState,
-          position: new _Vector2.default(0, -_this2.GameState.Canvas.cy)
+          position: new _Vector2.default(0, -_this2.GameState.Canvas.cy),
+          player: player
         });
         // Draw tiles from deck
         for (var _i = 0; _i < player.handSize - index; _i++) {
@@ -3191,7 +3188,7 @@ var _class = function () {
         for (var x = 0; x < this.columns; x++) {
           var type = new _TileType2.default('EMPTY');
           if (x === 0 || x === this.columns - 1) type = new _TileType2.default('PLAYER_COLUMN');
-          this.addCell(x, y, type);
+          this.addTile(x, y, type);
         }
       }
 
@@ -3220,8 +3217,8 @@ var _class = function () {
       });
     }
   }, {
-    key: 'addCell',
-    value: function addCell(x, y, type) {
+    key: 'addTile',
+    value: function addTile(x, y, type) {
       var cell = new _Tile2.default({
         GameState: this.GameState,
         dimensions: new _Vector2.default(64, 64),
@@ -3245,8 +3242,8 @@ var _class = function () {
       this.tiles.push(cell);
     }
   }, {
-    key: 'getCellAtCanvasPosition',
-    value: function getCellAtCanvasPosition(position) {
+    key: 'getTileAtCanvasPosition',
+    value: function getTileAtCanvasPosition(position) {
       var x = Math.floor((position.x - this.padding.x) / this.cellSize);
       var y = Math.floor((position.y - this.padding.y) / this.cellSize);
       return this.tiles.find(function (cell) {
@@ -3475,6 +3472,7 @@ var _class = function (_Entity) {
 
     var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
 
+    _this.player = config.player;
     _this.tiles = [];
     _this.selectedTile = 0;
     _this.size = 64;
@@ -3490,6 +3488,7 @@ var _class = function (_Entity) {
         GameState: this.GameState,
         dimensions: new _Vector2.default(this.size, this.size),
         offset: new _Vector2.default(0.5, 0.5),
+        placedBy: this.player,
         scale: new _Vector2.default(this.scale, this.scale),
         type: tileType,
         isVisible: false,
@@ -3540,8 +3539,8 @@ var _class = function (_Entity) {
       });
     }
   }, {
-    key: 'getCellAtCanvasPosition',
-    value: function getCellAtCanvasPosition(position) {
+    key: 'getTileAtCanvasPosition',
+    value: function getTileAtCanvasPosition(position) {
       return this.tiles.find(function (tile) {
         return (0, _rectContains2.default)(position, new _Vector2.default(tile.canvasPosition.x + tile.absoluteOffset.x, tile.canvasPosition.y + tile.absoluteOffset.y), new _Vector2.default(tile.dimensions.x * tile.scale.x, tile.dimensions.y * tile.scale.y));
       });
@@ -3829,7 +3828,16 @@ exports.default = function () {
           ticksPerFrame: 1
         }
       }
-    })
+    }),
+    tiles: {
+      // These must match up with tileType IDs
+      1: './img/captains/Jack/Propeller_Conductor_Empty.png',
+      2: './img/captains/Jack/Propeller_Conductor_Empty.png',
+      3: './img/captains/Jack/Propeller_Conductor_Straight.png',
+      4: './img/captains/Jack/Propeller_Conductor_Bend.png',
+      5: './img/captains/Jack/Propeller_Conductor_Triple.png',
+      6: './img/captains/Jack/Propeller_Conductor_Quad.png'
+    }
   });
 };
 
@@ -4294,7 +4302,15 @@ exports.default = function () {
         }
       }
     }),
-    tiles: {}
+    tiles: {
+      // These must match up with tileType IDs
+      1: './img/captains/Kcaj/Propeller_Conductor_Empty.png',
+      2: './img/captains/Kcaj/Propeller_Conductor_Empty.png',
+      3: './img/captains/Kcaj/Propeller_Conductor_Straight.png',
+      4: './img/captains/Kcaj/Propeller_Conductor_Bend.png',
+      5: './img/captains/Kcaj/Propeller_Conductor_Triple.png',
+      6: './img/captains/Kcaj/Propeller_Conductor_Quad.png'
+    }
   });
 };
 

@@ -94,6 +94,7 @@ export default class extends Level {
       const hand = new Hand({
         GameState : this.GameState,
         position: new Vector2(0, -this.GameState.Canvas.cy),
+        player,
       });
       // Draw tiles from deck
       for (let i = 0; i < (player.handSize - index); i++) {

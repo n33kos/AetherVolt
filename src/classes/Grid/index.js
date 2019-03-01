@@ -40,7 +40,7 @@ export default class {
       for (let x = 0; x < this.columns; x++) {
         let type = new TileType('EMPTY');
         if (x === 0 || x === this.columns - 1) type = new TileType('PLAYER_COLUMN');
-        this.addCell(x, y, type);
+        this.addTile(x, y, type);
       }
     }
 
@@ -64,7 +64,7 @@ export default class {
     });
   }
 
-  addCell(x, y, type) {
+  addTile(x, y, type) {
     const cell = new Tile({
       GameState: this.GameState,
       dimensions: new Vector2(64, 64),
@@ -91,7 +91,7 @@ export default class {
     this.tiles.push(cell);
   }
 
-  getCellAtCanvasPosition(position) {
+  getTileAtCanvasPosition(position) {
     const x = Math.floor((position.x - this.padding.x) / this.cellSize);
     const y = Math.floor((position.y - this.padding.y) / this.cellSize);
     return this.tiles.find(cell => cell.id === `${x}_${y}`);

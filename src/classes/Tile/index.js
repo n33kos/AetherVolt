@@ -14,6 +14,7 @@ export default class extends Sprite {
       id,
       type,
       player, // Player object for avatar in this cell
+      placedBy, // Player who placed the tile
       scale,
       isInHand = false,
       dragPosition = null,
@@ -37,7 +38,7 @@ export default class extends Sprite {
     this.animations = {
       exist: {
         frames        : 5,
-        spriteSheet   : './img/Pipes_Empty.png',
+        spriteSheet   : this.getSpriteSheet(),
         ticksPerFrame : 1,
         loop          : true,
       },
@@ -45,7 +46,7 @@ export default class extends Sprite {
     this.currentAnimation = 'exist';
     this.neighborPattern = [];
     this.isHovered = false;
-    this.placedBy = false;
+    this.placedBy = placedBy;
 
     this.turbulence = new Vector2(0, 0);
     this.turbulenceStep = Math.random() * Math.PI * 2;
@@ -60,7 +61,7 @@ export default class extends Sprite {
 
   setType(type) {
     this.tileType = type;
-    this.animations.exist.spriteSheet = type.spriteSheet;
+    this.animations.exist.spriteSheet = this.getSpriteSheet();
     this.neighborPattern = type.neighborPattern
     this.load();
   }
@@ -68,6 +69,10 @@ export default class extends Sprite {
   init(grid) {
     this.grid = grid;
     this.neighbors = this.getNeighbors();
+  }
+
+  getSpriteSheet() {
+    return this.placedBy ? this.placedBy.tiles[this.tileType.id] : '';
   }
 
   getNeighbors() {
@@ -184,6 +189,7 @@ export default class extends Sprite {
     this.GameState.Scene.add(dismissedTile);
 
     this.setType(new TileType('EMPTY'));
+    this.player = false;
     this.placedBy = false;
     this.init(this.grid);
   }

@@ -19,12 +19,13 @@ export default class {
   }
 
   place() {
+    this.targetTile.placedBy = this.player;
+    console.log(this.player.name);
     this.targetTile.setType(this.sourceTile.tileType);
     this.targetTile.targetRotation = this.sourceTile.targetRotation;
     this.targetTile.rotation = this.sourceTile.rotation;
     this.targetTile.neighborPattern = this.sourceTile.neighborPattern;
     this.targetTile.neighbors = this.targetTile.getNeighbors();
-    this.targetTile.placedBy = this.player;
     this.player.hand.remove(this.sourceTile.uuid);
   }
 

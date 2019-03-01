@@ -16,6 +16,7 @@ export default class {
     maxMoves = 1,
     moves = 1,
     name = 'Player 1',
+    tiles = {},
   }) {
     this.GameState = GameState;
     this.actions = actions;
@@ -31,6 +32,7 @@ export default class {
     this.maxMoves = maxMoves;
     this.moves = moves;
     this.name = name;
+    this.tiles = tiles;
   }
 
   setAvatarPosition(tile) {

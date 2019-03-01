@@ -8,6 +8,7 @@ export default class extends Entity {
   constructor(config) {
     super(config);
 
+    this.player = config.player;
     this.tiles = [];
     this.selectedTile = 0;
     this.size = 64;
@@ -20,6 +21,7 @@ export default class extends Entity {
       GameState: this.GameState,
       dimensions: new Vector2(this.size, this.size),
       offset: new Vector2(0.5, 0.5),
+      placedBy: this.player,
       scale: new Vector2(this.scale, this.scale),
       type: tileType,
       isVisible: false,
@@ -64,7 +66,7 @@ export default class extends Entity {
     });
   }
 
-  getCellAtCanvasPosition(position) {
+  getTileAtCanvasPosition(position) {
     return this.tiles.find(tile => {
       return rectContains(
         position,
