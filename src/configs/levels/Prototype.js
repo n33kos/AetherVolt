@@ -10,8 +10,8 @@ import TileHelper    from 'classes/TileHelper';
 import Vector2       from 'classes/Vector2';
 
 // ----- Captains ----
-import jack from 'config/captains/jack';
-import kcaj from 'config/captains/kcaj';
+import jack from 'configs/captains/jack';
+import kcaj from 'configs/captains/kcaj';
 
 // ----- Level Functions ----
 // VV These expect to be bound to the scope of this class, there is probably a better pattern than this VV

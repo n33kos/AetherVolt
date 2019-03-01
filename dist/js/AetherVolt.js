@@ -2127,7 +2127,7 @@ var _class = function () {
     this.pressedKeys = [];
     this.debounceValue = 10;
 
-    // refer to `config/controls` for callback event names
+    // refer to `configs/controls` for callback event names
     this.callbacks = _controls2.default.callbacks;
   }
 

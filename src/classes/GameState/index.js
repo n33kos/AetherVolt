@@ -1,6 +1,6 @@
-import config from 'config/gameState';
+import config from 'configs/gameState';
 import Level  from 'classes/Level';
-import levels from 'config/levels';
+import levels from 'configs/levels';
 
 export default class {
   constructor() {

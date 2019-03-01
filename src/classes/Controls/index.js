@@ -1,5 +1,5 @@
 import { throttle } from 'throttle-debounce';
-import config       from 'config/controls';
+import config       from 'configs/controls';
 import uuidv4       from 'uuid/v4';
 import Vector2      from 'classes/Vector2';
 
@@ -12,7 +12,7 @@ export default class {
     this.pressedKeys = [];
     this.debounceValue = 10;
 
-    // refer to `config/controls` for callback event names
+    // refer to `configs/controls` for callback event names
     this.callbacks = config.callbacks;
   }
 
