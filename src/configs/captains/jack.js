@@ -8,10 +8,10 @@ const captainName = 'Captain Jack';
 export default function() {
   return new Player({
     GameState : this.GameState,
-    name : captainName,
-    id   : 0,
-    color: '100,100,255',
-    avatar: new Avatar({
+    name      : captainName,
+    id        : 0,
+    color     : '100,100,255',
+    avatar    : new Avatar({
       GameState : this.GameState,
       dimensions: new Vector2(64, 128),
       scale: new Vector2(
@@ -51,7 +51,7 @@ export default function() {
         },
       },
     }),
-    tiles: {
+    tiles     : {
       // These must match up with tileType IDs
       1 : './img/captains/Jack/Propeller_Conductor_Empty.png',
       2 : './img/captains/Jack/Propeller_Conductor_Empty.png',
@@ -60,5 +60,7 @@ export default function() {
       5 : './img/captains/Jack/Propeller_Conductor_Triple.png',
       6 : './img/captains/Jack/Propeller_Conductor_Quad.png',
     },
+    moves     : 2,
+    maxMoves  : 2,
   });
 }

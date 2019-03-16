@@ -3836,7 +3836,9 @@ exports.default = function () {
       4: './img/captains/Jack/Propeller_Conductor_Bend.png',
       5: './img/captains/Jack/Propeller_Conductor_Triple.png',
       6: './img/captains/Jack/Propeller_Conductor_Quad.png'
-    }
+    },
+    moves: 2,
+    maxMoves: 2
   });
 };
 
@@ -4309,7 +4311,9 @@ exports.default = function () {
       4: './img/captains/Kcaj/Propeller_Conductor_Bend.png',
       5: './img/captains/Kcaj/Propeller_Conductor_Triple.png',
       6: './img/captains/Kcaj/Propeller_Conductor_Quad.png'
-    }
+    },
+    moves: 4,
+    maxMoves: 4
   });
 };
 
