@@ -1633,7 +1633,7 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function () {
   // Move player to random cell if they did not move
-  if (this.attackingPlayer.moves > 0) {
+  if (this.GameState.forceMoveAtEndOfTurn && this.attackingPlayer.moves > 0) {
     var startingTile = _getTileWithPlayerName2.default.call(this, this.attackingPlayer.name);
     var randomTile = (0, _getRandomIntegerNotEqualTo2.default)(startingTile.y, 0, this.columns);
     var finalTile = this.grid.tiles.find(function (tile) {
@@ -2708,7 +2708,8 @@ exports.default = {
   level: 0,
   levels: [],
   playerName: 'Player 1',
-  score: 0
+  score: 0,
+  forceMoveAtEndOfTurn: false
 };
 
 /***/ }),

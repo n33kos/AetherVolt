@@ -8,7 +8,7 @@ import processConnection          from './processConnection';
 
 export default function() {
   // Move player to random cell if they did not move
-  if (this.attackingPlayer.moves > 0) {
+  if (this.GameState.forceMoveAtEndOfTurn && this.attackingPlayer.moves > 0) {
     const startingTile = getTileWithPlayerName.call(this, this.attackingPlayer.name);
     const randomTile = getRandomIntegerNotEqualTo(startingTile.y, 0, this.columns);
     const finalTile = this.grid.tiles.find(tile => tile.id === `${startingTile.x}_${randomTile}`);
