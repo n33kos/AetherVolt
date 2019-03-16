@@ -13,13 +13,15 @@ export default class extends Sprite {
       y,
       id,
       type,
-      player, // Player object for avatar in this cell
-      placedBy, // Player who placed the tile
+      player, // Player object for avatar currently in this cell (usually only applies to empty cells in player columns)
+      placedBy, // Player object of player who placed the tile
       scale,
       isInHand = false,
       dragPosition = null,
       targetPosition = null,
       outline = null,
+      maxHealth = 2,
+      health = 2,
     } = config;
 
     this.x = x;
@@ -34,6 +36,8 @@ export default class extends Sprite {
     this.canvasPosition = targetPosition;
     this.targetScale = scale;
     this.outline = outline;
+    this.maxHealth = maxHealth;
+    this.health = health;
 
     this.animations = {
       exist: {
@@ -177,7 +181,15 @@ export default class extends Sprite {
   }
 
   emptyTile() {
-    // Add dismissed tile (floats away, may call this destroyed tile at some point)
+    this.createDismissedTile();
+    this.setType(new TileType('EMPTY'));
+    this.player = false;
+    this.placedBy = false;
+    this.init(this.grid);
+  }
+
+  createDismissedTile() {
+    // Add dismissed tile (floats away, may call this "destroyed tile" at some point)
     const dismissedTile = new DismissedTile({
       sprite         : this.animations.exist.spriteSheet,
       canvasPosition : this.canvasPosition,
@@ -187,10 +199,12 @@ export default class extends Sprite {
       scale          : this.scale,
     });
     this.GameState.Scene.add(dismissedTile);
+  }
 
-    this.setType(new TileType('EMPTY'));
-    this.player = false;
-    this.placedBy = false;
-    this.init(this.grid);
+  takeDamage(damage) {
+    this.health -= damage;
+    if (this.tileType.type !== 'PLAYER_COLUMN' && this.health <= 0) {
+      this.emptyTile();
+    }
   }
 }

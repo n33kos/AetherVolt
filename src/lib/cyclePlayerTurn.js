@@ -4,7 +4,7 @@ import cycleActions               from './cycleActions';
 import Deck                       from 'classes/Deck';
 import getRandomIntegerNotEqualTo from 'lib/getRandomIntegerNotEqualTo';
 import getTileWithPlayerName      from './getTileWithPlayerName';
-import processConnection          from './processConnection';
+import handleLightningDischarge          from './handleLightningDischarge';
 
 export default function() {
   // Move player to random cell if they did not move
@@ -22,8 +22,8 @@ export default function() {
     }
   }
 
-  // Process the connection
-  processConnection.call(this);
+  // Process the lightning dicharge
+  handleLightningDischarge.call(this);
 
   // Set defending player
   this.defendingPlayer = this.players[this.currentPlayerTurn];

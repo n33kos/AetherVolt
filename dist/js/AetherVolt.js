@@ -770,7 +770,11 @@ var _class = function (_Sprite) {
         _config$targetPositio = config.targetPosition,
         targetPosition = _config$targetPositio === undefined ? null : _config$targetPositio,
         _config$outline = config.outline,
-        outline = _config$outline === undefined ? null : _config$outline;
+        outline = _config$outline === undefined ? null : _config$outline,
+        _config$maxHealth = config.maxHealth,
+        maxHealth = _config$maxHealth === undefined ? 2 : _config$maxHealth,
+        _config$health = config.health,
+        health = _config$health === undefined ? 2 : _config$health;
 
 
     _this.x = x;
@@ -785,6 +789,8 @@ var _class = function (_Sprite) {
     _this.canvasPosition = targetPosition;
     _this.targetScale = scale;
     _this.outline = outline;
+    _this.maxHealth = maxHealth;
+    _this.health = health;
 
     _this.animations = {
       exist: {
@@ -940,7 +946,16 @@ var _class = function (_Sprite) {
   }, {
     key: 'emptyTile',
     value: function emptyTile() {
-      // Add dismissed tile (floats away, may call this destroyed tile at some point)
+      this.createDismissedTile();
+      this.setType(new _TileType2.default('EMPTY'));
+      this.player = false;
+      this.placedBy = false;
+      this.init(this.grid);
+    }
+  }, {
+    key: 'createDismissedTile',
+    value: function createDismissedTile() {
+      // Add dismissed tile (floats away, may call this "destroyed tile" at some point)
       var dismissedTile = new _DismissedTile2.default({
         sprite: this.animations.exist.spriteSheet,
         canvasPosition: this.canvasPosition,
@@ -950,11 +965,14 @@ var _class = function (_Sprite) {
         scale: this.scale
       });
       this.GameState.Scene.add(dismissedTile);
-
-      this.setType(new _TileType2.default('EMPTY'));
-      this.player = false;
-      this.placedBy = false;
-      this.init(this.grid);
+    }
+  }, {
+    key: 'takeDamage',
+    value: function takeDamage(damage) {
+      this.health -= damage;
+      if (this.tileType.type !== 'PLAYER_COLUMN' && this.health <= 0) {
+        this.emptyTile();
+      }
     }
   }]);
 
@@ -1649,8 +1667,8 @@ exports.default = function () {
     }
   }
 
-  // Process the connection
-  _processConnection2.default.call(this);
+  // Process the lightning dicharge
+  _handleLightningDischarge2.default.call(this);
 
   // Set defending player
   this.defendingPlayer = this.players[this.currentPlayerTurn];
@@ -1715,9 +1733,9 @@ var _getTileWithPlayerName = __webpack_require__(10);
 
 var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
 
-var _processConnection = __webpack_require__(21);
+var _handleLightningDischarge = __webpack_require__(21);
 
-var _processConnection2 = _interopRequireDefault(_processConnection);
+var _handleLightningDischarge2 = _interopRequireDefault(_handleLightningDischarge);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1746,9 +1764,10 @@ exports.default = function () {
     endCell.player.avatar.takeDamageAnimation();
     _fireLightning2.default.call(this, path);
 
-    // Dismiss used tiles
+    // Apply damage to tiles
     path.forEach(function (tile) {
-      if (tile.tileType.type !== 'PLAYER_COLUMN') tile.emptyTile();
+      // For now we will only apply 1 damage per discharge, that may change or be tied to abilities
+      tile.takeDamage(1);
     });
   }
 
@@ -2800,9 +2819,9 @@ var _findTileAtPosition = __webpack_require__(11);
 
 var _findTileAtPosition2 = _interopRequireDefault(_findTileAtPosition);
 
-var _processConnection = __webpack_require__(21);
+var _handleLightningDischarge = __webpack_require__(21);
 
-var _processConnection2 = _interopRequireDefault(_processConnection);
+var _handleLightningDischarge2 = _interopRequireDefault(_handleLightningDischarge);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 

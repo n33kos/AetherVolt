@@ -17,9 +17,10 @@ export default function() {
     endCell.player.avatar.takeDamageAnimation();
     fireLightning.call(this, path);
 
-    // Dismiss used tiles
+    // Apply damage to tiles
     path.forEach(tile => {
-      if (tile.tileType.type !== 'PLAYER_COLUMN') tile.emptyTile();
+      // For now we will only apply 1 damage per discharge, that may change or be tied to abilities
+      tile.takeDamage(1);
     });
   }
 

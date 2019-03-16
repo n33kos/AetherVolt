@@ -18,7 +18,7 @@ import kcaj from 'configs/captains/kcaj';
 import * as controls      from 'lib/controls';
 import cycleActions       from 'lib/cycleActions';
 import findTileAtPosition from 'lib/findTileAtPosition';
-import processConnection  from 'lib/processConnection';
+import handleLightningDischarge  from 'lib/handleLightningDischarge';
 
 export default class extends Level {
   constructor(config) {
