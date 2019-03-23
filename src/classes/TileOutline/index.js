@@ -1,5 +1,6 @@
-import Entity  from 'classes/Entity';
-import Vector2 from 'classes/Vector2';
+import Entity          from 'classes/Entity';
+import getPixelDensity from 'lib/getPixelDensity';
+import Vector2         from 'classes/Vector2';
 
 export default class extends Entity {
   constructor(config) {
@@ -9,6 +10,8 @@ export default class extends Entity {
       scale = new Vector2(1, 1),
     } = config;
 
+    this.color = '#fff';
+    this.lineWidth = getPixelDensity();
     this.scale = scale;
 
     this.calculateOffset();
@@ -16,7 +19,8 @@ export default class extends Entity {
 
   draw() {
     this.GameState.Canvas.ctx.beginPath();
-    this.GameState.Canvas.ctx.lineWidth = 1 * window.devicePixelRatio;
+    this.GameState.Canvas.ctx.lineWidth = this.lineWidth;
+    this.GameState.Canvas.ctx.strokeStyle = this.color;
     this.GameState.Canvas.ctx.rect(
       0,
       0,

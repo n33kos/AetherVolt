@@ -894,7 +894,7 @@ var _class = function (_Sprite) {
       if (this.outline) {
         this.outline.canvasPosition = this.targetPosition;
         this.outline.calculateOffset();
-        this.setOutlineColor();
+        this.outline.color = this.getOutlineColor();
         this.outline.drawEntity();
       }
       _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'drawEntity', this).call(this);
@@ -908,14 +908,12 @@ var _class = function (_Sprite) {
       _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'draw', this).call(this);
     }
   }, {
-    key: 'setOutlineColor',
-    value: function setOutlineColor() {
-      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
-      if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
-      if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = 'rgb(' + this.placedBy.color + ', 0.2';
-      if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) {
-        this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
-      }
+    key: 'getOutlineColor',
+    value: function getOutlineColor() {
+      if (this.tileType.type === 'PLAYER_COLUMN') return 'rgba(0, 0, 0, 0)';
+      return '#fff';
+      if (this.placedBy) return 'rgb(' + this.placedBy.color + ', 0.2';
+      if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) return 'rgba(0, 0, 0, 0.2)';
     }
   }, {
     key: 'handleTurbulence',
@@ -1725,7 +1723,7 @@ var _Deck = __webpack_require__(15);
 
 var _Deck2 = _interopRequireDefault(_Deck);
 
-var _getRandomIntegerNotEqualTo = __webpack_require__(44);
+var _getRandomIntegerNotEqualTo = __webpack_require__(45);
 
 var _getRandomIntegerNotEqualTo2 = _interopRequireDefault(_getRandomIntegerNotEqualTo);
 
@@ -1774,11 +1772,11 @@ exports.default = function () {
   _endGame2.default.call(this);
 };
 
-var _endGame = __webpack_require__(45);
+var _endGame = __webpack_require__(46);
 
 var _endGame2 = _interopRequireDefault(_endGame);
 
-var _fireLightning = __webpack_require__(46);
+var _fireLightning = __webpack_require__(47);
 
 var _fireLightning2 = _interopRequireDefault(_fireLightning);
 
@@ -1786,7 +1784,7 @@ var _getTileWithPlayerName = __webpack_require__(10);
 
 var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
 
-var _Pathfinder = __webpack_require__(48);
+var _Pathfinder = __webpack_require__(49);
 
 var _Pathfinder2 = _interopRequireDefault(_Pathfinder);
 
@@ -1899,19 +1897,19 @@ var _GameState = __webpack_require__(30);
 
 var _GameState2 = _interopRequireDefault(_GameState);
 
-var _Render = __webpack_require__(54);
+var _Render = __webpack_require__(55);
 
 var _Render2 = _interopRequireDefault(_Render);
 
-var _Scene = __webpack_require__(55);
+var _Scene = __webpack_require__(56);
 
 var _Scene2 = _interopRequireDefault(_Scene);
 
-var _UI = __webpack_require__(56);
+var _UI = __webpack_require__(57);
 
 var _UI2 = _interopRequireDefault(_UI);
 
-var _Update = __webpack_require__(57);
+var _Update = __webpack_require__(58);
 
 var _Update2 = _interopRequireDefault(_Update);
 
@@ -2783,7 +2781,7 @@ var _Grid = __webpack_require__(37);
 
 var _Grid2 = _interopRequireDefault(_Grid);
 
-var _Hand = __webpack_require__(41);
+var _Hand = __webpack_require__(42);
 
 var _Hand2 = _interopRequireDefault(_Hand);
 
@@ -2791,7 +2789,7 @@ var _Level2 = __webpack_require__(13);
 
 var _Level3 = _interopRequireDefault(_Level2);
 
-var _TileHelper = __webpack_require__(42);
+var _TileHelper = __webpack_require__(43);
 
 var _TileHelper2 = _interopRequireDefault(_TileHelper);
 
@@ -2799,15 +2797,15 @@ var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
-var _jack = __webpack_require__(43);
+var _jack = __webpack_require__(44);
 
 var _jack2 = _interopRequireDefault(_jack);
 
-var _kcaj = __webpack_require__(50);
+var _kcaj = __webpack_require__(51);
 
 var _kcaj2 = _interopRequireDefault(_kcaj);
 
-var _controls = __webpack_require__(51);
+var _controls = __webpack_require__(52);
 
 var controls = _interopRequireWildcard(_controls);
 
@@ -3391,6 +3389,10 @@ var _Entity2 = __webpack_require__(4);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
+var _getPixelDensity = __webpack_require__(41);
+
+var _getPixelDensity2 = _interopRequireDefault(_getPixelDensity);
+
 var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
@@ -3415,6 +3417,8 @@ var _class = function (_Entity) {
         scale = _config$scale === undefined ? new _Vector2.default(1, 1) : _config$scale;
 
 
+    _this.color = '#fff';
+    _this.lineWidth = (0, _getPixelDensity2.default)();
     _this.scale = scale;
 
     _this.calculateOffset();
@@ -3425,7 +3429,8 @@ var _class = function (_Entity) {
     key: 'draw',
     value: function draw() {
       this.GameState.Canvas.ctx.beginPath();
-      this.GameState.Canvas.ctx.lineWidth = 1 * window.devicePixelRatio;
+      this.GameState.Canvas.ctx.lineWidth = this.lineWidth;
+      this.GameState.Canvas.ctx.strokeStyle = this.color;
       this.GameState.Canvas.ctx.rect(0, 0, this.dimensions.x * this.scale.x, this.dimensions.y * this.scale.y);
       this.GameState.Canvas.ctx.stroke();
     }
@@ -3444,6 +3449,21 @@ exports.default = _class;
 
 /***/ }),
 /* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function () {
+  return window.devicePixelRatio > 1 ? 2 : 1;
+};
+
+/***/ }),
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3572,7 +3592,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3798,7 +3818,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3883,7 +3903,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var captainName = 'Captain Jack';
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3904,7 +3924,7 @@ exports.default = function (original, min, max) {
 };
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3939,7 +3959,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3961,14 +3981,14 @@ exports.default = function (path) {
   }, 750);
 };
 
-var _Lightning = __webpack_require__(47);
+var _Lightning = __webpack_require__(48);
 
 var _Lightning2 = _interopRequireDefault(_Lightning);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4104,7 +4124,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4116,7 +4136,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _PriorityQueue = __webpack_require__(49);
+var _PriorityQueue = __webpack_require__(50);
 
 var _PriorityQueue2 = _interopRequireDefault(_PriorityQueue);
 
@@ -4224,7 +4244,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4273,7 +4293,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4358,7 +4378,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var captainName = 'Captain Kcaj';
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4379,11 +4399,11 @@ var _findTileAtPosition = __webpack_require__(11);
 
 var _findTileAtPosition2 = _interopRequireDefault(_findTileAtPosition);
 
-var _resetHover = __webpack_require__(52);
+var _resetHover = __webpack_require__(53);
 
 var _resetHover2 = _interopRequireDefault(_resetHover);
 
-var _setHover = __webpack_require__(53);
+var _setHover = __webpack_require__(54);
 
 var _setHover2 = _interopRequireDefault(_setHover);
 
@@ -4434,7 +4454,7 @@ function handleMouseUp(e) {
 }
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4452,7 +4472,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4490,7 +4510,7 @@ var _findTileAtPosition2 = _interopRequireDefault(_findTileAtPosition);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4550,7 +4570,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4613,7 +4633,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4837,7 +4857,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

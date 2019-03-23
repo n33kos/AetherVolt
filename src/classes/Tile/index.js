@@ -122,7 +122,7 @@ export default class extends Sprite {
     if (this.outline) {
       this.outline.canvasPosition = this.targetPosition;
       this.outline.calculateOffset();
-      this.setOutlineColor();
+      this.outline.color = this.getOutlineColor();
       this.outline.drawEntity();
     }
     super.drawEntity();
@@ -135,13 +135,11 @@ export default class extends Sprite {
     super.draw();
   }
 
-  setOutlineColor() {
-    this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
-    if (this.tileType.type === 'PLAYER_COLUMN') this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
-    if (this.placedBy) this.GameState.Canvas.ctx.strokeStyle = `rgb(${this.placedBy.color}, 0.2`;
-    if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) {
-      this.GameState.Canvas.ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
-    }
+  getOutlineColor() {
+    if (this.tileType.type === 'PLAYER_COLUMN') return 'rgba(0, 0, 0, 0)';
+    return '#fff';
+    if (this.placedBy) return `rgb(${this.placedBy.color}, 0.2`;
+    if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) return 'rgba(0, 0, 0, 0.2)';
   }
 
   handleTurbulence() {
