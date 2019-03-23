@@ -20,7 +20,6 @@ export default class {
 
   place() {
     this.targetTile.placedBy = this.player;
-    console.log(this.player.name);
     this.targetTile.setType(this.sourceTile.tileType);
     this.targetTile.targetRotation = this.sourceTile.targetRotation;
     this.targetTile.rotation = this.sourceTile.rotation;

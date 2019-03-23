@@ -552,7 +552,6 @@ var _class = function () {
     key: 'place',
     value: function place() {
       this.targetTile.placedBy = this.player;
-      console.log(this.player.name);
       this.targetTile.setType(this.sourceTile.tileType);
       this.targetTile.targetRotation = this.sourceTile.targetRotation;
       this.targetTile.rotation = this.sourceTile.rotation;
