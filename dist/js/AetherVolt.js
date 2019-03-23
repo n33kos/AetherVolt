@@ -557,6 +557,8 @@ var _class = function () {
       this.targetTile.rotation = this.sourceTile.rotation;
       this.targetTile.neighborPattern = this.sourceTile.neighborPattern;
       this.targetTile.neighbors = this.targetTile.getNeighbors();
+      this.targetTile.health = this.sourceTile.health;
+      this.targetTile.maxHealth = this.sourceTile.maxHealth;
       this.player.hand.remove(this.sourceTile.uuid);
     }
   }, {
