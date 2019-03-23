@@ -15,10 +15,7 @@ import kcaj from 'configs/captains/kcaj';
 
 // ----- Level Functions ----
 // VV These expect to be bound to the scope of this class, there is probably a better pattern than this VV
-import * as controls      from 'lib/controls';
-import cycleActions       from 'lib/cycleActions';
-import findTileAtPosition from 'lib/findTileAtPosition';
-import handleLightningDischarge  from 'lib/handleLightningDischarge';
+import * as controls            from 'lib/controls';
 
 export default class extends Level {
   constructor(config) {
@@ -58,23 +55,24 @@ export default class extends Level {
     this.GameState.Scene.add(bg);
 
     // Add Clouds
-    for (var i = 0; i < 10; i++) {
-      const cloud = new Cloud({
-        GameState: this.GameState,
-        dimensions: new Vector2(32, 32),
-        offset: new Vector2(0.5, 0.5),
-        scale: new Vector2(
-          15 + Math.floor(Math.random() * 15),
-          15 + Math.floor(Math.random() * 15),
-        ),
-      });
-      cloud.canvasPosition = new Vector2(
-        Math.random() * this.GameState.Canvas.width,
-        Math.random() * this.GameState.Canvas.height,
-      );
-
-      this.GameState.Scene.add(cloud);
-    }
+    // Seems like this ish is giving us slowdown
+    // for (var i = 0; i < 10; i++) {
+    //   const cloud = new Cloud({
+    //     GameState: this.GameState,
+    //     dimensions: new Vector2(32, 32),
+    //     offset: new Vector2(0.5, 0.5),
+    //     scale: new Vector2(
+    //       15 + Math.floor(Math.random() * 15),
+    //       15 + Math.floor(Math.random() * 15),
+    //     ),
+    //   });
+    //   cloud.canvasPosition = new Vector2(
+    //     Math.random() * this.GameState.Canvas.width,
+    //     Math.random() * this.GameState.Canvas.height,
+    //   );
+    //
+    //   this.GameState.Scene.add(cloud);
+    // }
 
     // Init deck
     this.deck = new Deck({

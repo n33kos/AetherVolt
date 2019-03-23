@@ -1,8 +1,9 @@
-import Entity       from 'classes/Entity';
-import rectContains from 'lib/rectContains';
-import Tile         from 'classes/Tile';
-import uuidv4       from 'uuid/v4';
-import Vector2      from 'classes/Vector2';
+import Entity          from 'classes/Entity';
+import rectContains    from 'lib/rectContains';
+import Tile            from 'classes/Tile';
+import uuidv4          from 'uuid/v4';
+import Vector2         from 'classes/Vector2';
+import getPixelDensity from 'lib/getPixelDensity';
 
 export default class extends Entity {
   constructor(config) {
@@ -12,7 +13,7 @@ export default class extends Entity {
     this.tiles = [];
     this.selectedTile = 0;
     this.size = 64;
-    this.scale = 2;
+    this.scale = 1.5 * getPixelDensity();
     this.paddingRatio = 0.2;
   }
 

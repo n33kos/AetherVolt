@@ -1,7 +1,8 @@
-import Avatar      from 'classes/Avatar';
-import hoverAvatar from 'lib/hoverAvatar';
-import Player      from 'classes/Player';
-import Vector2     from 'classes/Vector2';
+import Avatar          from 'classes/Avatar';
+import getPixelDensity from 'lib/getPixelDensity';
+import hoverAvatar     from 'lib/hoverAvatar';
+import Player          from 'classes/Player';
+import Vector2         from 'classes/Vector2';
 
 const captainName = 'Captain Jack';
 
@@ -15,8 +16,8 @@ export default function() {
       GameState : this.GameState,
       dimensions: new Vector2(64, 128),
       scale: new Vector2(
-        Math.min(4, this.GameState.Canvas.width / 460),
-        Math.min(4, this.GameState.Canvas.width / 460),
+        Math.min(2, this.GameState.Canvas.width / 12) * getPixelDensity(),
+        Math.min(2, this.GameState.Canvas.width / 12) * getPixelDensity(),
       ),
       offset: new Vector2(0.5, 0.5),
       onHover: hoverAvatar.bind(this, captainName),
