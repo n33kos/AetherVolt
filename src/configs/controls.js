@@ -1,12 +1,12 @@
 export default {
   callbacks : {
-    mouseDown: [],
-    mouseUp: [],
-    mouseMove: [],
-    touchStart: [],
-    touchEnd: [],
-    touchMove: [],
-    keyDown: [],
-    keyUp: [],
+    keyDown    : [],
+    keyUp      : [],
+    mouseDown  : [],
+    mouseMove  : [],
+    mouseUp    : [],
+    touchEnd   : [],
+    touchMove  : [],
+    touchStart : [],
   },
 };

@@ -28,10 +28,7 @@ export default class {
   }
 
   initLevels() {
-    this.levels = levels.map(level => {
-      const lvl = new level({GameState : this});
-      return lvl;
-    });
+    this.levels = levels.map(level => level(this));
   }
 
   loadLevel() {

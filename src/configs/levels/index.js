@@ -1,5 +1,5 @@
 import Prototype from './Prototype';
 
 export default [
-  Prototype,
+  GameState => Prototype(GameState),
 ];
