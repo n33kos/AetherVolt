@@ -3,7 +3,6 @@ export default {
   isPaused             : true,
   level                : 0,
   levels               : [],
-  playerName           : 'Player 1',
   score                : 0,
   forceMoveAtEndOfTurn : false,
 };
