@@ -1,40 +1,30 @@
-// ---- Classes ----
-import Action        from 'classes/Action';
-import Background    from 'classes/Background';
-import Cloud         from 'classes/Cloud';
-import Deck          from 'classes/Deck';
-import Grid          from 'classes/Grid';
-import Hand          from 'classes/Hand';
-import Level         from 'classes/Level';
-import Vector2       from 'classes/Vector2';
+import Action      from 'classes/Action';
+import Background  from 'classes/Background';
+import BaseService from 'services/BaseService';
+import Cloud       from 'classes/Cloud';
+import Deck        from 'classes/Deck';
+import Grid        from 'classes/Grid';
+import Hand        from 'classes/Hand';
+import Level       from 'classes/Level';
+import Vector2     from 'classes/Vector2';
 
-// ----- Captains ----
-import jack from 'configs/captains/jack';
-import kcaj from 'configs/captains/kcaj';
-
-// ----- Level Functions ----
 // VV These expect to be bound to the scope of the level class, there is probably a better pattern than this VV
 import * as controls from 'lib/controls';
 
-export default class {
-  constructor(GameState, level = null) {
-    this.GameState = GameState;
-    this.level = level;
-  }
-
+export default class extends BaseService {
   createLevel(config) {
     this.level = new Level({
       GameState : this.GameState,
       ...config,
     });
 
-    // Make sure we bind the load function's 'this' to the level
+    // Make sure we bind the load function's 'this' to the level itself instead of the service
     this.level.load = this.generateLoadFunction.bind(this.level, config);
 
     return this.level;
   }
 
-  generateLoadFunction(config) {
+  generateLoadFunction(config, players) {
     // Clear Scene
     if (config.clearOnLoad) {
       this.GameState.Scene.clear();
@@ -81,17 +71,15 @@ export default class {
     this.deck = new Deck({
       deckSize : config.deckSize,
     });
-    // debugger;
 
-    // Init players
-    this.players = [
-      kcaj.call(this),
-      jack.call(this),
-    ];
+    // Set passed in players to class var
+    this.players = players;
+
+    // Set attacking player to first in array (this is brittle)
     this.attackingPlayer = this.players[0];
     this.defendingPlayer = this.players[1];
 
-    // Init hands
+    // Init players
     this.players.forEach((player, index) => {
       const hand = new Hand({
         GameState : this.GameState,
