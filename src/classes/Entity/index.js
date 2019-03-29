@@ -23,7 +23,6 @@ export default class extends LoadedEntity {
     this.canvasPosition = new Vector2();
     this.controlCallbackIds = [];
     this.dimensions = dimensions;
-    this.GameState = GameState;
     this.offset = offset;
     this.position = position;
     this.rotation = rotation;

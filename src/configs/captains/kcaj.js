@@ -1,67 +1,15 @@
-import Avatar          from 'classes/Avatar';
-import getPixelDensity from 'lib/getPixelDensity';
-import hoverAvatar     from 'lib/hoverAvatar';
-import Player          from 'classes/Player';
-import Vector2         from 'classes/Vector2';
+import CreateCaptainService from 'services/CreateCaptainService';
 
-const captainName = 'Captain Kcaj';
+export default (GameState) => {
+  const createCaptainService = new CreateCaptainService(GameState);
 
-export default function() {
-  return new Player({
-    GameState : this.GameState,
-    name      : captainName,
-    id        : 0,
-    color     : '255,100,100',
-    avatar    : new Avatar({
-      GameState : this.GameState,
-      dimensions: new Vector2(64, 128),
-      scale: new Vector2(
-        Math.min(2, this.GameState.Canvas.width / 12) * getPixelDensity(),
-        Math.min(2, this.GameState.Canvas.width / 12) * getPixelDensity(),
-      ),
-      offset: new Vector2(0.5, 0.5),
-      onHover: hoverAvatar.bind(this, captainName),
-      targetPosition : new Vector2(
-        -256,
-        this.GameState.Canvas.cy,
-      ),
-      animations : {
-        mouseDown : {
-          frames        : 12,
-          loop          : true,
-          spriteSheet   : './img/captains/Kcaj/Ship.png',
-          ticksPerFrame : 5,
-        },
-        mouseUp : {
-          frames        : 12,
-          loop          : true,
-          spriteSheet   : './img/captains/Kcaj/Ship.png',
-          ticksPerFrame : 5,
-        },
-        hover : {
-          frames        : 12,
-          loop          : true,
-          spriteSheet   : './img/captains/Kcaj/Ship.png',
-          ticksPerFrame : 5,
-        },
-        damage : {
-          frames        : 8,
-          loop          : true,
-          spriteSheet   : './img/captains/Kcaj/Ship_Damage.png',
-          ticksPerFrame : 1,
-        },
-      },
-    }),
-    tiles     : {
-      // These must match up with tileType IDs
-      1 : './img/captains/Kcaj/Propeller_Conductor_Empty.png',
-      2 : './img/captains/Kcaj/Propeller_Conductor_Empty.png',
-      3 : './img/captains/Kcaj/Propeller_Conductor_Straight.png',
-      4 : './img/captains/Kcaj/Propeller_Conductor_Bend.png',
-      5 : './img/captains/Kcaj/Propeller_Conductor_Triple.png',
-      6 : './img/captains/Kcaj/Propeller_Conductor_Quad.png',
-    },
-    moves     : 4,
-    maxMoves  : 4,
+  return createCaptainService.createCaptain({
+    color      : '255,100,100',
+    health     : 30,
+    maxHealth  : 30,
+    maxMoves   : 4,
+    moves      : 4,
+    name       : 'Kcaj',
+    spritePath : './img/captains/Kcaj/',
   });
-}
+};

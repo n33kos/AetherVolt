@@ -76,7 +76,6 @@ export default class extends Sprite {
   }
 
   getSpriteSheet() {
-    // debugger;
     return this.placedBy ? this.placedBy.tiles[this.tileType.id] : '';
   }
 

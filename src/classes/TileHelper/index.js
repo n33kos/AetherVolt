@@ -24,13 +24,14 @@ export default class {
     this.isRotating = true;
 
     const leftButton = new SpriteButton({
-      onClick : this.rotateLeft.bind(this),
+      GameState       : this.GameState,
+      onClick         : this.rotateLeft.bind(this),
       mouseDownSprite : './img/Rotate_Left.png',
-      mouseUpSprite : './img/Rotate_Left.png',
-      hoverSprite : './img/Rotate_Left.png',
-      scale : tile.scale,
-      dimensions : new Vector2(64, 64),
-      order: -20,
+      mouseUpSprite   : './img/Rotate_Left.png',
+      hoverSprite     : './img/Rotate_Left.png',
+      scale           : tile.scale,
+      dimensions      : new Vector2(64, 64),
+      order           : -20,
     });
     leftButton.canvasPosition = new Vector2(
       tile.canvasPosition.x + (tile.dimensions.x * tile.scale.x / 2),
@@ -39,13 +40,14 @@ export default class {
     leftButton.calculateOffset();
 
     const rightButton = new SpriteButton({
-      onClick : this.rotateRight.bind(this),
+      GameState       : this.GameState,
+      onClick         : this.rotateRight.bind(this),
       mouseDownSprite : './img/Rotate_Right.png',
-      mouseUpSprite : './img/Rotate_Right.png',
-      hoverSprite : './img/Rotate_Right.png',
-      scale : tile.scale,
-      dimensions : new Vector2(64, 64),
-      order: -20,
+      mouseUpSprite   : './img/Rotate_Right.png',
+      hoverSprite     : './img/Rotate_Right.png',
+      scale           : tile.scale,
+      dimensions      : new Vector2(64, 64),
+      order           : -20,
     });
     rightButton.canvasPosition = new Vector2(
       tile.canvasPosition.x - (tile.dimensions.x * tile.scale.x / 2),
@@ -114,13 +116,14 @@ export default class {
     const avatar = this.currentAction.sourceTile.player.avatar;
 
     const upButton = new SpriteButton({
-      onClick : this.moveUp.bind(this),
+      GameState       : this.GameState,
+      onClick         : this.moveUp.bind(this),
       mouseDownSprite : './img/Move_Up.png',
-      mouseUpSprite : './img/Move_Up.png',
-      hoverSprite : './img/Move_Up.png',
-      scale : tile.scale,
-      dimensions : new Vector2(64, 64),
-      order: -20,
+      mouseUpSprite   : './img/Move_Up.png',
+      hoverSprite     : './img/Move_Up.png',
+      scale           : tile.scale,
+      dimensions      : new Vector2(64, 64),
+      order           : -20,
     });
     upButton.canvasPosition = new Vector2(
       avatar.canvasPosition.x,
@@ -129,13 +132,14 @@ export default class {
     upButton.calculateOffset();
 
     const downButton = new SpriteButton({
-      onClick : this.moveDown.bind(this),
+      GameState       : this.GameState,
+      onClick         : this.moveDown.bind(this),
       mouseDownSprite : './img/Move_Down.png',
-      mouseUpSprite : './img/Move_Down.png',
-      hoverSprite : './img/Move_Down.png',
-      scale : tile.scale,
-      dimensions : new Vector2(64, 64),
-      order: -20,
+      mouseUpSprite   : './img/Move_Down.png',
+      hoverSprite     : './img/Move_Down.png',
+      scale           : tile.scale,
+      dimensions      : new Vector2(64, 64),
+      order           : -20,
     });
     downButton.canvasPosition = new Vector2(
       avatar.canvasPosition.x,

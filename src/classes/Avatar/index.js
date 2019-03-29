@@ -1,5 +1,5 @@
-import SpriteButton from 'classes/SpriteButton';
-import Vector2      from 'classes/Vector2';
+import SpriteButton          from 'classes/SpriteButton';
+import Vector2               from 'classes/Vector2';
 
 export default class extends SpriteButton {
   constructor(config) {
@@ -8,10 +8,12 @@ export default class extends SpriteButton {
     const {
       sprite,
       targetPosition = null,
+      playerName,
     } = config;
 
     this.targetPosition = targetPosition;
     this.canvasPosition = targetPosition;
+    this.playerName = playerName;
 
     this.turbulence = new Vector2(0, 0);
     this.turbulenceStep = Math.random() * Math.PI * 2;

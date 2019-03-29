@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -291,8 +291,8 @@ exports.default = _class;
 "use strict";
 
 
-var rng = __webpack_require__(28);
-var bytesToUuid = __webpack_require__(29);
+var rng = __webpack_require__(27);
+var bytesToUuid = __webpack_require__(28);
 
 function v4(options, buf, offset) {
   var i = buf && offset || 0;
@@ -342,7 +342,7 @@ var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
-var _worldSpaceToCanvas = __webpack_require__(33);
+var _worldSpaceToCanvas = __webpack_require__(32);
 
 var _worldSpaceToCanvas2 = _interopRequireDefault(_worldSpaceToCanvas);
 
@@ -383,7 +383,6 @@ var _class = function (_LoadedEntity) {
     _this.canvasPosition = new _Vector2.default();
     _this.controlCallbackIds = [];
     _this.dimensions = dimensions;
-    _this.GameState = GameState;
     _this.offset = offset;
     _this.position = position;
     _this.rotation = rotation;
@@ -455,21 +454,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function () {
-  return window.devicePixelRatio > 1 ? 2 : 1;
-};
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function () {
   // Decrement action
   if (this.attackingPlayer.actions > 0 && this.currentAction.actionType.type !== 'MOVE') {
     this.attackingPlayer.actions -= 1;
@@ -492,18 +476,18 @@ exports.default = function () {
   this.GameState.UI.updatePlayerStats(this.players);
 };
 
-var _Action = __webpack_require__(8);
+var _Action = __webpack_require__(7);
 
 var _Action2 = _interopRequireDefault(_Action);
 
-var _cyclePlayerTurn = __webpack_require__(20);
+var _cyclePlayerTurn = __webpack_require__(19);
 
 var _cyclePlayerTurn2 = _interopRequireDefault(_cyclePlayerTurn);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -555,7 +539,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -570,7 +554,7 @@ exports.default = function (point, rectPos, rectDim) {
 };
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -582,7 +566,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ActionType = __webpack_require__(6);
+var _ActionType = __webpack_require__(5);
 
 var _ActionType2 = _interopRequireDefault(_ActionType);
 
@@ -664,7 +648,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -737,7 +721,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -755,7 +739,7 @@ var _cloneClass = __webpack_require__(15);
 
 var _cloneClass2 = _interopRequireDefault(_cloneClass);
 
-var _DismissedTile = __webpack_require__(41);
+var _DismissedTile = __webpack_require__(40);
 
 var _DismissedTile2 = _interopRequireDefault(_DismissedTile);
 
@@ -763,7 +747,7 @@ var _Sprite2 = __webpack_require__(1);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
-var _TileType = __webpack_require__(9);
+var _TileType = __webpack_require__(8);
 
 var _TileType2 = _interopRequireDefault(_TileType);
 
@@ -865,7 +849,6 @@ var _class = function (_Sprite) {
   }, {
     key: 'getSpriteSheet',
     value: function getSpriteSheet() {
-      // debugger;
       return this.placedBy ? this.placedBy.tiles[this.tileType.id] : '';
     }
   }, {
@@ -1010,6 +993,21 @@ var _class = function (_Sprite) {
 }(_Sprite3.default);
 
 exports.default = _class;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function () {
+  return window.devicePixelRatio > 1 ? 2 : 1;
+};
 
 /***/ }),
 /* 11 */
@@ -1179,7 +1177,7 @@ var _LoadedEntity2 = __webpack_require__(14);
 
 var _LoadedEntity3 = _interopRequireDefault(_LoadedEntity2);
 
-var _TileHelper = __webpack_require__(32);
+var _TileHelper = __webpack_require__(31);
 
 var _TileHelper2 = _interopRequireDefault(_TileHelper);
 
@@ -1345,7 +1343,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _rectContains = __webpack_require__(7);
+var _rectContains = __webpack_require__(6);
 
 var _rectContains2 = _interopRequireDefault(_rectContains);
 
@@ -1480,9 +1478,30 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function _class(GameState) {
+  _classCallCheck(this, _class);
+
+  this.GameState = GameState;
+};
+
+exports.default = _class;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _TileType = __webpack_require__(9);
+var _TileType = __webpack_require__(8);
 
 var _TileType2 = _interopRequireDefault(_TileType);
 
@@ -1544,134 +1563,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _SpriteButton2 = __webpack_require__(16);
-
-var _SpriteButton3 = _interopRequireDefault(_SpriteButton2);
-
-var _Vector = __webpack_require__(0);
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _class = function (_SpriteButton) {
-  _inherits(_class, _SpriteButton);
-
-  function _class(config) {
-    _classCallCheck(this, _class);
-
-    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
-
-    var sprite = config.sprite,
-        _config$targetPositio = config.targetPosition,
-        targetPosition = _config$targetPositio === undefined ? null : _config$targetPositio;
-
-
-    _this.targetPosition = targetPosition;
-    _this.canvasPosition = targetPosition;
-
-    _this.turbulence = new _Vector2.default(0, 0);
-    _this.turbulenceStep = Math.random() * Math.PI * 2;
-    _this.turbulenceSpeed = 0.05;
-    _this.turbulenceRange = new _Vector2.default(1, 15);
-    return _this;
-  }
-
-  _createClass(_class, [{
-    key: 'draw',
-    value: function draw() {
-      this.handleTurbulence();
-      _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'draw', this).call(this);
-    }
-  }, {
-    key: 'handleTurbulence',
-    value: function handleTurbulence() {
-      if (!this.targetPosition) return;
-
-      this.addTurbulence();
-
-      var positionDiff = new _Vector2.default(this.targetPosition.x - this.canvasPosition.x - this.turbulence.x, this.targetPosition.y - this.canvasPosition.y - this.turbulence.y);
-      this.canvasPosition = new _Vector2.default(this.canvasPosition.x + positionDiff.x * 0.005 * this.GameState.deltaTime, this.canvasPosition.y + positionDiff.y * 0.005 * this.GameState.deltaTime);
-      this.calculateOffset();
-    }
-  }, {
-    key: 'addTurbulence',
-    value: function addTurbulence() {
-      this.turbulenceStep += this.turbulenceSpeed;
-      if (this.turbulenceStep >= Math.PI * 2) this.turbulenceStep = 0;
-
-      this.turbulence = new _Vector2.default(Math.cos(this.turbulenceStep) * this.turbulenceRange.x, Math.sin(this.turbulenceStep) * this.turbulenceRange.y);
-    }
-  }, {
-    key: 'takeDamageAnimation',
-    value: function takeDamageAnimation(color) {
-      var _this2 = this;
-
-      this.currentAnimation = 'damage';
-
-      window.setTimeout(function () {
-        _this2.currentAnimation = 'mouseUp';
-      }, 750);
-    }
-  }]);
-
-  return _class;
-}(_SpriteButton3.default);
-
-exports.default = _class;
-
-/***/ }),
 /* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function (playerName) {
-  // Cant move if it isnt your turn
-  if (this.attackingPlayer.name !== playerName) return;
-
-  var playerTile = _getTileWithPlayerName2.default.call(this, playerName);
-  this.currentAction.sourceTile = playerTile;
-  this.tileHelper.initMove(playerTile, this.currentAction, _cycleActions2.default.bind(this));
-};
-
-var _cycleActions = __webpack_require__(5);
-
-var _cycleActions2 = _interopRequireDefault(_cycleActions);
-
-var _getTileWithPlayerName = __webpack_require__(11);
-
-var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ }),
-/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1741,23 +1633,23 @@ exports.default = function () {
   this.GameState.UI.updatePlayerStats(this.players);
 };
 
-var _Action = __webpack_require__(8);
+var _Action = __webpack_require__(7);
 
 var _Action2 = _interopRequireDefault(_Action);
 
-var _ActionType = __webpack_require__(6);
+var _ActionType = __webpack_require__(5);
 
 var _ActionType2 = _interopRequireDefault(_ActionType);
 
-var _cycleActions = __webpack_require__(5);
+var _cycleActions = __webpack_require__(4);
 
 var _cycleActions2 = _interopRequireDefault(_cycleActions);
 
-var _Deck = __webpack_require__(17);
+var _Deck = __webpack_require__(18);
 
 var _Deck2 = _interopRequireDefault(_Deck);
 
-var _getRandomIntegerNotEqualTo = __webpack_require__(45);
+var _getRandomIntegerNotEqualTo = __webpack_require__(44);
 
 var _getRandomIntegerNotEqualTo2 = _interopRequireDefault(_getRandomIntegerNotEqualTo);
 
@@ -1765,98 +1657,14 @@ var _getTileWithPlayerName = __webpack_require__(11);
 
 var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
 
-var _handleLightningDischarge = __webpack_require__(46);
+var _handleLightningDischarge = __webpack_require__(45);
 
 var _handleLightningDischarge2 = _interopRequireDefault(_handleLightningDischarge);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Vector = __webpack_require__(0);
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class(_ref) {
-    var GameState = _ref.GameState,
-        _ref$actions = _ref.actions,
-        actions = _ref$actions === undefined ? 2 : _ref$actions,
-        avatar = _ref.avatar,
-        _ref$color = _ref.color,
-        color = _ref$color === undefined ? 'blue' : _ref$color,
-        _ref$controller = _ref.controller,
-        controller = _ref$controller === undefined ? 'human' : _ref$controller,
-        _ref$damage = _ref.damage,
-        damage = _ref$damage === undefined ? 2 : _ref$damage,
-        _ref$hand = _ref.hand,
-        hand = _ref$hand === undefined ? [] : _ref$hand,
-        _ref$handSize = _ref.handSize,
-        handSize = _ref$handSize === undefined ? 4 : _ref$handSize,
-        _ref$health = _ref.health,
-        health = _ref$health === undefined ? 50 : _ref$health,
-        _ref$maxActions = _ref.maxActions,
-        maxActions = _ref$maxActions === undefined ? 2 : _ref$maxActions,
-        _ref$maxHealth = _ref.maxHealth,
-        maxHealth = _ref$maxHealth === undefined ? 50 : _ref$maxHealth,
-        _ref$maxMoves = _ref.maxMoves,
-        maxMoves = _ref$maxMoves === undefined ? 1 : _ref$maxMoves,
-        _ref$moves = _ref.moves,
-        moves = _ref$moves === undefined ? 1 : _ref$moves,
-        _ref$name = _ref.name,
-        name = _ref$name === undefined ? 'Player 1' : _ref$name,
-        _ref$tiles = _ref.tiles,
-        tiles = _ref$tiles === undefined ? {} : _ref$tiles;
-
-    _classCallCheck(this, _class);
-
-    this.GameState = GameState;
-    this.actions = actions;
-    this.avatar = avatar;
-    this.color = color;
-    this.controller = controller;
-    this.damage = damage;
-    this.hand = hand;
-    this.handSize = handSize;
-    this.health = health;
-    this.maxActions = maxActions;
-    this.maxHealth = maxHealth;
-    this.maxMoves = maxMoves;
-    this.moves = moves;
-    this.name = name;
-    this.tiles = tiles;
-  }
-
-  _createClass(_class, [{
-    key: 'setAvatarPosition',
-    value: function setAvatarPosition(tile) {
-      var playerSide = this.name === 'Player 1' ? -1 : 1;
-      this.avatar.targetPosition = tile.canvasPosition;
-    }
-  }]);
-
-  return _class;
-}();
-
-exports.default = _class;
-
-/***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1879,41 +1687,179 @@ exports.default = function (pos) {
 };
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _Audio = __webpack_require__(24);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Avatar = __webpack_require__(54);
+
+var _Avatar2 = _interopRequireDefault(_Avatar);
+
+var _BaseService2 = __webpack_require__(17);
+
+var _BaseService3 = _interopRequireDefault(_BaseService2);
+
+var _cycleActions = __webpack_require__(4);
+
+var _cycleActions2 = _interopRequireDefault(_cycleActions);
+
+var _getPixelDensity = __webpack_require__(10);
+
+var _getPixelDensity2 = _interopRequireDefault(_getPixelDensity);
+
+var _getTileWithPlayerName = __webpack_require__(11);
+
+var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
+
+var _Player = __webpack_require__(55);
+
+var _Player2 = _interopRequireDefault(_Player);
+
+var _Vector = __webpack_require__(0);
+
+var _Vector2 = _interopRequireDefault(_Vector);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _class = function (_BaseService) {
+  _inherits(_class, _BaseService);
+
+  function _class() {
+    _classCallCheck(this, _class);
+
+    return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
+  }
+
+  _createClass(_class, [{
+    key: 'createCaptain',
+    value: function createCaptain(config) {
+      this.player = new _Player2.default({
+        GameState: this.GameState,
+        name: config.name,
+        color: config.color,
+        avatar: new _Avatar2.default({
+          GameState: this.GameState,
+          dimensions: new _Vector2.default(64, 128),
+          scale: new _Vector2.default(2 * (0, _getPixelDensity2.default)(), 2 * (0, _getPixelDensity2.default)()),
+          playerName: config.name,
+          offset: new _Vector2.default(0.5, 0.5),
+          onHover: this.generateOnHoverAvatarFunction(config),
+          targetPosition: new _Vector2.default(0, 0),
+          animations: {
+            mouseDown: {
+              frames: 12,
+              loop: true,
+              spriteSheet: config.spritePath + '/Ship.png',
+              ticksPerFrame: 5
+            },
+            mouseUp: {
+              frames: 12,
+              loop: true,
+              spriteSheet: config.spritePath + '/Ship.png',
+              ticksPerFrame: 5
+            },
+            hover: {
+              frames: 12,
+              loop: true,
+              spriteSheet: config.spritePath + '/Ship.png',
+              ticksPerFrame: 5
+            },
+            damage: {
+              frames: 8,
+              loop: true,
+              spriteSheet: config.spritePath + '/Ship_Damage.png',
+              ticksPerFrame: 1
+            }
+          }
+        }),
+        tiles: {
+          // These MUST match up with tileType IDs
+          1: config.spritePath + '/Propeller_Conductor_Empty.png',
+          2: config.spritePath + '/Propeller_Conductor_Empty.png',
+          3: config.spritePath + '/Propeller_Conductor_Straight.png',
+          4: config.spritePath + '/Propeller_Conductor_Bend.png',
+          5: config.spritePath + '/Propeller_Conductor_Triple.png',
+          6: config.spritePath + '/Propeller_Conductor_Quad.png'
+        },
+        moves: config.moves,
+        maxMoves: config.maxMoves,
+        health: config.health,
+        maxHealth: config.maxHealth
+      });
+
+      return this.player;
+    }
+  }, {
+    key: 'generateOnHoverAvatarFunction',
+    value: function generateOnHoverAvatarFunction(config) {
+      var _this2 = this;
+
+      return function () {
+        // Cant move if it isnt your turn
+        if (_this2.GameState.currentLevel.attackingPlayer.name !== config.name) return;
+
+        var playerTile = _getTileWithPlayerName2.default.call(_this2.GameState.currentLevel, config.name);
+        _this2.GameState.currentLevel.currentAction.sourceTile = playerTile;
+        _this2.GameState.currentLevel.tileHelper.initMove(playerTile, _this2.GameState.currentLevel.currentAction, _cycleActions2.default.bind(_this2.GameState.currentLevel));
+      };
+    }
+  }]);
+
+  return _class;
+}(_BaseService3.default);
+
+exports.default = _class;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _Audio = __webpack_require__(23);
 
 var _Audio2 = _interopRequireDefault(_Audio);
 
-var _Canvas = __webpack_require__(25);
+var _Canvas = __webpack_require__(24);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _Controls = __webpack_require__(26);
+var _Controls = __webpack_require__(25);
 
 var _Controls2 = _interopRequireDefault(_Controls);
 
-var _GameState = __webpack_require__(30);
+var _GameState = __webpack_require__(29);
 
 var _GameState2 = _interopRequireDefault(_GameState);
 
-var _Render = __webpack_require__(56);
+var _Render = __webpack_require__(57);
 
 var _Render2 = _interopRequireDefault(_Render);
 
-var _Scene = __webpack_require__(57);
+var _Scene = __webpack_require__(58);
 
 var _Scene2 = _interopRequireDefault(_Scene);
 
-var _UI = __webpack_require__(58);
+var _UI = __webpack_require__(59);
 
 var _UI2 = _interopRequireDefault(_UI);
 
-var _Update = __webpack_require__(59);
+var _Update = __webpack_require__(60);
 
 var _Update2 = _interopRequireDefault(_Update);
 
@@ -1961,7 +1907,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
 });
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2015,7 +1961,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2101,7 +2047,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2115,7 +2061,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _throttleDebounce = __webpack_require__(12);
 
-var _controls = __webpack_require__(27);
+var _controls = __webpack_require__(26);
 
 var _controls2 = _interopRequireDefault(_controls);
 
@@ -2502,7 +2448,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2525,7 +2471,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2566,7 +2512,7 @@ if (getRandomValues) {
 }
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2591,7 +2537,7 @@ function bytesToUuid(buf, offset) {
 module.exports = bytesToUuid;
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2603,7 +2549,10 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _gameState = __webpack_require__(31);
+// ------ Captains -------
+
+
+var _gameState = __webpack_require__(30);
 
 var _gameState2 = _interopRequireDefault(_gameState);
 
@@ -2611,9 +2560,17 @@ var _Level = __webpack_require__(13);
 
 var _Level2 = _interopRequireDefault(_Level);
 
-var _levels = __webpack_require__(34);
+var _levels = __webpack_require__(33);
 
 var _levels2 = _interopRequireDefault(_levels);
+
+var _jack = __webpack_require__(53);
+
+var _jack2 = _interopRequireDefault(_jack);
+
+var _kcaj = __webpack_require__(56);
+
+var _kcaj2 = _interopRequireDefault(_kcaj);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2628,8 +2585,8 @@ var _class = function () {
     this.level = _gameState2.default.level;
     this.levels = _gameState2.default.levels;
     this.score = _gameState2.default.score;
-    this.playerName = _gameState2.default.playerName;
     this.currentLevel = new _Level2.default({ GameState: this });
+    this.captains = [];
 
     /*
       Class variables added in loader :
@@ -2648,6 +2605,14 @@ var _class = function () {
       this.initLevels();
     }
   }, {
+    key: 'initCaptains',
+    value: function initCaptains() {
+      this.captains = {
+        kcaj: (0, _kcaj2.default)(this),
+        jack: (0, _jack2.default)(this)
+      };
+    }
+  }, {
     key: 'initLevels',
     value: function initLevels() {
       var _this = this;
@@ -2661,8 +2626,12 @@ var _class = function () {
     value: function loadLevel() {
       var newLevel = this.levels[this.level];
 
+      // In the future this array will be set via a hero select screen
+      this.initCaptains();
+      var players = [this.captains.jack, this.captains.kcaj];
+
       // load level
-      newLevel.load();
+      newLevel.load(players);
       this.currentLevel = newLevel;
 
       // Remove focus from any UI elements clicked to prevent control misdirection
@@ -2713,7 +2682,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2733,7 +2702,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2745,7 +2714,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ActionType = __webpack_require__(6);
+var _ActionType = __webpack_require__(5);
 
 var _ActionType2 = _interopRequireDefault(_ActionType);
 
@@ -2790,6 +2759,7 @@ var _class = function () {
       this.isRotating = true;
 
       var leftButton = new _SpriteButton2.default({
+        GameState: this.GameState,
         onClick: this.rotateLeft.bind(this),
         mouseDownSprite: './img/Rotate_Left.png',
         mouseUpSprite: './img/Rotate_Left.png',
@@ -2802,6 +2772,7 @@ var _class = function () {
       leftButton.calculateOffset();
 
       var rightButton = new _SpriteButton2.default({
+        GameState: this.GameState,
         onClick: this.rotateRight.bind(this),
         mouseDownSprite: './img/Rotate_Right.png',
         mouseUpSprite: './img/Rotate_Right.png',
@@ -2876,6 +2847,7 @@ var _class = function () {
       var avatar = this.currentAction.sourceTile.player.avatar;
 
       var upButton = new _SpriteButton2.default({
+        GameState: this.GameState,
         onClick: this.moveUp.bind(this),
         mouseDownSprite: './img/Move_Up.png',
         mouseUpSprite: './img/Move_Up.png',
@@ -2888,6 +2860,7 @@ var _class = function () {
       upButton.calculateOffset();
 
       var downButton = new _SpriteButton2.default({
+        GameState: this.GameState,
         onClick: this.moveDown.bind(this),
         mouseDownSprite: './img/Move_Down.png',
         mouseUpSprite: './img/Move_Down.png',
@@ -2959,7 +2932,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2980,7 +2953,7 @@ exports.default = function (GameState, position) {
 };
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2990,7 +2963,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Prototype = __webpack_require__(35);
+var _Prototype = __webpack_require__(34);
 
 var _Prototype2 = _interopRequireDefault(_Prototype);
 
@@ -3001,7 +2974,7 @@ exports.default = [function (GameState) {
 }];
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3011,7 +2984,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _CreateLevelService = __webpack_require__(36);
+var _CreateLevelService = __webpack_require__(35);
 
 var _CreateLevelService2 = _interopRequireDefault(_CreateLevelService);
 
@@ -3032,7 +3005,7 @@ exports.default = function (GameState) {
 };
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3044,37 +3017,33 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // ---- Classes ----
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-
-// ----- Captains ----
-
-
-// ----- Level Functions ----
-// VV These expect to be bound to the scope of the level class, there is probably a better pattern than this VV
-
-
-var _Action = __webpack_require__(8);
+var _Action = __webpack_require__(7);
 
 var _Action2 = _interopRequireDefault(_Action);
 
-var _Background = __webpack_require__(37);
+var _Background = __webpack_require__(36);
 
 var _Background2 = _interopRequireDefault(_Background);
 
-var _Cloud = __webpack_require__(38);
+var _BaseService2 = __webpack_require__(17);
+
+var _BaseService3 = _interopRequireDefault(_BaseService2);
+
+var _Cloud = __webpack_require__(37);
 
 var _Cloud2 = _interopRequireDefault(_Cloud);
 
-var _Deck = __webpack_require__(17);
+var _Deck = __webpack_require__(18);
 
 var _Deck2 = _interopRequireDefault(_Deck);
 
-var _Grid = __webpack_require__(39);
+var _Grid = __webpack_require__(38);
 
 var _Grid2 = _interopRequireDefault(_Grid);
 
-var _Hand = __webpack_require__(43);
+var _Hand = __webpack_require__(42);
 
 var _Hand2 = _interopRequireDefault(_Hand);
 
@@ -3086,15 +3055,7 @@ var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
-var _jack = __webpack_require__(44);
-
-var _jack2 = _interopRequireDefault(_jack);
-
-var _kcaj = __webpack_require__(52);
-
-var _kcaj2 = _interopRequireDefault(_kcaj);
-
-var _controls = __webpack_require__(53);
+var _controls = __webpack_require__(43);
 
 var controls = _interopRequireWildcard(_controls);
 
@@ -3104,14 +3065,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _class = function () {
-  function _class(GameState) {
-    var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// VV These expect to be bound to the scope of the level class, there is probably a better pattern than this VV
+
+
+var _class = function (_BaseService) {
+  _inherits(_class, _BaseService);
+
+  function _class() {
     _classCallCheck(this, _class);
 
-    this.GameState = GameState;
-    this.level = level;
+    return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
   }
 
   _createClass(_class, [{
@@ -3121,15 +3088,15 @@ var _class = function () {
         GameState: this.GameState
       }, config));
 
-      // Make sure we bind the load function's 'this' to the level
+      // Make sure we bind the load function's 'this' to the level itself instead of the service
       this.level.load = this.generateLoadFunction.bind(this.level, config);
 
       return this.level;
     }
   }, {
     key: 'generateLoadFunction',
-    value: function generateLoadFunction(config) {
-      var _this = this;
+    value: function generateLoadFunction(config, players) {
+      var _this2 = this;
 
       // Clear Scene
       if (config.clearOnLoad) {
@@ -3168,32 +3135,33 @@ var _class = function () {
       this.deck = new _Deck2.default({
         deckSize: config.deckSize
       });
-      // debugger;
 
-      // Init players
-      this.players = [_kcaj2.default.call(this), _jack2.default.call(this)];
+      // Set passed in players to class var
+      this.players = players;
+
+      // Set attacking player to first in array (this is brittle)
       this.attackingPlayer = this.players[0];
       this.defendingPlayer = this.players[1];
 
-      // Init hands
+      // Init players
       this.players.forEach(function (player, index) {
         var hand = new _Hand2.default({
-          GameState: _this.GameState,
-          position: new _Vector2.default(0, -_this.GameState.Canvas.cy),
+          GameState: _this2.GameState,
+          position: new _Vector2.default(0, -_this2.GameState.Canvas.cy),
           player: player
         });
 
         // Draw tiles from deck
         for (var _i = 0; _i < player.handSize - index; _i++) {
-          hand.add(_this.deck.draw());
+          hand.add(_this2.deck.draw());
         }
 
         // Set visibility of hand
         hand.setVisibility(false);
-        if (index === _this.currentPlayerTurn) hand.setVisibility(true);
+        if (index === _this2.currentPlayerTurn) hand.setVisibility(true);
 
         player.hand = hand;
-        _this.GameState.Scene.add(hand);
+        _this2.GameState.Scene.add(hand);
       });
 
       // Init grid, it automatically adds the tiles to the scene
@@ -3221,12 +3189,12 @@ var _class = function () {
   }]);
 
   return _class;
-}();
+}(_BaseService3.default);
 
 exports.default = _class;
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3299,7 +3267,7 @@ var _class = function (_Sprite) {
 exports.default = _class;
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3382,7 +3350,7 @@ var _class = function (_Sprite) {
 exports.default = _class;
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3394,19 +3362,19 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _randomRange = __webpack_require__(40);
+var _randomRange = __webpack_require__(39);
 
 var _randomRange2 = _interopRequireDefault(_randomRange);
 
-var _Tile = __webpack_require__(10);
+var _Tile = __webpack_require__(9);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
-var _TileOutline = __webpack_require__(42);
+var _TileOutline = __webpack_require__(41);
 
 var _TileOutline2 = _interopRequireDefault(_TileOutline);
 
-var _TileType = __webpack_require__(9);
+var _TileType = __webpack_require__(8);
 
 var _TileType2 = _interopRequireDefault(_TileType);
 
@@ -3526,7 +3494,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3541,7 +3509,7 @@ exports.default = function (min, max) {
 };
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3624,7 +3592,7 @@ var _class = function (_Sprite) {
 exports.default = _class;
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3640,7 +3608,7 @@ var _Entity2 = __webpack_require__(3);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
-var _getPixelDensity = __webpack_require__(4);
+var _getPixelDensity = __webpack_require__(10);
 
 var _getPixelDensity2 = _interopRequireDefault(_getPixelDensity);
 
@@ -3699,7 +3667,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3715,11 +3683,11 @@ var _Entity2 = __webpack_require__(3);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
-var _rectContains = __webpack_require__(7);
+var _rectContains = __webpack_require__(6);
 
 var _rectContains2 = _interopRequireDefault(_rectContains);
 
-var _Tile = __webpack_require__(10);
+var _Tile = __webpack_require__(9);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
@@ -3731,7 +3699,7 @@ var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
-var _getPixelDensity = __webpack_require__(4);
+var _getPixelDensity = __webpack_require__(10);
 
 var _getPixelDensity2 = _interopRequireDefault(_getPixelDensity);
 
@@ -3832,7 +3800,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3841,87 +3809,74 @@ exports.default = _class;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.handleMouseDown = handleMouseDown;
+exports.handleMouseMove = handleMouseMove;
+exports.handleMouseUp = handleMouseUp;
 
-exports.default = function () {
-  return new _Player2.default({
-    GameState: this.GameState,
-    name: captainName,
-    id: 0,
-    color: '100,100,255',
-    avatar: new _Avatar2.default({
-      GameState: this.GameState,
-      dimensions: new _Vector2.default(64, 128),
-      scale: new _Vector2.default(Math.min(2, this.GameState.Canvas.width / 12) * (0, _getPixelDensity2.default)(), Math.min(2, this.GameState.Canvas.width / 12) * (0, _getPixelDensity2.default)()),
-      offset: new _Vector2.default(0.5, 0.5),
-      onHover: _hoverAvatar2.default.bind(this, captainName),
-      targetPosition: new _Vector2.default(-256, this.GameState.Canvas.cy),
-      animations: {
-        mouseDown: {
-          frames: 12,
-          loop: true,
-          spriteSheet: './img/captains/Jack/Ship.png',
-          ticksPerFrame: 5
-        },
-        mouseUp: {
-          frames: 12,
-          loop: true,
-          spriteSheet: './img/captains/Jack/Ship.png',
-          ticksPerFrame: 5
-        },
-        hover: {
-          frames: 12,
-          loop: true,
-          spriteSheet: './img/captains/Jack/Ship.png',
-          ticksPerFrame: 5
-        },
-        damage: {
-          frames: 8,
-          loop: true,
-          spriteSheet: './img/captains/Jack/Ship_Damage.png',
-          ticksPerFrame: 1
-        }
-      }
-    }),
-    tiles: {
-      // These must match up with tileType IDs
-      1: './img/captains/Jack/Propeller_Conductor_Empty.png',
-      2: './img/captains/Jack/Propeller_Conductor_Empty.png',
-      3: './img/captains/Jack/Propeller_Conductor_Straight.png',
-      4: './img/captains/Jack/Propeller_Conductor_Bend.png',
-      5: './img/captains/Jack/Propeller_Conductor_Triple.png',
-      6: './img/captains/Jack/Propeller_Conductor_Quad.png'
-    },
-    moves: 2,
-    maxMoves: 2
-  });
-};
+var _cycleActions = __webpack_require__(4);
 
-var _Avatar = __webpack_require__(18);
+var _cycleActions2 = _interopRequireDefault(_cycleActions);
 
-var _Avatar2 = _interopRequireDefault(_Avatar);
+var _findTileAtPosition = __webpack_require__(20);
 
-var _getPixelDensity = __webpack_require__(4);
+var _findTileAtPosition2 = _interopRequireDefault(_findTileAtPosition);
 
-var _getPixelDensity2 = _interopRequireDefault(_getPixelDensity);
+var _resetHover = __webpack_require__(51);
 
-var _hoverAvatar = __webpack_require__(19);
+var _resetHover2 = _interopRequireDefault(_resetHover);
 
-var _hoverAvatar2 = _interopRequireDefault(_hoverAvatar);
+var _setHover = __webpack_require__(52);
 
-var _Player = __webpack_require__(21);
-
-var _Player2 = _interopRequireDefault(_Player);
-
-var _Vector = __webpack_require__(0);
-
-var _Vector2 = _interopRequireDefault(_Vector);
+var _setHover2 = _interopRequireDefault(_setHover);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var captainName = 'Captain Jack';
+function handleMouseDown(e) {
+  var clickedTile = _findTileAtPosition2.default.call(this, this.GameState.Controls.position);
+  if (!clickedTile) return;
+
+  // Set source tile in current action
+  this.currentAction.sourceTile = clickedTile;
+
+  if (clickedTile.isInHand) {
+    this.tileHelper.initDrag(clickedTile, this.currentAction, _cycleActions2.default.bind(this));
+  }
+}
+
+function handleMouseMove(e) {
+  _resetHover2.default.call(this);
+
+  if (this.tileHelper.isDragging && this.tileHelper.tile) {
+    this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
+  }
+
+  _setHover2.default.call(this, this.GameState.Controls.position);
+}
+
+function handleMouseUp(e) {
+  var clickedTile = _findTileAtPosition2.default.call(this, this.GameState.Controls.position);
+  _resetHover2.default.call(this);
+
+  // ----EMPTY TILE ACTION----
+  if (!clickedTile || !this.tileHelper.isDragging && clickedTile.tileType.type === 'EMPTY' || this.tileHelper.isDragging && clickedTile === this.currentAction.sourceTile) {
+    this.currentAction.sourceTile = null;
+    this.currentAction.targetTile = null;
+    this.tileHelper.clear();
+    return;
+  }
+
+  // Set target tile in action
+  this.currentAction.targetTile = clickedTile;
+
+  //----PLACE ACTION----
+  if (clickedTile.tileType.type === 'EMPTY' && this.currentAction.sourceTile && this.currentAction.sourceTile.isInHand) {
+    this.tileHelper.placeDraggedCell();
+    this.tileHelper.clear();
+  }
+}
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3942,7 +3897,7 @@ exports.default = function (original, min, max) {
 };
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3976,11 +3931,11 @@ exports.default = function () {
   _endGame2.default.call(this);
 };
 
-var _endGame = __webpack_require__(47);
+var _endGame = __webpack_require__(46);
 
 var _endGame2 = _interopRequireDefault(_endGame);
 
-var _fireLightning = __webpack_require__(48);
+var _fireLightning = __webpack_require__(47);
 
 var _fireLightning2 = _interopRequireDefault(_fireLightning);
 
@@ -3988,14 +3943,14 @@ var _getTileWithPlayerName = __webpack_require__(11);
 
 var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
 
-var _Pathfinder = __webpack_require__(50);
+var _Pathfinder = __webpack_require__(49);
 
 var _Pathfinder2 = _interopRequireDefault(_Pathfinder);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4030,7 +3985,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4052,14 +4007,14 @@ exports.default = function (path) {
   }, 750);
 };
 
-var _Lightning = __webpack_require__(49);
+var _Lightning = __webpack_require__(48);
 
 var _Lightning2 = _interopRequireDefault(_Lightning);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4075,11 +4030,11 @@ var _Entity2 = __webpack_require__(3);
 
 var _Entity3 = _interopRequireDefault(_Entity2);
 
-var _rectContains = __webpack_require__(7);
+var _rectContains = __webpack_require__(6);
 
 var _rectContains2 = _interopRequireDefault(_rectContains);
 
-var _Tile = __webpack_require__(10);
+var _Tile = __webpack_require__(9);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
@@ -4195,7 +4150,7 @@ var _class = function (_Entity) {
 exports.default = _class;
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4207,7 +4162,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _PriorityQueue = __webpack_require__(51);
+var _PriorityQueue = __webpack_require__(50);
 
 var _PriorityQueue2 = _interopRequireDefault(_PriorityQueue);
 
@@ -4315,7 +4270,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4364,172 +4319,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function () {
-  return new _Player2.default({
-    GameState: this.GameState,
-    name: captainName,
-    id: 0,
-    color: '255,100,100',
-    avatar: new _Avatar2.default({
-      GameState: this.GameState,
-      dimensions: new _Vector2.default(64, 128),
-      scale: new _Vector2.default(Math.min(2, this.GameState.Canvas.width / 12) * (0, _getPixelDensity2.default)(), Math.min(2, this.GameState.Canvas.width / 12) * (0, _getPixelDensity2.default)()),
-      offset: new _Vector2.default(0.5, 0.5),
-      onHover: _hoverAvatar2.default.bind(this, captainName),
-      targetPosition: new _Vector2.default(-256, this.GameState.Canvas.cy),
-      animations: {
-        mouseDown: {
-          frames: 12,
-          loop: true,
-          spriteSheet: './img/captains/Kcaj/Ship.png',
-          ticksPerFrame: 5
-        },
-        mouseUp: {
-          frames: 12,
-          loop: true,
-          spriteSheet: './img/captains/Kcaj/Ship.png',
-          ticksPerFrame: 5
-        },
-        hover: {
-          frames: 12,
-          loop: true,
-          spriteSheet: './img/captains/Kcaj/Ship.png',
-          ticksPerFrame: 5
-        },
-        damage: {
-          frames: 8,
-          loop: true,
-          spriteSheet: './img/captains/Kcaj/Ship_Damage.png',
-          ticksPerFrame: 1
-        }
-      }
-    }),
-    tiles: {
-      // These must match up with tileType IDs
-      1: './img/captains/Kcaj/Propeller_Conductor_Empty.png',
-      2: './img/captains/Kcaj/Propeller_Conductor_Empty.png',
-      3: './img/captains/Kcaj/Propeller_Conductor_Straight.png',
-      4: './img/captains/Kcaj/Propeller_Conductor_Bend.png',
-      5: './img/captains/Kcaj/Propeller_Conductor_Triple.png',
-      6: './img/captains/Kcaj/Propeller_Conductor_Quad.png'
-    },
-    moves: 4,
-    maxMoves: 4
-  });
-};
-
-var _Avatar = __webpack_require__(18);
-
-var _Avatar2 = _interopRequireDefault(_Avatar);
-
-var _getPixelDensity = __webpack_require__(4);
-
-var _getPixelDensity2 = _interopRequireDefault(_getPixelDensity);
-
-var _hoverAvatar = __webpack_require__(19);
-
-var _hoverAvatar2 = _interopRequireDefault(_hoverAvatar);
-
-var _Player = __webpack_require__(21);
-
-var _Player2 = _interopRequireDefault(_Player);
-
-var _Vector = __webpack_require__(0);
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var captainName = 'Captain Kcaj';
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.handleMouseDown = handleMouseDown;
-exports.handleMouseMove = handleMouseMove;
-exports.handleMouseUp = handleMouseUp;
-
-var _cycleActions = __webpack_require__(5);
-
-var _cycleActions2 = _interopRequireDefault(_cycleActions);
-
-var _findTileAtPosition = __webpack_require__(22);
-
-var _findTileAtPosition2 = _interopRequireDefault(_findTileAtPosition);
-
-var _resetHover = __webpack_require__(54);
-
-var _resetHover2 = _interopRequireDefault(_resetHover);
-
-var _setHover = __webpack_require__(55);
-
-var _setHover2 = _interopRequireDefault(_setHover);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function handleMouseDown(e) {
-  var clickedTile = _findTileAtPosition2.default.call(this, this.GameState.Controls.position);
-  if (!clickedTile) return;
-
-  // Set source tile in current action
-  this.currentAction.sourceTile = clickedTile;
-
-  if (clickedTile.isInHand) {
-    this.tileHelper.initDrag(clickedTile, this.currentAction, _cycleActions2.default.bind(this));
-  }
-}
-
-function handleMouseMove(e) {
-  _resetHover2.default.call(this);
-
-  if (this.tileHelper.isDragging && this.tileHelper.tile) {
-    this.tileHelper.tile.canvasPosition = this.GameState.Controls.position;
-  }
-
-  _setHover2.default.call(this, this.GameState.Controls.position);
-}
-
-function handleMouseUp(e) {
-  var clickedTile = _findTileAtPosition2.default.call(this, this.GameState.Controls.position);
-  _resetHover2.default.call(this);
-
-  // ----EMPTY TILE ACTION----
-  if (!clickedTile || !this.tileHelper.isDragging && clickedTile.tileType.type === 'EMPTY' || this.tileHelper.isDragging && clickedTile === this.currentAction.sourceTile) {
-    this.currentAction.sourceTile = null;
-    this.currentAction.targetTile = null;
-    this.tileHelper.clear();
-    return;
-  }
-
-  // Set target tile in action
-  this.currentAction.targetTile = clickedTile;
-
-  //----PLACE ACTION----
-  if (clickedTile.tileType.type === 'EMPTY' && this.currentAction.sourceTile && this.currentAction.sourceTile.isInHand) {
-    this.tileHelper.placeDraggedCell();
-    this.tileHelper.clear();
-  }
-}
-
-/***/ }),
-/* 54 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4547,7 +4337,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 55 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4574,18 +4364,263 @@ exports.default = function (pos) {
   }
 };
 
-var _cycleActions = __webpack_require__(5);
+var _cycleActions = __webpack_require__(4);
 
 var _cycleActions2 = _interopRequireDefault(_cycleActions);
 
-var _findTileAtPosition = __webpack_require__(22);
+var _findTileAtPosition = __webpack_require__(20);
 
 var _findTileAtPosition2 = _interopRequireDefault(_findTileAtPosition);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _CreateCaptainService = __webpack_require__(21);
+
+var _CreateCaptainService2 = _interopRequireDefault(_CreateCaptainService);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (GameState) {
+  var createCaptainService = new _CreateCaptainService2.default(GameState);
+
+  return createCaptainService.createCaptain({
+    color: '100,100,255',
+    health: 50,
+    maxHealth: 50,
+    maxMoves: 2,
+    moves: 2,
+    name: 'Jack',
+    spritePath: './img/captains/Jack/'
+  });
+};
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _SpriteButton2 = __webpack_require__(16);
+
+var _SpriteButton3 = _interopRequireDefault(_SpriteButton2);
+
+var _Vector = __webpack_require__(0);
+
+var _Vector2 = _interopRequireDefault(_Vector);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _class = function (_SpriteButton) {
+  _inherits(_class, _SpriteButton);
+
+  function _class(config) {
+    _classCallCheck(this, _class);
+
+    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, config));
+
+    var sprite = config.sprite,
+        _config$targetPositio = config.targetPosition,
+        targetPosition = _config$targetPositio === undefined ? null : _config$targetPositio,
+        playerName = config.playerName;
+
+
+    _this.targetPosition = targetPosition;
+    _this.canvasPosition = targetPosition;
+    _this.playerName = playerName;
+
+    _this.turbulence = new _Vector2.default(0, 0);
+    _this.turbulenceStep = Math.random() * Math.PI * 2;
+    _this.turbulenceSpeed = 0.05;
+    _this.turbulenceRange = new _Vector2.default(1, 15);
+    return _this;
+  }
+
+  _createClass(_class, [{
+    key: 'draw',
+    value: function draw() {
+      this.handleTurbulence();
+      _get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'draw', this).call(this);
+    }
+  }, {
+    key: 'handleTurbulence',
+    value: function handleTurbulence() {
+      if (!this.targetPosition) return;
+
+      this.addTurbulence();
+
+      var positionDiff = new _Vector2.default(this.targetPosition.x - this.canvasPosition.x - this.turbulence.x, this.targetPosition.y - this.canvasPosition.y - this.turbulence.y);
+      this.canvasPosition = new _Vector2.default(this.canvasPosition.x + positionDiff.x * 0.005 * this.GameState.deltaTime, this.canvasPosition.y + positionDiff.y * 0.005 * this.GameState.deltaTime);
+      this.calculateOffset();
+    }
+  }, {
+    key: 'addTurbulence',
+    value: function addTurbulence() {
+      this.turbulenceStep += this.turbulenceSpeed;
+      if (this.turbulenceStep >= Math.PI * 2) this.turbulenceStep = 0;
+
+      this.turbulence = new _Vector2.default(Math.cos(this.turbulenceStep) * this.turbulenceRange.x, Math.sin(this.turbulenceStep) * this.turbulenceRange.y);
+    }
+  }, {
+    key: 'takeDamageAnimation',
+    value: function takeDamageAnimation(color) {
+      var _this2 = this;
+
+      this.currentAnimation = 'damage';
+
+      window.setTimeout(function () {
+        _this2.currentAnimation = 'mouseUp';
+      }, 750);
+    }
+  }]);
+
+  return _class;
+}(_SpriteButton3.default);
+
+exports.default = _class;
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Vector = __webpack_require__(0);
+
+var _Vector2 = _interopRequireDefault(_Vector);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class(_ref) {
+    var GameState = _ref.GameState,
+        _ref$actions = _ref.actions,
+        actions = _ref$actions === undefined ? 2 : _ref$actions,
+        avatar = _ref.avatar,
+        _ref$color = _ref.color,
+        color = _ref$color === undefined ? 'blue' : _ref$color,
+        _ref$controller = _ref.controller,
+        controller = _ref$controller === undefined ? 'human' : _ref$controller,
+        _ref$damage = _ref.damage,
+        damage = _ref$damage === undefined ? 2 : _ref$damage,
+        _ref$hand = _ref.hand,
+        hand = _ref$hand === undefined ? [] : _ref$hand,
+        _ref$handSize = _ref.handSize,
+        handSize = _ref$handSize === undefined ? 4 : _ref$handSize,
+        _ref$health = _ref.health,
+        health = _ref$health === undefined ? 50 : _ref$health,
+        _ref$maxActions = _ref.maxActions,
+        maxActions = _ref$maxActions === undefined ? 2 : _ref$maxActions,
+        _ref$maxHealth = _ref.maxHealth,
+        maxHealth = _ref$maxHealth === undefined ? 50 : _ref$maxHealth,
+        _ref$maxMoves = _ref.maxMoves,
+        maxMoves = _ref$maxMoves === undefined ? 1 : _ref$maxMoves,
+        _ref$moves = _ref.moves,
+        moves = _ref$moves === undefined ? 1 : _ref$moves,
+        _ref$name = _ref.name,
+        name = _ref$name === undefined ? 'Player 1' : _ref$name,
+        _ref$tiles = _ref.tiles,
+        tiles = _ref$tiles === undefined ? {} : _ref$tiles;
+
+    _classCallCheck(this, _class);
+
+    this.GameState = GameState;
+    this.actions = actions;
+    this.avatar = avatar;
+    this.color = color;
+    this.controller = controller;
+    this.damage = damage;
+    this.hand = hand;
+    this.handSize = handSize;
+    this.health = health;
+    this.maxActions = maxActions;
+    this.maxHealth = maxHealth;
+    this.maxMoves = maxMoves;
+    this.moves = moves;
+    this.name = name;
+    this.tiles = tiles;
+  }
+
+  _createClass(_class, [{
+    key: 'setAvatarPosition',
+    value: function setAvatarPosition(tile) {
+      var playerSide = this.name === 'Player 1' ? -1 : 1;
+      this.avatar.targetPosition = tile.canvasPosition;
+    }
+  }]);
+
+  return _class;
+}();
+
+exports.default = _class;
+
+/***/ }),
 /* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _CreateCaptainService = __webpack_require__(21);
+
+var _CreateCaptainService2 = _interopRequireDefault(_CreateCaptainService);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (GameState) {
+  var createCaptainService = new _CreateCaptainService2.default(GameState);
+
+  return createCaptainService.createCaptain({
+    color: '255,100,100',
+    health: 30,
+    maxHealth: 30,
+    maxMoves: 4,
+    moves: 4,
+    name: 'Kcaj',
+    spritePath: './img/captains/Kcaj/'
+  });
+};
+
+/***/ }),
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4645,7 +4680,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4708,7 +4743,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4720,7 +4755,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _cyclePlayerTurn = __webpack_require__(20);
+var _cyclePlayerTurn = __webpack_require__(19);
 
 var _cyclePlayerTurn2 = _interopRequireDefault(_cyclePlayerTurn);
 
@@ -4932,7 +4967,7 @@ var _class = function () {
 exports.default = _class;
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
