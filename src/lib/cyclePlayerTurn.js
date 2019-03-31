@@ -3,13 +3,13 @@ import ActionType                 from 'classes/ActionType';
 import cycleActions               from './cycleActions';
 import Deck                       from 'classes/Deck';
 import getRandomIntegerNotEqualTo from 'lib/getRandomIntegerNotEqualTo';
-import getTileWithPlayerName      from './getTileWithPlayerName';
-import handleLightningDischarge          from './handleLightningDischarge';
+import getTileWithPlayer          from './getTileWithPlayer';
+import handleLightningDischarge   from './handleLightningDischarge';
 
 export default function() {
   // Move player to random cell if they did not move
   if (this.GameState.forceMoveAtEndOfTurn && this.attackingPlayer.moves > 0) {
-    const startingTile = getTileWithPlayerName.call(this, this.attackingPlayer.name);
+    const startingTile = getTileWithPlayer.call(this, this.attackingPlayer);
     const randomTile = getRandomIntegerNotEqualTo(startingTile.y, 0, this.columns);
     const finalTile = this.grid.tiles.find(tile => tile.id === `${startingTile.x}_${randomTile}`);
 

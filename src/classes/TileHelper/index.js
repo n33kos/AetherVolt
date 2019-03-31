@@ -1,9 +1,9 @@
-import ActionType            from 'classes/ActionType';
-import cloneClass            from 'lib/cloneClass';
-import cycleActions          from 'lib/cycleActions';
-import getTileWithPlayerName from 'lib/getTileWithPlayerName';
-import SpriteButton          from 'classes/SpriteButton';
-import Vector2               from 'classes/Vector2';
+import ActionType        from 'classes/ActionType';
+import cloneClass        from 'lib/cloneClass';
+import cycleActions      from 'lib/cycleActions';
+import getTileWithPlayer from 'lib/getTileWithPlayer';
+import SpriteButton      from 'classes/SpriteButton';
+import Vector2           from 'classes/Vector2';
 
 export default class {
   constructor(GameState) {
@@ -110,7 +110,7 @@ export default class {
   initArrowMove(player) {
     this.clear();
 
-    this.tile = getTileWithPlayerName.call(this.GameState.currentLevel, player.name);
+    this.tile = getTileWithPlayer.call(this.GameState.currentLevel, player);
     this.currentAction = this.GameState.currentLevel.currentAction;
     this.isMoving = true;
 

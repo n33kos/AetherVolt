@@ -139,6 +139,43 @@ exports.default = _class;
 "use strict";
 
 
+var rng = __webpack_require__(26);
+var bytesToUuid = __webpack_require__(27);
+
+function v4(options, buf, offset) {
+  var i = buf && offset || 0;
+
+  if (typeof options == 'string') {
+    buf = options === 'binary' ? new Array(16) : null;
+    options = null;
+  }
+  options = options || {};
+
+  var rnds = options.random || (options.rng || rng)();
+
+  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+  rnds[6] = rnds[6] & 0x0f | 0x40;
+  rnds[8] = rnds[8] & 0x3f | 0x80;
+
+  // Copy bytes to buffer, if provided
+  if (buf) {
+    for (var ii = 0; ii < 16; ++ii) {
+      buf[i + ii] = rnds[ii];
+    }
+  }
+
+  return buf || bytesToUuid(rnds);
+}
+
+module.exports = v4;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -283,43 +320,6 @@ var _class = function (_Entity) {
 }(_Entity3.default);
 
 exports.default = _class;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var rng = __webpack_require__(26);
-var bytesToUuid = __webpack_require__(27);
-
-function v4(options, buf, offset) {
-  var i = buf && offset || 0;
-
-  if (typeof options == 'string') {
-    buf = options === 'binary' ? new Array(16) : null;
-    options = null;
-  }
-  options = options || {};
-
-  var rnds = options.random || (options.rng || rng)();
-
-  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-  rnds[6] = rnds[6] & 0x0f | 0x40;
-  rnds[8] = rnds[8] & 0x3f | 0x80;
-
-  // Copy bytes to buffer, if provided
-  if (buf) {
-    for (var ii = 0; ii < 16; ++ii) {
-      buf[i + ii] = rnds[ii];
-    }
-  }
-
-  return buf || bytesToUuid(rnds);
-}
-
-module.exports = v4;
 
 /***/ }),
 /* 3 */
@@ -716,9 +716,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function (name) {
+exports.default = function (player) {
   return this.grid.tiles.find(function (tile) {
-    return tile.player && tile.player.name === name;
+    return tile.player && tile.player.uuid === player.uuid;
   });
 };
 
@@ -760,7 +760,7 @@ var _DismissedTile = __webpack_require__(37);
 
 var _DismissedTile2 = _interopRequireDefault(_DismissedTile);
 
-var _Sprite2 = __webpack_require__(1);
+var _Sprite2 = __webpack_require__(2);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -1195,7 +1195,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function () {
   // Move player to random cell if they did not move
   if (this.GameState.forceMoveAtEndOfTurn && this.attackingPlayer.moves > 0) {
-    var startingTile = _getTileWithPlayerName2.default.call(this, this.attackingPlayer.name);
+    var startingTile = _getTileWithPlayer2.default.call(this, this.attackingPlayer);
     var randomTile = (0, _getRandomIntegerNotEqualTo2.default)(startingTile.y, 0, this.columns);
     var finalTile = this.grid.tiles.find(function (tile) {
       return tile.id === startingTile.x + '_' + randomTile;
@@ -1272,9 +1272,9 @@ var _getRandomIntegerNotEqualTo = __webpack_require__(31);
 
 var _getRandomIntegerNotEqualTo2 = _interopRequireDefault(_getRandomIntegerNotEqualTo);
 
-var _getTileWithPlayerName = __webpack_require__(8);
+var _getTileWithPlayer = __webpack_require__(8);
 
-var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
+var _getTileWithPlayer2 = _interopRequireDefault(_getTileWithPlayer);
 
 var _handleLightningDischarge = __webpack_require__(32);
 
@@ -1454,7 +1454,7 @@ var _rectContains = __webpack_require__(9);
 
 var _rectContains2 = _interopRequireDefault(_rectContains);
 
-var _Sprite2 = __webpack_require__(1);
+var _Sprite2 = __webpack_require__(2);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -1988,7 +1988,7 @@ var _controls = __webpack_require__(25);
 
 var _controls2 = _interopRequireDefault(_controls);
 
-var _v = __webpack_require__(2);
+var _v = __webpack_require__(1);
 
 var _v2 = _interopRequireDefault(_v);
 
@@ -2532,7 +2532,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _v = __webpack_require__(2);
+var _v = __webpack_require__(1);
 
 var _v2 = _interopRequireDefault(_v);
 
@@ -2840,8 +2840,8 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function () {
   var pathfinder = new _Pathfinder2.default(this.grid.tiles);
-  var startCell = _getTileWithPlayerName2.default.call(this, this.attackingPlayer.name);
-  var endCell = _getTileWithPlayerName2.default.call(this, this.defendingPlayer.name);
+  var startCell = _getTileWithPlayer2.default.call(this, this.attackingPlayer);
+  var endCell = _getTileWithPlayer2.default.call(this, this.defendingPlayer);
   var path = pathfinder.findPath(startCell, endCell);
 
   if (path.length > 0) {
@@ -2870,9 +2870,9 @@ var _fireLightning = __webpack_require__(34);
 
 var _fireLightning2 = _interopRequireDefault(_fireLightning);
 
-var _getTileWithPlayerName = __webpack_require__(8);
+var _getTileWithPlayer = __webpack_require__(8);
 
-var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
+var _getTileWithPlayer2 = _interopRequireDefault(_getTileWithPlayer);
 
 var _Pathfinder = __webpack_require__(38);
 
@@ -2969,7 +2969,7 @@ var _Tile = __webpack_require__(10);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
-var _v = __webpack_require__(2);
+var _v = __webpack_require__(1);
 
 var _v2 = _interopRequireDefault(_v);
 
@@ -3116,7 +3116,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _Sprite2 = __webpack_require__(1);
+var _Sprite2 = __webpack_require__(2);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -3606,6 +3606,10 @@ var _CreateAvatarService = __webpack_require__(47);
 
 var _CreateAvatarService2 = _interopRequireDefault(_CreateAvatarService);
 
+var _v = __webpack_require__(1);
+
+var _v2 = _interopRequireDefault(_v);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3660,6 +3664,7 @@ var _class = function () {
     this.name = name;
     this.spritePath = spritePath;
     this.createAvatarService = new _CreateAvatarService2.default(this.GameState);
+    this.uuid = (0, _v2.default)();
 
     this.avatar = null;
     this.tiles = {
@@ -4135,7 +4140,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _Sprite2 = __webpack_require__(1);
+var _Sprite2 = __webpack_require__(2);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -4208,7 +4213,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _Sprite2 = __webpack_require__(1);
+var _Sprite2 = __webpack_require__(2);
 
 var _Sprite3 = _interopRequireDefault(_Sprite2);
 
@@ -4535,7 +4540,7 @@ var _Tile = __webpack_require__(10);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
-var _v = __webpack_require__(2);
+var _v = __webpack_require__(1);
 
 var _v2 = _interopRequireDefault(_v);
 
@@ -4768,9 +4773,9 @@ var _cycleActions = __webpack_require__(3);
 
 var _cycleActions2 = _interopRequireDefault(_cycleActions);
 
-var _getTileWithPlayerName = __webpack_require__(8);
+var _getTileWithPlayer = __webpack_require__(8);
 
-var _getTileWithPlayerName2 = _interopRequireDefault(_getTileWithPlayerName);
+var _getTileWithPlayer2 = _interopRequireDefault(_getTileWithPlayer);
 
 var _SpriteButton = __webpack_require__(18);
 
@@ -4889,7 +4894,7 @@ var _class = function () {
     value: function initArrowMove(player) {
       this.clear();
 
-      this.tile = _getTileWithPlayerName2.default.call(this.GameState.currentLevel, player.name);
+      this.tile = _getTileWithPlayer2.default.call(this.GameState.currentLevel, player);
       this.currentAction = this.GameState.currentLevel.currentAction;
       this.isMoving = true;
 

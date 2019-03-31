@@ -1,4 +1,5 @@
-import CreateAvatarService   from 'services/CreateAvatarService';
+import CreateAvatarService from 'services/CreateAvatarService';
+import uuidv4              from 'uuid/v4';
 
 export default class {
   constructor({
@@ -34,6 +35,7 @@ export default class {
     this.name = name;
     this.spritePath = spritePath;
     this.createAvatarService = new CreateAvatarService(this.GameState);
+    this.uuid = uuidv4();
 
     this.avatar = null;
     this.tiles = {
