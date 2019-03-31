@@ -4682,6 +4682,11 @@ var _class = function (_LoadedEntity) {
       // Override this function to add load logic
     }
   }, {
+    key: 'unLoad',
+    value: function unLoad() {
+      // Override this function to add unload logic
+    }
+  }, {
     key: 'setPlayers',
     value: function setPlayers(players) {
       this.players = players;

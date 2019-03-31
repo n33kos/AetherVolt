@@ -39,6 +39,10 @@ export default class extends LoadedEntity {
     // Override this function to add load logic
   }
 
+  unLoad() {
+    // Override this function to add unload logic
+  }
+
   setPlayers(players) {
     this.players = players;
   }
