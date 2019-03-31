@@ -24,7 +24,7 @@ export default class extends BaseService {
     return this.level;
   }
 
-  generateLoadFunction(config, players) {
+  generateLoadFunction(config) {
     // Clear Scene
     if (config.clearOnLoad) {
       this.GameState.Scene.clear();
@@ -71,9 +71,6 @@ export default class extends BaseService {
     this.deck = new Deck({
       deckSize : config.deckSize,
     });
-
-    // Set passed in players to class var
-    this.players = players;
 
     // Set attacking player to first in array (this is brittle)
     this.attackingPlayer = this.players[0];

@@ -1,10 +1,12 @@
 import config from 'configs/gameState';
-import Level  from 'classes/Level';
 import levels from 'configs/levels';
 
 // ------ Captains -------
 import jack from 'configs/captains/jack';
 import kcaj from 'configs/captains/kcaj';
+
+// import CaptainFactory from 'factories/CaptainFactory';
+import LevelFactory   from 'factories/LevelFactory';
 
 export default class {
   constructor() {
@@ -13,8 +15,9 @@ export default class {
     this.level = config.level;
     this.levels = config.levels;
     this.score = config.score;
-    this.currentLevel = new Level({ GameState: this });
+    this.currentLevel = null;
     this.captains = [];
+    this.levelFactory = new LevelFactory(this);
 
     /*
       Class variables added in loader :
@@ -28,6 +31,7 @@ export default class {
   }
 
   init() {
+    // this.initCaptains(); //currently being initialized on level load, fix that.
     this.initLevels();
   }
 
@@ -39,21 +43,25 @@ export default class {
   }
 
   initLevels() {
-    this.levels = levels.map(level => level(this));
+    this.levels = levels.map(levelConfig => this.levelFactory.generateLevel(levelConfig));
   }
 
   loadLevel() {
     const newLevel = this.levels[this.level];
 
-    // In the future this array will be set via a hero select screen
+    // Need to figure out a way to load these on init instead of in here
     this.initCaptains();
-    const players = [
+
+    // In the future this array will be set via a hero select screen, for now its hard coded
+    newLevel.setPlayers([
       this.captains.jack,
       this.captains.kcaj,
-    ];
+    ]);
 
     // load level
-    newLevel.load(players);
+    newLevel.load();
+
+    // Set level as current level
     this.currentLevel = newLevel;
 
     // Remove focus from any UI elements clicked to prevent control misdirection

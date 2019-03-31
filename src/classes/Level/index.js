@@ -28,6 +28,7 @@ export default class extends LoadedEntity {
     this.attackingPlayer = attackingPlayer;
     this.defendingPlayer = defendingPlayer;
     this.hoveredTile = hoveredTile;
+    this.players = null;
   }
 
   gameLogic() {
@@ -36,5 +37,9 @@ export default class extends LoadedEntity {
 
   load() {
     // Override this function to add load logic
+  }
+
+  setPlayers(players) {
+    this.players = players;
   }
 }
