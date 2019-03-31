@@ -1,8 +1,4 @@
-import Avatar                from 'classes/Avatar';
-import cycleActions          from 'lib/cycleActions';
-import getPixelDensity       from 'lib/getPixelDensity';
-import getTileWithPlayerName from 'lib/getTileWithPlayerName';
-import Vector2               from 'classes/Vector2';
+import CreateAvatarService   from 'services/CreateAvatarService';
 
 export default class {
   constructor({
@@ -37,6 +33,7 @@ export default class {
     this.moves = moves;
     this.name = name;
     this.spritePath = spritePath;
+    this.createAvatarService = new CreateAvatarService(this.GameState);
 
     this.avatar = null;
     this.tiles = {
@@ -51,59 +48,12 @@ export default class {
   }
 
   setAvatarPosition(tile) {
-    const playerSide = (this.name === 'Player 1' ? -1 : 1);
     this.avatar.targetPosition = tile.canvasPosition;
   }
 
   load() {
-    this.avatar = new Avatar({
-      GameState : this.GameState,
-      dimensions : new Vector2(64, 128),
-      scale : new Vector2(
-        2 * getPixelDensity(),
-        2 * getPixelDensity(),
-      ),
-      playerName : this.name,
-      offset : new Vector2(0.5, 0.5),
-      onHover : () => {
-        // Cant move if it isnt your turn
-        if (this.GameState.currentLevel.attackingPlayer.name !== this.name) return;
-
-        const playerTile = getTileWithPlayerName.call(this.GameState.currentLevel, this.name);
-        this.GameState.currentLevel.currentAction.sourceTile = playerTile;
-        this.GameState.currentLevel.tileHelper.initMove(
-          playerTile,
-          this.GameState.currentLevel.currentAction,
-          cycleActions.bind(this.GameState.currentLevel),
-        );
-      },
-      targetPosition : new Vector2(0, 0),
-      animations : {
-        mouseDown : {
-          frames        : 12,
-          loop          : true,
-          spriteSheet   : `${this.spritePath}/Ship.png`,
-          ticksPerFrame : 5,
-        },
-        mouseUp : {
-          frames        : 12,
-          loop          : true,
-          spriteSheet   : `${this.spritePath}/Ship.png`,
-          ticksPerFrame : 5,
-        },
-        hover : {
-          frames        : 12,
-          loop          : true,
-          spriteSheet   : `${this.spritePath}/Ship.png`,
-          ticksPerFrame : 5,
-        },
-        damage : {
-          frames        : 8,
-          loop          : true,
-          spriteSheet   : `${this.spritePath}/Ship_Damage.png`,
-          ticksPerFrame : 1,
-        },
-      },
+    this.avatar = this.createAvatarService.createAvatar({
+      player : this,
     });
   }
 }

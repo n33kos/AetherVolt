@@ -3,11 +3,11 @@ import Player      from 'classes/Player';
 
 export default class extends BaseService {
   createCaptain(config) {
-    this.player = new Player({
+    this.captain = new Player({
       GameState : this.GameState,
       ...config,
     });
 
-    return this.player;
+    return this.captain;
   }
 }

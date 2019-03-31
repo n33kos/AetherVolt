@@ -1,7 +1,9 @@
-import ActionType   from 'classes/ActionType';
-import cloneClass   from 'lib/cloneClass';
-import SpriteButton from 'classes/SpriteButton';
-import Vector2      from 'classes/Vector2';
+import ActionType            from 'classes/ActionType';
+import cloneClass            from 'lib/cloneClass';
+import cycleActions          from 'lib/cycleActions';
+import getTileWithPlayerName from 'lib/getTileWithPlayerName';
+import SpriteButton          from 'classes/SpriteButton';
+import Vector2               from 'classes/Vector2';
 
 export default class {
   constructor(GameState) {
@@ -105,15 +107,14 @@ export default class {
     this.callback();
   }
 
-  initMove(tile, currentAction, callback) {
+  initArrowMove(player) {
     this.clear();
 
-    this.tile = tile;
-    this.currentAction = currentAction;
-    this.callback = callback;
+    this.tile = getTileWithPlayerName.call(this.GameState.currentLevel, player.name);
+    this.currentAction = this.GameState.currentLevel.currentAction;
     this.isMoving = true;
 
-    const avatar = this.currentAction.sourceTile.player.avatar;
+    const avatar = this.tile.player.avatar;
 
     const upButton = new SpriteButton({
       GameState       : this.GameState,
@@ -121,7 +122,7 @@ export default class {
       mouseDownSprite : './img/Move_Up.png',
       mouseUpSprite   : './img/Move_Up.png',
       hoverSprite     : './img/Move_Up.png',
-      scale           : tile.scale,
+      scale           : this.tile.scale,
       dimensions      : new Vector2(64, 64),
       order           : -20,
     });
@@ -137,7 +138,7 @@ export default class {
       mouseDownSprite : './img/Move_Down.png',
       mouseUpSprite   : './img/Move_Down.png',
       hoverSprite     : './img/Move_Down.png',
-      scale           : tile.scale,
+      scale           : this.tile.scale,
       dimensions      : new Vector2(64, 64),
       order           : -20,
     });
@@ -158,10 +159,12 @@ export default class {
     const target = this.GameState.currentLevel.grid.tiles.find(
       tile => tile.id === `${this.tile.x}_${this.tile.y - 1}`
     );
+
     if (target) {
+      this.currentAction.sourceTile = this.tile;
       this.currentAction.targetTile = target;
       this.currentAction.commit();
-      this.callback();
+      cycleActions.bind(this.GameState.currentLevel);
     }
 
     this.clear();
@@ -172,10 +175,12 @@ export default class {
     const target = this.GameState.currentLevel.grid.tiles.find(
       tile => tile.id === `${this.tile.x}_${this.tile.y + 1}`
     );
+
     if (target) {
+      this.currentAction.sourceTile = this.tile;
       this.currentAction.targetTile = target;
       this.currentAction.commit();
-      this.callback();
+      cycleActions.bind(this.GameState.currentLevel);
     }
 
     this.clear();
