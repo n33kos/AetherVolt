@@ -44,13 +44,6 @@ export default function() {
   // Set new attacking player
   this.attackingPlayer = this.players[this.currentPlayerTurn];
 
-  // Refresh deck if needed
-  if (this.deck.tiles.length <= 0) {
-    this.deck = new Deck({
-      deckSize : this.rows * this.columns,
-    });
-  }
-
   // Draw a tile
   this.attackingPlayer.hand.add(this.deck.draw());
 

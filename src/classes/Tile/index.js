@@ -3,6 +3,7 @@ import DismissedTile from 'classes/DismissedTile';
 import Sprite        from 'classes/Sprite';
 import TileType      from 'classes/TileType';
 import Vector2       from 'classes/Vector2';
+import uuidv4        from 'uuid/v4';
 
 export default class extends Sprite {
   constructor(config) {
@@ -58,6 +59,7 @@ export default class extends Sprite {
     this.turbulenceRange = new Vector2(5, 5);
     this.turbulenceScale = 0;
     this.turbulenceScaleRange = 0.1;
+    this.uuid = uuidv4();
 
     this.setType(type);
     this.calculateOffset();

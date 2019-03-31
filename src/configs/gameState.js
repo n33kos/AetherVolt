@@ -5,4 +5,5 @@ export default {
   levels               : [],
   score                : 0,
   forceMoveAtEndOfTurn : false,
+  infiniteDeck         : false,
 };

@@ -3,8 +3,11 @@ import TileType from 'classes/TileType';
 export default class {
   constructor({
     deckSize = 30,
+    GameState,
   }) {
+    this.GameState = GameState;
     this.tiles = [];
+    this.deckSize = deckSize;
     this.tilesPerType = Math.floor(deckSize / 4);
     this.typeCounter = 0;
     this.currentType = 0;
@@ -15,10 +18,14 @@ export default class {
       'QUAD',
     ];
 
-    for (var i = 0; i < deckSize; i++) {
-      this.tiles.push(
-        new TileType(this.allowedTypes[this.currentType])
-      );
+    this.createDeck();
+  }
+
+  createDeck() {
+    this.tiles = [];
+
+    for (var i = 0; i < this.deckSize; i++) {
+      this.tiles.push(new TileType(this.allowedTypes[this.currentType]));
       this.incrementType();
     }
 
@@ -42,6 +49,11 @@ export default class {
   }
 
   draw() {
+    if (this.tiles <= 0) {
+      if (this.GameState.infiniteDeck) this.createDeck();
+      if (!this.GameState.infiniteDeck) return;
+    }
+
     return this.tiles.pop();
   }
 }

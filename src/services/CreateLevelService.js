@@ -69,7 +69,8 @@ export default class extends BaseService {
 
     // Init deck
     this.deck = new Deck({
-      deckSize : config.deckSize,
+      deckSize  : config.deckSize,
+      GameState : this.GameState,
     });
 
     // Set attacking player to first in array (this is brittle)

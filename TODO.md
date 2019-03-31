@@ -7,7 +7,8 @@
 - [ ] Colored lightning & damage animation (Requires sprite color shifter)
 - [ ] Make hand size actually work
 - [ ] Find a better pattern for all the libs which need to be bound to level scope
-
+- [ ] Make player stats display before first action
+- [ ] Make deck run out correctly
 
 # DONE
 - [x] Add hero-specific tile sprites

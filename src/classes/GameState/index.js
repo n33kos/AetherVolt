@@ -24,15 +24,17 @@ export default class {
     this.captains = [];
     this.Controls = null;
     this.currentLevel = null;
-    this.deltaTime = gameStateConfig.deltaTime;
-    this.isPaused = gameStateConfig.isPaused;
-    this.level = gameStateConfig.level;
     this.levelFactory = new LevelFactory(this);
-    this.levels = gameStateConfig.levels;
     this.Render = null;
     this.Scene = null;
-    this.score = gameStateConfig.score;
     this.UI = null;
+
+    this.loadConfigs();
+  }
+
+  loadConfigs() {
+    // Loads configs into keys on this
+    Object.keys(gameStateConfig).forEach(config => this[config] = gameStateConfig[config]);
   }
 
   init() {

@@ -1,7 +1,6 @@
 import Entity          from 'classes/Entity';
 import rectContains    from 'lib/rectContains';
 import Tile            from 'classes/Tile';
-import uuidv4          from 'uuid/v4';
 import Vector2         from 'classes/Vector2';
 import getPixelDensity from 'lib/getPixelDensity';
 
@@ -18,18 +17,19 @@ export default class extends Entity {
   }
 
   add(tileType) {
+    if (!tileType) return;
+
     const tile = new Tile({
-      GameState: this.GameState,
-      dimensions: new Vector2(this.size, this.size),
-      offset: new Vector2(0.5, 0.5),
-      placedBy: this.player,
-      scale: new Vector2(this.scale, this.scale),
-      type: tileType,
-      isVisible: false,
-      isInHand: true,
+      GameState  : this.GameState,
+      dimensions : new Vector2(this.size, this.size),
+      offset     : new Vector2(0.5, 0.5),
+      placedBy   : this.player,
+      scale      : new Vector2(this.scale, this.scale),
+      type       : tileType,
+      isVisible  : false,
+      isInHand   : true,
     });
 
-    tile.uuid = uuidv4();
     this.tiles.push(tile);
     this.updatePosition();
   }

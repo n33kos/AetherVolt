@@ -772,6 +772,10 @@ var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
 
+var _v = __webpack_require__(1);
+
+var _v2 = _interopRequireDefault(_v);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -843,6 +847,7 @@ var _class = function (_Sprite) {
     _this.turbulenceRange = new _Vector2.default(5, 5);
     _this.turbulenceScale = 0;
     _this.turbulenceScaleRange = 0.1;
+    _this.uuid = (0, _v2.default)();
 
     _this.setType(type);
     _this.calculateOffset();
@@ -1232,13 +1237,6 @@ exports.default = function () {
   // Set new attacking player
   this.attackingPlayer = this.players[this.currentPlayerTurn];
 
-  // Refresh deck if needed
-  if (this.deck.tiles.length <= 0) {
-    this.deck = new _Deck2.default({
-      deckSize: this.rows * this.columns
-    });
-  }
-
   // Draw a tile
   this.attackingPlayer.hand.add(this.deck.draw());
 
@@ -1306,25 +1304,35 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var _class = function () {
   function _class(_ref) {
     var _ref$deckSize = _ref.deckSize,
-        deckSize = _ref$deckSize === undefined ? 30 : _ref$deckSize;
+        deckSize = _ref$deckSize === undefined ? 30 : _ref$deckSize,
+        GameState = _ref.GameState;
 
     _classCallCheck(this, _class);
 
+    this.GameState = GameState;
     this.tiles = [];
+    this.deckSize = deckSize;
     this.tilesPerType = Math.floor(deckSize / 4);
     this.typeCounter = 0;
     this.currentType = 0;
     this.allowedTypes = ['STRAIGHT', 'BEND', 'TRIPLE', 'QUAD'];
 
-    for (var i = 0; i < deckSize; i++) {
-      this.tiles.push(new _TileType2.default(this.allowedTypes[this.currentType]));
-      this.incrementType();
-    }
-
-    this.shuffle();
+    this.createDeck();
   }
 
   _createClass(_class, [{
+    key: 'createDeck',
+    value: function createDeck() {
+      this.tiles = [];
+
+      for (var i = 0; i < this.deckSize; i++) {
+        this.tiles.push(new _TileType2.default(this.allowedTypes[this.currentType]));
+        this.incrementType();
+      }
+
+      this.shuffle();
+    }
+  }, {
     key: 'incrementType',
     value: function incrementType() {
       this.typeCounter++;
@@ -1347,6 +1355,11 @@ var _class = function () {
   }, {
     key: 'draw',
     value: function draw() {
+      if (this.tiles <= 0) {
+        if (this.GameState.infiniteDeck) this.createDeck();
+        if (!this.GameState.infiniteDeck) return;
+      }
+
       return this.tiles.pop();
     }
   }]);
@@ -1702,18 +1715,25 @@ var _class = function () {
     this.captains = [];
     this.Controls = null;
     this.currentLevel = null;
-    this.deltaTime = _gameState2.default.deltaTime;
-    this.isPaused = _gameState2.default.isPaused;
-    this.level = _gameState2.default.level;
     this.levelFactory = new _LevelFactory2.default(this);
-    this.levels = _gameState2.default.levels;
     this.Render = null;
     this.Scene = null;
-    this.score = _gameState2.default.score;
     this.UI = null;
+
+    this.loadConfigs();
   }
 
   _createClass(_class, [{
+    key: 'loadConfigs',
+    value: function loadConfigs() {
+      var _this = this;
+
+      // Loads configs into keys on this
+      Object.keys(_gameState2.default).forEach(function (config) {
+        return _this[config] = _gameState2.default[config];
+      });
+    }
+  }, {
     key: 'init',
     value: function init() {
       this.initCaptains();
@@ -1744,19 +1764,19 @@ var _class = function () {
   }, {
     key: 'initCaptains',
     value: function initCaptains() {
-      var _this = this;
+      var _this2 = this;
 
       this.captains = _captains2.default.map(function (config) {
-        return _this.captainFactory.generateCaptain(config);
+        return _this2.captainFactory.generateCaptain(config);
       });
     }
   }, {
     key: 'initLevels',
     value: function initLevels() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.levels = _levels2.default.map(function (config) {
-        return _this2.levelFactory.generateLevel(config);
+        return _this3.levelFactory.generateLevel(config);
       });
     }
   }, {
@@ -3476,7 +3496,8 @@ exports.default = {
   level: 0,
   levels: [],
   score: 0,
-  forceMoveAtEndOfTurn: false
+  forceMoveAtEndOfTurn: false,
+  infiniteDeck: false
 };
 
 /***/ }),
@@ -3494,7 +3515,7 @@ exports.default = [{
   clearOnLoad: true,
   cloudCount: 0,
   columns: 4,
-  deckSize: 16,
+  deckSize: 32,
   name: "Prototype Level",
   rows: 4
 }];
@@ -4075,7 +4096,8 @@ var _class = function (_BaseService) {
 
       // Init deck
       this.deck = new _Deck2.default({
-        deckSize: config.deckSize
+        deckSize: config.deckSize,
+        GameState: this.GameState
       });
 
       // Set attacking player to first in array (this is brittle)
@@ -4547,10 +4569,6 @@ var _Tile = __webpack_require__(10);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
-var _v = __webpack_require__(1);
-
-var _v2 = _interopRequireDefault(_v);
-
 var _Vector = __webpack_require__(0);
 
 var _Vector2 = _interopRequireDefault(_Vector);
@@ -4587,6 +4605,8 @@ var _class = function (_Entity) {
   _createClass(_class, [{
     key: 'add',
     value: function add(tileType) {
+      if (!tileType) return;
+
       var tile = new _Tile2.default({
         GameState: this.GameState,
         dimensions: new _Vector2.default(this.size, this.size),
@@ -4598,7 +4618,6 @@ var _class = function (_Entity) {
         isInHand: true
       });
 
-      tile.uuid = (0, _v2.default)();
       this.tiles.push(tile);
       this.updatePosition();
     }
