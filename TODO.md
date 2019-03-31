@@ -6,8 +6,10 @@
 - [ ] Implement sprite color shifter
 - [ ] Colored lightning & damage animation (Requires sprite color shifter)
 - [ ] Make hand size actually work
-- [ ] Change getTileWithPlayerName to use IDs instead of names
+- [ ] Find a better pattern for all the libs which need to be bound to level scope
+
 
 # DONE
 - [x] Add hero-specific tile sprites
 - [x] Add factories to make configs actually configs
+- [x] Change getTileWithPlayerName to use IDs instead of names

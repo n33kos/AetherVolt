@@ -2771,6 +2771,13 @@ var _class = function () {
       if (!players) return;
 
       players.forEach(function (player, index) {
+        var wrapper = document.querySelector('[data-ui-player="' + (index + 1) + '"]');
+        if (_this2.GameState.currentLevel.currentPlayerTurn === index) {
+          wrapper.classList.add('currentTurn');
+        } else {
+          wrapper.classList.remove('currentTurn');
+        }
+
         var name = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="name"]');
         var health = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="health"]');
         var damage = document.querySelector('[data-ui-player="' + (index + 1) + '"] [data-ui="damage"]');
