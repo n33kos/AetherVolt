@@ -1,3 +1,12 @@
+// ---- Classes ----
+import Audio    from 'classes/Audio';
+import Canvas   from 'classes/Canvas';
+import Controls from 'classes/Controls';
+import Render   from 'classes/Render';
+import Scene    from 'classes/Scene';
+import UI       from 'classes/UI';
+import Update   from 'classes/Update';
+
 // ---- Configs ----
 import captainsConfig  from 'configs/captains';
 import gameStateConfig from 'configs/gameState';
@@ -9,49 +18,71 @@ import LevelFactory   from 'factories/LevelFactory';
 
 export default class {
   constructor() {
+    this.Audio = null;
+    this.Canvas = null;
+    this.captainFactory = new CaptainFactory(this);
+    this.captains = [];
+    this.Controls = null;
+    this.currentLevel = null;
     this.deltaTime = gameStateConfig.deltaTime;
     this.isPaused = gameStateConfig.isPaused;
     this.level = gameStateConfig.level;
-    this.levels = gameStateConfig.levels;
-    this.score = gameStateConfig.score;
-    this.currentLevel = null;
-    this.captains = {};
     this.levelFactory = new LevelFactory(this);
-    this.captainFactory = new CaptainFactory(this);
-
-    /*
-      Class variables added in loader :
-      - this.Audio
-      - this.UI
-      - this.Controls
-      - this.Canvas
-      - this.Scene
-      - this.Render
-    */
+    this.levels = gameStateConfig.levels;
+    this.Render = null;
+    this.Scene = null;
+    this.score = gameStateConfig.score;
+    this.UI = null;
   }
 
   init() {
+    this.initCaptains();
     this.initLevels();
+
+    this.Audio = new Audio(this);
+    // Audio must be initialized after a user interacts somehow, this is a standard.
+    // As such, the Audio class is initialized from the UI class when a button is clicked instead of here.
+
+    this.Canvas = new Canvas(this);
+    this.Canvas.init();
+
+    this.Controls = new Controls(this);
+    this.Controls.init();
+
+    this.Scene = new Scene(this);
+    this.Scene.init();
+
+    this.Render = new Render(this);
+    this.Render.init();
+
+    this.Update = new Update(this);
+    this.Update.init();
+
+    this.UI = new UI(this);
+    this.UI.init();
   }
 
   initCaptains() {
-    captainsConfig.forEach(config => this.captains[config.name] = this.captainFactory.generateCaptain(config));
+    this.captains = captainsConfig.map(config => this.captainFactory.generateCaptain(config));
   }
 
   initLevels() {
     this.levels = levelsConfig.map(config => this.levelFactory.generateLevel(config));
   }
 
+  loadCaptains() {
+    this.captains.forEach(captain => captain.load());
+  }
+
   loadLevel() {
     const newLevel = this.levels[this.level];
 
-    // Need to figure out a way to load these on init instead of in here
-    this.initCaptains();
+    this.loadCaptains();
 
     // In the future this array will be set via a hero select screen, for now its hard coded
     newLevel.setPlayers([
-      this.captains.Jack,
-      this.captains.Kcaj,
+      this.captains[0],
+      this.captains[1],
     ]);
 
     // load level

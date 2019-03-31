@@ -1,5 +1,4 @@
 # TO-DO
-- [ ] Make configs files actually just configs, move wrapping service calls to top level folders or libs
 - [..] Move to a service oriented architecture
 - [ ] Implement background music
 - [ ] Implement hero-specific sounds
@@ -9,3 +8,4 @@
 
 # DONE
 - [x] Add hero-specific tile sprites
+- [x] Add factories to make configs actually configs
