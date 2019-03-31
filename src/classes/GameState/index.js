@@ -1,23 +1,23 @@
-import config from 'configs/gameState';
-import levels from 'configs/levels';
+// ---- Configs ----
+import captainsConfig  from 'configs/captains';
+import gameStateConfig from 'configs/gameState';
+import levelsConfig    from 'configs/levels';
 
-// ------ Captains -------
-import jack from 'configs/captains/jack';
-import kcaj from 'configs/captains/kcaj';
-
-// import CaptainFactory from 'factories/CaptainFactory';
+// ---- Factories ----
+import CaptainFactory from 'factories/CaptainFactory';
 import LevelFactory   from 'factories/LevelFactory';
 
 export default class {
   constructor() {
-    this.deltaTime = config.deltaTime;
-    this.isPaused = config.isPaused;
-    this.level = config.level;
-    this.levels = config.levels;
-    this.score = config.score;
+    this.deltaTime = gameStateConfig.deltaTime;
+    this.isPaused = gameStateConfig.isPaused;
+    this.level = gameStateConfig.level;
+    this.levels = gameStateConfig.levels;
+    this.score = gameStateConfig.score;
     this.currentLevel = null;
-    this.captains = [];
+    this.captains = {};
     this.levelFactory = new LevelFactory(this);
+    this.captainFactory = new CaptainFactory(this);
 
     /*
       Class variables added in loader :
@@ -31,19 +31,15 @@ export default class {
   }
 
   init() {
-    // this.initCaptains(); //currently being initialized on level load, fix that.
     this.initLevels();
   }
 
   initCaptains() {
-    this.captains = {
-      kcaj : kcaj(this),
-      jack : jack(this),
-    };
+    captainsConfig.forEach(config => this.captains[config.name] = this.captainFactory.generateCaptain(config));
   }
 
   initLevels() {
-    this.levels = levels.map(levelConfig => this.levelFactory.generateLevel(levelConfig));
+    this.levels = levelsConfig.map(config => this.levelFactory.generateLevel(config));
   }
 
   loadLevel() {
@@ -54,8 +50,8 @@ export default class {
 
     // In the future this array will be set via a hero select screen, for now its hard coded
     newLevel.setPlayers([
-      this.captains.jack,
-      this.captains.kcaj,
+      this.captains.Jack,
+      this.captains.Kcaj,
     ]);
 
     // load level
@@ -97,6 +93,6 @@ export default class {
   endlevel() {
     this.currentLevel.unload();
     this.isPaused = true;
-    this.score = config.score;
+    this.score = gameStateConfig.score;
   }
 }
