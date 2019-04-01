@@ -4,16 +4,16 @@ import cyclePlayerTurn from 'lib/cyclePlayerTurn';
 export default function() {
   // Decrement action
   if (
-    this.attackingPlayer.actions > 0
-    && this.currentAction.actionType.type !== 'MOVE'
+    this.currentAction.actionType.type !== 'MOVE'
+    && this.attackingPlayer.actions > 0
   ) {
     this.attackingPlayer.actions -= 1;
   }
 
   // Decrement movement
   if (
-    this.attackingPlayer.moves > 0
-    && this.currentAction.actionType.type === 'MOVE'
+    this.currentAction.actionType.type === 'MOVE'
+    && this.attackingPlayer.moves > 0
   ) {
       this.attackingPlayer.moves -= 1;
   }

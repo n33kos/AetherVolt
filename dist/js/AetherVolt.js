@@ -334,12 +334,12 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function () {
   // Decrement action
-  if (this.attackingPlayer.actions > 0 && this.currentAction.actionType.type !== 'MOVE') {
+  if (this.currentAction.actionType.type !== 'MOVE' && this.attackingPlayer.actions > 0) {
     this.attackingPlayer.actions -= 1;
   }
 
   // Decrement movement
-  if (this.attackingPlayer.moves > 0 && this.currentAction.actionType.type === 'MOVE') {
+  if (this.currentAction.actionType.type === 'MOVE' && this.attackingPlayer.moves > 0) {
     this.attackingPlayer.moves -= 1;
   }
 
@@ -4968,7 +4968,7 @@ var _class = function () {
         this.currentAction.sourceTile = this.tile;
         this.currentAction.targetTile = target;
         this.currentAction.commit();
-        _cycleActions2.default.bind(this.GameState.currentLevel);
+        _cycleActions2.default.call(this.GameState.currentLevel);
       }
 
       this.clear();
@@ -4987,7 +4987,7 @@ var _class = function () {
         this.currentAction.sourceTile = this.tile;
         this.currentAction.targetTile = target;
         this.currentAction.commit();
-        _cycleActions2.default.bind(this.GameState.currentLevel);
+        _cycleActions2.default.call(this.GameState.currentLevel);
       }
 
       this.clear();

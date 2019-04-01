@@ -164,7 +164,7 @@ export default class {
       this.currentAction.sourceTile = this.tile;
       this.currentAction.targetTile = target;
       this.currentAction.commit();
-      cycleActions.bind(this.GameState.currentLevel);
+      cycleActions.call(this.GameState.currentLevel);
     }
 
     this.clear();
@@ -180,7 +180,7 @@ export default class {
       this.currentAction.sourceTile = this.tile;
       this.currentAction.targetTile = target;
       this.currentAction.commit();
-      cycleActions.bind(this.GameState.currentLevel);
+      cycleActions.call(this.GameState.currentLevel);
     }
 
     this.clear();
