@@ -1475,6 +1475,13 @@ var _class = function () {
     this.currentType = 0;
     this.allowedTypes = ['STRAIGHT', 'BEND', 'TRIPLE', 'QUAD'];
 
+    // Temporary Test to opnly ue quads
+    this.allowedTypes = [
+    // 'STRAIGHT',
+    // 'BEND',
+    // 'TRIPLE',
+    'QUAD'];
+
     this.createDeck();
   }
 
