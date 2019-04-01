@@ -8,8 +8,7 @@
 - [ ] Make hand size actually work
 - [ ] Find a better pattern for all the libs which need to be bound to level scope
 - [ ] Make player stats display before first action
-- [ ] Correct broken move counter
-- [ ] Add functions to get availabile actions in Action class
+- [ ] Disable arrows for impossible actions
 
 # DONE
 - [x] Add hero-specific tile sprites
@@ -17,3 +16,4 @@
 - [x] Change getTileWithPlayerName to use IDs instead of names
 - [x] Make deck run out correctly, add infinite deck config
 - [x] Fix movement bug cause by refactor
+- [x] Add very simple AI

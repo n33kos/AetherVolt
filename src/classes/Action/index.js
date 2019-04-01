@@ -36,8 +36,6 @@ export default class {
     this.targetTile.player.setAvatarPosition(this.targetTile);
   }
 
-  // TODO: Add a function to get the allowed/required actions
-
   commit() {
     if (this.player.actions > 0) {
       switch (this.actionType.type) {

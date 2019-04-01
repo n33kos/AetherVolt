@@ -1,4 +1,5 @@
 import Action          from 'classes/Action';
+import AiService       from 'services/AiService';
 import cyclePlayerTurn from 'lib/cyclePlayerTurn';
 
 export default function() {
@@ -28,4 +29,7 @@ export default function() {
 
   // Update UI
   this.GameState.UI.updatePlayerStats(this.players);
+
+  // Set an AI turn
+  if (this.attackingPlayer.controller === 'AI') this.GameState.AiService.scheduleAction();
 }

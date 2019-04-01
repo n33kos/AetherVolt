@@ -7,7 +7,7 @@ export default class {
     actions = 2,
     avatar,
     color = 'blue',
-    controller = 'human',
+    controller = 'AI',
     damage = 2,
     hand = [],
     handSize = 4,

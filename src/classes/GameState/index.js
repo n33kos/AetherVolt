@@ -16,6 +16,9 @@ import levelsConfig    from 'configs/levels';
 import CaptainFactory from 'factories/CaptainFactory';
 import LevelFactory   from 'factories/LevelFactory';
 
+// ---- Services ----
+import AiService      from 'services/AiService';
+
 export default class {
   constructor() {
     this.Audio = null;
@@ -28,6 +31,7 @@ export default class {
     this.Render = null;
     this.Scene = null;
     this.UI = null;
+    this.AiService = null;
 
     this.loadConfigs();
   }
@@ -44,6 +48,8 @@ export default class {
     this.Audio = new Audio(this);
     // Audio must be initialized after a user interacts somehow, this is a standard.
     // As such, the Audio class is initialized from the UI class when a button is clicked instead of here.
+
+    this.AiService = new AiService(this);
 
     this.Canvas = new Canvas(this);
     this.Canvas.init();
@@ -82,10 +88,12 @@ export default class {
     this.loadCaptains();
 
     // In the future this array will be set via a hero select screen, for now its hard coded
-    newLevel.setPlayers([
+    const players = [
       this.captains[0],
       this.captains[1],
-    ]);
+    ];
+    // players[0].controller = 'Human'
+    newLevel.setPlayers(players);
 
     // load level
     newLevel.load();

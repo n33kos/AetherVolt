@@ -56,9 +56,9 @@ export default class extends Sprite {
     this.turbulence = new Vector2(0, 0);
     this.turbulenceStep = Math.random() * Math.PI * 2;
     this.turbulenceSpeed = 0.02;
-    this.turbulenceRange = new Vector2(5, 5);
+    this.turbulenceRange = new Vector2(20, 20);
     this.turbulenceScale = 0;
-    this.turbulenceScaleRange = 0.1;
+    this.turbulenceScaleRange = 0.5;
     this.uuid = uuidv4();
 
     this.setType(type);
