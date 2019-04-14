@@ -2,8 +2,7 @@
 - [ ] Implement background music
 - [ ] Implement hero-specific sounds
 - [ ] Create Background sprites
-- [ ] Rename WorldSpaceToCanvas to ScreenSpaceToCanvas, Make it take canvas as arg, not gamestate
-- [ ] Improve backgorund sprite movement and performance
+- [ ] Improve background sprite movement and performance (maybe all sprite movement)
 - [ ] Implement sprite color shifter function
 - [ ] Colored lightning & damage animation (Requires sprite color shifter)
 - [ ] Make hand size actually work
@@ -21,6 +20,7 @@
 - [x] Move findTileAtPosition and getTileWithPlayer to TileService
 - [x] Move lighting libs to lightning service
 - [x] Move endGame to game service
+- [x] Rename WorldSpaceToCanvas to ScreenSpaceToCanvas
 
 #### v0.0.2
 - [x] Add hero-specific tile sprites

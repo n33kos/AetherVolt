@@ -1,6 +1,6 @@
 {
   "name": "AetherVolt",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "A template for AetherVolt",
   "main": "dist/js/AetherVolt.min.js",
