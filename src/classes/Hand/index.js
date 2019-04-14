@@ -1,5 +1,4 @@
 import Entity          from 'classes/Entity';
-import rectContains    from 'lib/rectContains';
 import Tile            from 'classes/Tile';
 import Vector2         from 'classes/Vector2';
 import getPixelDensity from 'lib/getPixelDensity';
@@ -64,22 +63,6 @@ export default class extends Entity {
   setVisibility(isVisible) {
     this.tiles.forEach(tile => {
       tile.isVisible = isVisible;
-    });
-  }
-
-  getTileAtCanvasPosition(position) {
-    return this.tiles.find(tile => {
-      return rectContains(
-        position,
-        new Vector2(
-          tile.canvasPosition.x + tile.absoluteOffset.x,
-          tile.canvasPosition.y + tile.absoluteOffset.y,
-        ),
-        new Vector2(
-          tile.dimensions.x * tile.scale.x,
-          tile.dimensions.y * tile.scale.y,
-        ),
-      );
     });
   }
 }

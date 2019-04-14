@@ -1,19 +1,17 @@
 import ActionService      from 'services/ActionService';
 import BaseService        from 'services/BaseService';
-import findTileAtPosition from 'lib/findTileAtPosition';
+import TileService        from 'services/TileService';
 
 export default class extends BaseService {
   constructor(GameState) {
     super(GameState);
 
     this.actionService = new ActionService(GameState);
+    this.tileService = new TileService(GameState);
   }
 
   handleMouseDown(e) {
-    const clickedTile = findTileAtPosition.call(
-      this.GameState.currentLevel,
-      this.GameState.Controls.position
-    );
+    const clickedTile = this.tileService.findTileAtPosition(this.GameState.Controls.position);
     if (!clickedTile) return;
 
     // Set source tile in current action
@@ -39,7 +37,7 @@ export default class extends BaseService {
   }
 
   handleMouseUp(e) {
-    const clickedTile = findTileAtPosition.call(this.GameState.currentLevel, this.GameState.Controls.position);
+    const clickedTile = this.tileService.findTileAtPosition(this.GameState.Controls.position);
     this.resetHover();
 
     // ----EMPTY TILE ACTION----
@@ -69,7 +67,7 @@ export default class extends BaseService {
   }
 
   setHover(pos) {
-    const hoveredTile = findTileAtPosition.call(this.GameState.currentLevel, pos);
+    const hoveredTile = this.tileService.findTileAtPosition(pos);
     if (!hoveredTile) return;
 
     this.GameState.currentLevel.hoveredTile = hoveredTile;

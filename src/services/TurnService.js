@@ -3,18 +3,20 @@ import ActionType                 from 'classes/ActionType';
 import BaseService                from 'services/BaseService';
 import Deck                       from 'classes/Deck';
 import getRandomIntegerNotEqualTo from 'lib/getRandomIntegerNotEqualTo';
-import getTileWithPlayer          from 'lib/getTileWithPlayer';
 import handleLightningDischarge   from 'lib/handleLightningDischarge';
+import TileService                from 'services/TileService';
 
 export default class extends BaseService {
   constructor(GameState) {
     super(GameState);
+
+    this.tileService = new TileService(GameState);
   }
 
   cycleTurn() {
     // Move player to random cell if they did not move
     if (this.GameState.forceMoveAtEndOfTurn && this.GameState.currentLevel.attackingPlayer.moves > 0) {
-      const startingTile = getTileWithPlayer.call(this, this.GameState.currentLevel.attackingPlayer);
+      const startingTile = this.tileService.getTileWithPlayer(this.GameState.currentLevel.attackingPlayer);
       const randomTile = getRandomIntegerNotEqualTo(startingTile.y, 0, this.GameState.currentLevel.columns);
       const finalTile = this.GameState.currentLevel.grid.tiles.find(tile => tile.id === `${startingTile.x}_${randomTile}`);
 

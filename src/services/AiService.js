@@ -1,7 +1,7 @@
 import ActionService     from 'services/ActionService';
 import ActionType        from 'classes/ActionType';
 import BaseService       from 'services/BaseService';
-import getTileWithPlayer from 'lib/getTileWithPlayer';
+import TileService       from 'services/TileService';
 
 export default class extends BaseService {
   constructor(GameState) {
@@ -9,6 +9,7 @@ export default class extends BaseService {
 
     this.maxThinkyTime = 200;
     this.actionService = new ActionService(GameState);
+    this.tileService = new TileService(GameState);
   }
 
   scheduleAction() {
@@ -31,7 +32,7 @@ export default class extends BaseService {
   }
 
   move() {
-    const sourceTile = getTileWithPlayer.call(this.GameState.currentLevel, this.GameState.currentLevel.attackingPlayer);
+    const sourceTile = this.tileService.getTileWithPlayer(this.GameState.currentLevel.attackingPlayer);
     const targetTile = this.GameState.currentLevel.grid.tiles.find(
       tile => tile.id === `${sourceTile.x}_${sourceTile.y + (Math.random() > 0.5 ? -1 : 1)}`
     );

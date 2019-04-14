@@ -90,10 +90,4 @@ export default class {
     this.GameState.Scene.add(cell);
     this.tiles.push(cell);
   }
-
-  getTileAtCanvasPosition(position) {
-    const x = Math.floor((position.x - this.padding.x) / this.cellSize);
-    const y = Math.floor((position.y - this.padding.y) / this.cellSize);
-    return this.tiles.find(cell => cell.id === `${x}_${y}`);
-  }
 }

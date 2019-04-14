@@ -1,8 +1,8 @@
 import ActionService     from 'services/ActionService';
 import ActionType        from 'classes/ActionType';
 import cloneClass        from 'lib/cloneClass';
-import getTileWithPlayer from 'lib/getTileWithPlayer';
 import SpriteButton      from 'classes/SpriteButton';
+import TileService       from 'services/TileService';
 import Vector2           from 'classes/Vector2';
 
 export default class {
@@ -16,6 +16,7 @@ export default class {
     this.isDragging = false;
     this.isMoving = false;
     this.actionService = new ActionService(GameState);
+    this.tileService = new TileService(GameState);
   }
 
   initRotation(tile, currentAction, callback) {
@@ -111,7 +112,7 @@ export default class {
   initArrowMove(player) {
     this.clear();
 
-    this.tile = getTileWithPlayer.call(this.GameState.currentLevel, player);
+    this.tile = this.tileService.getTileWithPlayer(player);
     this.currentAction = this.GameState.currentLevel.currentAction;
     this.isMoving = true;
 

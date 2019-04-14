@@ -21,8 +21,8 @@ export default class {
     // Temporary Test to limit types
     this.allowedTypes = [
       // 'STRAIGHT',
-      'BEND',
-      'TRIPLE',
+      // 'BEND',
+      // 'TRIPLE',
       'QUAD',
     ];
 

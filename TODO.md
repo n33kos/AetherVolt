@@ -1,5 +1,4 @@
 # TO-DO
-- [ ] Move findTileAtPosition and getTileWithPlayer to TileService
 - [ ] Move lighting libs to lightning service
 - [ ] Move endGame to service
 - [ ] Implement background music
@@ -21,6 +20,7 @@
 - [x] Move cyclePlayerTurns lib to TurnService
 - [x] Move cycleActions lib to ActionService
 - [x] Move controls, setHover, and resethover libs to ControlService
+- [x] Move findTileAtPosition and getTileWithPlayer to TileService
 
 #### v0.0.2
 - [x] Add hero-specific tile sprites
