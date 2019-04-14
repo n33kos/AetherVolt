@@ -157,6 +157,11 @@ export default class {
     });
   }
 
+  updateGameStateStats() {
+    const round = document.querySelector(`[data-gamestate-round]`);
+    round.innerHTML = this.GameState.round;
+  }
+
   updateLevel(level) {
     if (!level) return;
 

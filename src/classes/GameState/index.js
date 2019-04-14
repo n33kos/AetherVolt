@@ -37,7 +37,7 @@ export default class {
   }
 
   loadConfigs() {
-    // Loads configs into keys on this
+    // Loads configs into keys on `this`
     Object.keys(gameStateConfig).forEach(config => this[config] = gameStateConfig[config]);
   }
 
@@ -101,8 +101,15 @@ export default class {
     // Set level as current level
     this.currentLevel = newLevel;
 
+    // reset round counter to 1
+    this.round = 1;
+
     // Remove focus from any UI elements clicked to prevent control misdirection
     document.activeElement.blur();
+
+    // Render stats initially
+    this.UI.updatePlayerStats(players);
+    this.UI.updateGameStateStats();
   }
 
   play() {

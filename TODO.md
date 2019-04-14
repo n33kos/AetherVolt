@@ -1,21 +1,32 @@
 # TO-DO
-- [..] Move to a service oriented architecture
+- [ ] Find a better pattern for all the libs which need to be bound to level scope (probably just make them services)
+- [ ] Move cycleplayerturns to a TurnService
+- [ ] Move cycleactions to a ActionService
+- [ ] Move controls, setHover, and resethover libs to ControlService
+- [ ] Move findTileAtPosition and getTileWithPlayer to TileService
+- [ ] Move lighting libs to lightning service
+- [ ] Move endGame to service
 - [ ] Implement background music
 - [ ] Implement hero-specific sounds
 - [ ] Create Background sprites
-- [ ] Implement sprite color shifter
+- [ ] Rename WorldSpaceToCanvas to ScreenSpaceToCanvas, Make it take canvas as arg, not gamestate
+- [ ] Improve backgorund sprite movement and performance
+- [ ] Implement sprite color shifter function
 - [ ] Colored lightning & damage animation (Requires sprite color shifter)
 - [ ] Make hand size actually work
-- [ ] Find a better pattern for all the libs which need to be bound to level scope
-- [ ] Make player stats display before first action
 - [ ] Disable arrows for impossible actions
-- [ ] Add turn counter
 
 # DONE
+
+#### v0.0.3
+- [x] Remove dist folder from tracking
+- [x] Add round counter
+- [x] Make player GUI display before first action
+
+#### v0.0.2
 - [x] Add hero-specific tile sprites
 - [x] Add factories to make configs actually configs
 - [x] Change getTileWithPlayerName to use IDs instead of names
 - [x] Make deck run out correctly, add infinite deck config
 - [x] Fix movement bug cause by refactor
 - [x] Add very simple AI
-- [x] Remove dist folder from tracking

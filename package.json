@@ -20,7 +20,7 @@
       "patterns": [
         "src"
       ],
-      "extensions": "js",
+      "extensions": "js,html",
       "quiet": true
     },
     "styles": {

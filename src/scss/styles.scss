@@ -93,10 +93,13 @@ canvas {
   font-size: 40px;
 }
 
-.TurnButton button {
-  font-size: 30px;
+.TurnButton {
+  left: 50%;
   position: absolute;
   top: 0;
-  left: 50%;
   transform: translateX(-50%);
+
+  button {
+    font-size: 30px;
+  }
 }

@@ -41,6 +41,9 @@ export default function() {
   this.currentPlayerTurn++;
   if (this.currentPlayerTurn >= this.players.length) this.currentPlayerTurn = 0;
 
+  // Increment round
+  if (this.currentPlayerTurn === 0) this.GameState.round += 1;
+
   // Set new attacking player
   this.attackingPlayer = this.players[this.currentPlayerTurn];
 
@@ -55,4 +58,5 @@ export default function() {
 
   // Update UI
   this.GameState.UI.updatePlayerStats(this.players);
+  this.GameState.UI.updateGameStateStats();
 }
