@@ -2,8 +2,9 @@ import Action                     from 'classes/Action';
 import ActionType                 from 'classes/ActionType';
 import BaseService                from 'services/BaseService';
 import Deck                       from 'classes/Deck';
+import GameService                from 'services/GameService';
 import getRandomIntegerNotEqualTo from 'lib/getRandomIntegerNotEqualTo';
-import handleLightningDischarge   from 'lib/handleLightningDischarge';
+import LightningService           from 'services/LightningService';
 import TileService                from 'services/TileService';
 
 export default class extends BaseService {
@@ -11,6 +12,8 @@ export default class extends BaseService {
     super(GameState);
 
     this.tileService = new TileService(GameState);
+    this.lightningService = new LightningService(GameState);
+    this.gameService = new GameService(GameState);
   }
 
   cycleTurn() {
@@ -30,7 +33,10 @@ export default class extends BaseService {
     }
 
     // Process the lightning dicharge
-    handleLightningDischarge.call(this.GameState.currentLevel);
+    this.lightningService.handleLightningDischarge();
+
+    // Check if game is completed
+    this.gameService.endGame();
 
     // Set defending player
     this.GameState.currentLevel.defendingPlayer = this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn];

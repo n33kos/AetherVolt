@@ -2,9 +2,9 @@
   Override this class to create game entities.
   Draw canvas calls at position 0,0 as position, rotation, and offset will be applied automagically
 */
-import LoadedEntity       from 'classes/LoadedEntity';
-import Vector2            from 'classes/Vector2';
-import worldSpaceToCanvas from 'lib/worldSpaceToCanvas';
+import LoadedEntity        from 'classes/LoadedEntity';
+import screenSpaceToCanvas from 'lib/screenSpaceToCanvas';
+import Vector2             from 'classes/Vector2';
 
 export default class extends LoadedEntity {
   constructor(config) {
@@ -35,7 +35,7 @@ export default class extends LoadedEntity {
   // Remember: use setPosition instead of directly setting position var.
   setPosition(position) {
     this.position = position;
-    this.canvasPosition = worldSpaceToCanvas(this.GameState, this.position);
+    this.canvasPosition = screenSpaceToCanvas(this.GameState.Canvas, this.position);
     this.calculateOffset();
   }
 
