@@ -6,7 +6,7 @@ import TurnService from 'services/TurnService';
 export default class extends BaseService {
   constructor(GameState) {
     super(GameState);
-    
+
     this.turnService = new TurnService(GameState);
   }
 

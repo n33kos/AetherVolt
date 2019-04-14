@@ -1,6 +1,4 @@
 # TO-DO
-- [ ] Find a better pattern for all the libs which need to be bound to level scope (probably just make them services)
-- [ ] Move controls, setHover, and resethover libs to ControlService
 - [ ] Move findTileAtPosition and getTileWithPlayer to TileService
 - [ ] Move lighting libs to lightning service
 - [ ] Move endGame to service
@@ -22,6 +20,7 @@
 - [x] Make player GUI display before first action
 - [x] Move cyclePlayerTurns lib to TurnService
 - [x] Move cycleActions lib to ActionService
+- [x] Move controls, setHover, and resethover libs to ControlService
 
 #### v0.0.2
 - [x] Add hero-specific tile sprites

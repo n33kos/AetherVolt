@@ -1,17 +1,21 @@
-import Action      from 'classes/Action';
-import Background  from 'classes/Background';
-import BaseService from 'services/BaseService';
-import Cloud       from 'classes/Cloud';
-import Deck        from 'classes/Deck';
-import Grid        from 'classes/Grid';
-import Hand        from 'classes/Hand';
-import Level       from 'classes/Level';
-import Vector2     from 'classes/Vector2';
-
-// VV These expect to be bound to the scope of the level class, there is probably a better pattern than this VV
-import * as controls from 'lib/controls';
+import Action         from 'classes/Action';
+import Background     from 'classes/Background';
+import BaseService    from 'services/BaseService';
+import Cloud          from 'classes/Cloud';
+import ControlService from 'services/ControlService';
+import Deck           from 'classes/Deck';
+import Grid           from 'classes/Grid';
+import Hand           from 'classes/Hand';
+import Level          from 'classes/Level';
+import Vector2        from 'classes/Vector2';
 
 export default class extends BaseService {
+  constructor(GameState) {
+    super(GameState);
+
+    this.controlService = new ControlService(GameState);
+  }
+
   createLevel(config) {
     this.level = new Level({
       GameState : this.GameState,
@@ -19,12 +23,12 @@ export default class extends BaseService {
     });
 
     // Make sure we bind the load function's 'this' to the level itself instead of the service
-    this.level.load = this.generateLoadFunction.bind(this.level, config);
+    this.level.load = this.generateLoadFunction.bind(this.level, config, this.controlService);
 
     return this.level;
   }
 
-  generateLoadFunction(config) {
+  generateLoadFunction(config, controlService) {
     // Clear Scene
     if (config.clearOnLoad) {
       this.GameState.Scene.clear();
@@ -112,12 +116,12 @@ export default class extends BaseService {
     this.currentAction = new Action({ player : this.attackingPlayer });
 
     // Init Controls
-    this.addControlsCallback('mouseDown', controls.handleMouseDown.bind(this));
-    this.addControlsCallback('mouseUp', controls.handleMouseUp.bind(this));
-    this.addControlsCallback('mouseMove', controls.handleMouseMove.bind(this));
+    this.addControlsCallback('mouseDown', controlService.handleMouseDown.bind(controlService));
+    this.addControlsCallback('mouseUp', controlService.handleMouseUp.bind(controlService));
+    this.addControlsCallback('mouseMove', controlService.handleMouseMove.bind(controlService));
 
-    this.addControlsCallback('touchStart', controls.handleMouseDown.bind(this));
-    this.addControlsCallback('touchEnd', controls.handleMouseUp.bind(this));
-    this.addControlsCallback('touchMove', controls.handleMouseMove.bind(this));
+    this.addControlsCallback('touchStart', controlService.handleMouseDown.bind(controlService));
+    this.addControlsCallback('touchEnd', controlService.handleMouseUp.bind(controlService));
+    this.addControlsCallback('touchMove', controlService.handleMouseMove.bind(controlService));
   }
 }
