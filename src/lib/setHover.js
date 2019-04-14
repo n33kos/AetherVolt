@@ -1,4 +1,4 @@
-import cycleActions       from './cycleActions';
+import ActionService      from 'services/ActionService';
 import findTileAtPosition from './findTileAtPosition';
 
 export default function(pos) {
@@ -15,7 +15,8 @@ export default function(pos) {
       && hoveredTile.tileType.type !== 'PLAYER_COLUMN'
       && !this.hoveredTile.isInHand
     ) {
-      this.tileHelper.initRotation(hoveredTile, this.currentAction, cycleActions.bind(this));
+      const actionService = new ActionService(this.GameState);
+      this.tileHelper.initRotation(hoveredTile, this.currentAction, actionService.cycleAction);
     }
 
     if (hoveredTile.tileType.type === 'EMPTY') this.tileHelper.clear();

@@ -1,6 +1,6 @@
+import ActionService     from 'services/ActionService';
 import ActionType        from 'classes/ActionType';
 import cloneClass        from 'lib/cloneClass';
-import cycleActions      from 'lib/cycleActions';
 import getTileWithPlayer from 'lib/getTileWithPlayer';
 import SpriteButton      from 'classes/SpriteButton';
 import Vector2           from 'classes/Vector2';
@@ -15,6 +15,7 @@ export default class {
     this.isRotating = false;
     this.isDragging = false;
     this.isMoving = false;
+    this.actionService = new ActionService(GameState);
   }
 
   initRotation(tile, currentAction, callback) {
@@ -164,7 +165,7 @@ export default class {
       this.currentAction.sourceTile = this.tile;
       this.currentAction.targetTile = target;
       this.currentAction.commit();
-      cycleActions.call(this.GameState.currentLevel);
+      this.actionService.cycleAction();
     }
 
     this.clear();
@@ -180,7 +181,7 @@ export default class {
       this.currentAction.sourceTile = this.tile;
       this.currentAction.targetTile = target;
       this.currentAction.commit();
-      cycleActions.call(this.GameState.currentLevel);
+      this.actionService.cycleAction();
     }
 
     this.clear();

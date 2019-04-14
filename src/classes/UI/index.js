@@ -1,4 +1,4 @@
-import cyclePlayerTurn from 'lib/cyclePlayerTurn';
+import TurnService from 'services/TurnService';
 
 export default class {
   constructor(GameState) {
@@ -17,6 +17,7 @@ export default class {
       endTurn    : document.querySelectorAll('[data-gamestate-end-turn]'),
     };
     this.isFullscreen = false;
+    this.turnService = new TurnService(GameState);
   }
 
   init() {
@@ -82,7 +83,7 @@ export default class {
     // End turn button
     Array.from(this.buttons.endTurn).forEach(button => {
       button.addEventListener('click', () => {
-        cyclePlayerTurn.call(this.GameState.currentLevel);
+        this.turnService.cycleTurn();
       });
     });
   }

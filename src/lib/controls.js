@@ -1,4 +1,4 @@
-import cycleActions       from './cycleActions';
+import ActionService      from 'services/ActionService';
 import findTileAtPosition from './findTileAtPosition';
 import resetHover         from './resetHover';
 import setHover           from './setHover';
@@ -11,7 +11,8 @@ export function handleMouseDown(e) {
   this.currentAction.sourceTile = clickedTile;
 
   if (clickedTile.isInHand) {
-    this.tileHelper.initDrag(clickedTile, this.currentAction, cycleActions.bind(this));
+    const actionService = new ActionService(this.GameState);
+    this.tileHelper.initDrag(clickedTile, this.currentAction, actionService.cycleAction);
   }
 }
 

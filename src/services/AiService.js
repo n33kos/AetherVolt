@@ -1,14 +1,14 @@
+import ActionService     from 'services/ActionService';
 import ActionType        from 'classes/ActionType';
 import BaseService       from 'services/BaseService';
-import cycleActions      from 'lib/cycleActions';
-import cyclePlayerTurn   from 'lib/cyclePlayerTurn';
 import getTileWithPlayer from 'lib/getTileWithPlayer';
 
 export default class extends BaseService {
-  constructor(config) {
-    super(config);
+  constructor(GameState) {
+    super(GameState);
 
     this.maxThinkyTime = 200;
+    this.actionService = new ActionService(GameState);
   }
 
   scheduleAction() {
@@ -41,7 +41,7 @@ export default class extends BaseService {
       this.GameState.currentLevel.currentAction.sourceTile = sourceTile;
       this.GameState.currentLevel.currentAction.targetTile = targetTile;
       this.GameState.currentLevel.currentAction.commit();
-      cycleActions.call(this.GameState.currentLevel);
+      this.actionService.cycleAction();
     } else {
       this.scheduleAction();
     }
@@ -55,7 +55,7 @@ export default class extends BaseService {
       this.GameState.currentLevel.currentAction.rotationDirection = Math.random() > 0.5 ? -1 : 1;
       this.GameState.currentLevel.currentAction.targetTile = tileToRotate
       this.GameState.currentLevel.currentAction.commit();
-      cycleActions.call(this.GameState.currentLevel);
+      this.actionService.cycleAction();
     } else {
       this.scheduleAction();
     }
@@ -88,7 +88,7 @@ export default class extends BaseService {
       this.GameState.currentLevel.currentAction.targetTile = targetTile;
 
       this.GameState.currentLevel.currentAction.commit();
-      cycleActions.call(this.GameState.currentLevel);
+      this.actionService.cycleAction();
     } else {
       this.scheduleAction();
     }
