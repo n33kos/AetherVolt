@@ -9,6 +9,7 @@
 - [ ] Find a better pattern for all the libs which need to be bound to level scope
 - [ ] Make player stats display before first action
 - [ ] Disable arrows for impossible actions
+- [ ] Add turn counter
 
 # DONE
 - [x] Add hero-specific tile sprites
@@ -17,3 +18,4 @@
 - [x] Make deck run out correctly, add infinite deck config
 - [x] Fix movement bug cause by refactor
 - [x] Add very simple AI
+- [x] Remove dist folder from tracking

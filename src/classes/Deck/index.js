@@ -18,11 +18,11 @@ export default class {
       'QUAD',
     ];
 
-    // Temporary Test to opnly ue quads
+    // Temporary Test to limit types
     this.allowedTypes = [
       // 'STRAIGHT',
-      // 'BEND',
-      // 'TRIPLE',
+      'BEND',
+      'TRIPLE',
       'QUAD',
     ];
 

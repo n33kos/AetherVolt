@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = [
   {
@@ -20,19 +21,27 @@ module.exports = [
         },
       ]
     },
-    output: {
-      path: path.resolve(__dirname, 'dist/js'),
-      filename: "[name].js",
-      library: 'AetherVolt',
-      libraryTarget: 'umd',
-      umdNamedDefine: true
-    },
     optimization: {
       minimize: true,
       minimizer: [new UglifyJsPlugin({
         include: /\.min\.js$/
       })]
     },
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: "js/[name].js",
+      library: 'AetherVolt',
+      libraryTarget: 'umd',
+      umdNamedDefine: true
+    },
+    plugins : [
+      new CopyPlugin([
+        { from: 'src/audio/dist', to: 'audio' },
+        { from: 'src/font', to: 'font' },
+        { from: 'src/html' },
+        { from: 'src/img/dist', to: 'img' },
+      ]),
+    ],
     resolve: {
       modules: [
         path.resolve('./src'),
