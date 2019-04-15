@@ -1,5 +1,6 @@
-import Entity  from 'classes/Entity';
-import Vector2 from 'classes/Vector2';
+import colorizeImageData from 'lib/colorizeImageData';
+import Entity            from 'classes/Entity';
+import Vector2           from 'classes/Vector2';
 
 export default class extends Entity {
   constructor(config) {
@@ -33,6 +34,7 @@ export default class extends Entity {
 
     this.lastAnimation = null;
     this.tickCounter = 0
+    this.colorizedImage = null;
   }
 
   load() {
@@ -65,7 +67,7 @@ export default class extends Entity {
     }
 
     this.GameState.Canvas.ctx.drawImage(
-      this.animations[this.currentAnimation].image,
+      this.getImage(),
       this.currentFrame * this.dimensions.x,
       0,
       this.dimensions.x,
@@ -75,6 +77,17 @@ export default class extends Entity {
       this.dimensions.x * this.scale.x,
       this.dimensions.y * this.scale.y,
     );
+  }
+
+  colorize(color) {
+    this.colorizedImage = colorizeImageData(
+      this.animations[this.currentAnimation].image,
+      color,
+    );
+  }
+
+  decolorize() {
+    this.colorizedImage = null;
   }
 
   handleFrames() {
@@ -115,5 +128,11 @@ export default class extends Entity {
       this.tickCounter = 0;
       this.currentFrame += 1;
     }
+  }
+
+  getImage() {
+    if (this.colorizedImage) return this.colorizedImage;
+
+    return this.animations[this.currentAnimation].image
   }
 }

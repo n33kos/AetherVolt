@@ -6,7 +6,7 @@ export default class {
     GameState,
     actions = 2,
     avatar,
-    color = 'blue',
+    color = '0,255,0',
     controller = 'AI',
     damage = 2,
     hand = [],

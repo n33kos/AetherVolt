@@ -1,7 +1,8 @@
-import BaseService   from 'services/BaseService';
-import Lightning     from 'classes/Lightning';
-import Pathfinder    from 'classes/Pathfinder';
-import TileService   from 'services/TileService';
+import BaseService from 'services/BaseService';
+import Lightning   from 'classes/Lightning';
+import Pathfinder  from 'classes/Pathfinder';
+import TileService from 'services/TileService';
+import Vector3     from 'classes/Vector3';
 
 export default class extends BaseService {
   constructor(GameState) {
@@ -35,13 +36,26 @@ export default class extends BaseService {
   }
 
   fireLightning(path) {
+    const attacker = this.GameState.currentLevel.attackingPlayer;
+    const defender = this.GameState.currentLevel.defendingPlayer;
+
     const lightning = new Lightning({
+      color: attacker.color,
       GameState: this.GameState,
       path,
     });
 
+    defender.avatar.colorize(
+      new Vector3(
+        ...attacker.color.split(',')
+      ),
+    );
+
     window.setTimeout(
-      () => this.GameState.Scene.remove(lightning.uuid),
+      () => {
+        this.GameState.Scene.remove(lightning.uuid);
+        defender.avatar.decolorize();
+      },
       this.lightningDuration,
     );
   }
