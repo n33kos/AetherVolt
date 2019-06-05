@@ -1,6 +1,7 @@
-import colorizeImageData from 'lib/colorizeImageData';
-import Entity            from 'classes/Entity';
-import Vector2           from 'classes/Vector2';
+import * as blendingModes from 'constants/blendingModes';
+import colorizeImageData  from 'lib/colorizeImageData';
+import Entity             from 'classes/Entity';
+import Vector2            from 'classes/Vector2';
 
 export default class extends Entity {
   constructor(config) {
@@ -83,6 +84,7 @@ export default class extends Entity {
     this.colorizedImage = colorizeImageData(
       this.animations[this.currentAnimation].image,
       color,
+      blendingModes.ADD,
     );
   }
 

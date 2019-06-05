@@ -4,7 +4,6 @@
 - [ ] Create Background sprites
 - [ ] Improve background sprite movement and performance (maybe all sprite movement)
 - [ ] Disable arrows for impossible actions
-- [ ] Add color filter options to colorizer
 - [ ] Create multiple levels and auto transition functionality
 
 # DONE
@@ -14,6 +13,7 @@ Version in progress..
 - [x] Implement sprite color shifter function
 - [x] Colored lightning & damage animation (Requires sprite color shifter)
 - [x] Make hand size actually work
+- [X] Add color filter options to colorizer
 
 #### v0.0.3
 - [x] Remove dist folder from tracking
