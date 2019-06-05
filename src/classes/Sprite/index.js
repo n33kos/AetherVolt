@@ -56,7 +56,7 @@ export default class extends Entity {
   draw() {
     if (!this.animations[this.currentAnimation]) return;
 
-    this.handleFrames();
+    if (this.animations[this.currentAnimation].length > 1) this.handleFrames();
 
     if (this.mirrorX || this.mirrorY) {
       // No need to reset canvas transforms, Entity class handles that

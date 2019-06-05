@@ -3,11 +3,17 @@
 - [ ] Implement hero-specific sounds
 - [ ] Create Background sprites
 - [ ] Improve background sprite movement and performance (maybe all sprite movement)
-- [ ] Make hand size actually work
 - [ ] Disable arrows for impossible actions
 - [ ] Add color filter options to colorizer
+- [ ] Create multiple levels and auto transition functionality
 
 # DONE
+
+#### v0.0.4
+Version in progress..
+- [x] Implement sprite color shifter function
+- [x] Colored lightning & damage animation (Requires sprite color shifter)
+- [x] Make hand size actually work
 
 #### v0.0.3
 - [x] Remove dist folder from tracking
@@ -20,8 +26,6 @@
 - [x] Move lighting libs to lightning service
 - [x] Move endGame to game service
 - [x] Rename WorldSpaceToCanvas to ScreenSpaceToCanvas
-- [x] Implement sprite color shifter function
-- [x] Colored lightning & damage animation (Requires sprite color shifter)
 
 #### v0.0.2
 - [x] Add hero-specific tile sprites

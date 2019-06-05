@@ -17,7 +17,7 @@ import CaptainFactory from 'factories/CaptainFactory';
 import LevelFactory   from 'factories/LevelFactory';
 
 // ---- Services ----
-import AiService      from 'services/AiService';
+import AiService from 'services/AiService';
 
 export default class {
   constructor() {

@@ -1,6 +1,7 @@
 export default [
   {
     color      : '100,100,255',
+    handSize   : 4,
     health     : 50,
     maxHealth  : 50,
     maxMoves   : 2,
@@ -10,6 +11,7 @@ export default [
   },
   {
     color      : '255,100,100',
+    handSize   : 4,
     health     : 30,
     maxHealth  : 30,
     maxMoves   : 4,

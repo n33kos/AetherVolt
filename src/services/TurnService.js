@@ -60,8 +60,10 @@ export default class extends BaseService {
     // Set new attacking player
     this.GameState.currentLevel.attackingPlayer = this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn];
 
-    // Draw a tile
-    this.GameState.currentLevel.attackingPlayer.hand.add(this.GameState.currentLevel.deck.draw());
+    // Draw a tile if we haven't met handSize
+    if (this.GameState.currentLevel.attackingPlayer.hand.tiles.length < this.GameState.currentLevel.attackingPlayer.handSize) {
+      this.GameState.currentLevel.attackingPlayer.hand.add(this.GameState.currentLevel.deck.draw());
+    }
 
     // Show new hand
     this.GameState.currentLevel.attackingPlayer.hand.setVisibility(true);
