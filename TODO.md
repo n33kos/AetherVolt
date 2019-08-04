@@ -5,11 +5,11 @@
 - [ ] Improve background sprite movement and performance (maybe all sprite movement)
 - [ ] Disable arrows for impossible actions
 - [ ] Create multiple levels and auto transition functionality
+- [ ] Branch a few alternate play style tests
 
 # DONE
 
 #### v0.0.4
-Version in progress..
 - [x] Implement sprite color shifter function
 - [x] Colored lightning & damage animation (Requires sprite color shifter)
 - [x] Make hand size actually work
