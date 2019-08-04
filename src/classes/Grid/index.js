@@ -65,7 +65,7 @@ export default class {
   }
 
   addTile(x, y, type) {
-    const cell = new Tile({
+    const tile = new Tile({
       GameState: this.GameState,
       dimensions: new Vector2(64, 64),
       offset: new Vector2(0.5, 0.5),
@@ -76,18 +76,15 @@ export default class {
       type,
       outline: new TileOutline({ GameState: this.GameState }),
     });
-    cell.canvasPosition = new Vector2(
-      (x * this.cellSize) + this.padding.x + (this.cellSize/2),
-      (y * this.cellSize) + this.padding.y + (this.cellSize/2),
-    );
-    cell.targetPosition = cell.canvasPosition;
+    tile.canvasPosition = tile.getCanvasPosition(this.cellSize, this.padding);
+    tile.targetPosition = tile.canvasPosition;
 
     // Set outline values
-    cell.outline.canvasPosition = cell.targetPosition;
-    cell.outline.scale = cell.scale;
-    cell.outline.dimensions = cell.dimensions;
+    tile.outline.canvasPosition = tile.targetPosition;
+    tile.outline.scale = tile.scale;
+    tile.outline.dimensions = tile.dimensions;
 
-    this.GameState.Scene.add(cell);
-    this.tiles.push(cell);
+    this.GameState.Scene.add(tile);
+    this.tiles.push(tile);
   }
 }

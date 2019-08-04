@@ -1,5 +1,6 @@
 import BaseService  from 'services/BaseService';
 import rectContains from 'lib/rectContains';
+import TileType     from "classes/TileType";
 import Vector2      from 'classes/Vector2';
 
 export default class extends BaseService {
@@ -40,6 +41,31 @@ export default class extends BaseService {
           tile.dimensions.y * tile.scale.y,
         ),
       );
+    });
+  }
+
+  pushTilesDown() {
+    this.GameState.currentLevel.grid.tiles.forEach(tile => {
+      if (tile.tileType.type !== "PLAYER_COLUMN") {
+        // Move the tile down
+        tile.y += 1;
+        tile.id = `${tile.x}_${tile.y}`;
+        tile.targetPosition = tile.getCanvasPosition(
+          this.GameState.currentLevel.grid.cellSize,
+          this.GameState.currentLevel.grid.padding
+        );
+
+        // Replace tile with empty if at the top
+        if (tile.y === 1) {
+          this.GameState.currentLevel.grid.addTile(tile.x, 0, new TileType("EMPTY"));
+        }
+
+        // If we move a tile off the bottom, dismiss it, then detroy it.
+        if (tile.y >= this.GameState.currentLevel.grid.rows) {
+          tile.emptyTile();
+          tile.destroy();
+        }
+      }
     });
   }
 }

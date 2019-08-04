@@ -5,9 +5,12 @@
 - [ ] Improve background sprite movement and performance (maybe all sprite movement)
 - [ ] Disable arrows for impossible actions
 - [ ] Create multiple levels and auto transition functionality
-- [ ] Branch a few alternate play style tests
 
 # DONE
+
+#### v0.0.5
+In Progress...
+- [x] Implement a few alternate play style options
 
 #### v0.0.4
 - [x] Implement sprite color shifter function

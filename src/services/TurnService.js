@@ -54,8 +54,14 @@ export default class extends BaseService {
     this.GameState.currentLevel.currentPlayerTurn++;
     if (this.GameState.currentLevel.currentPlayerTurn >= this.GameState.currentLevel.players.length) this.GameState.currentLevel.currentPlayerTurn = 0;
 
-    // Increment round
-    if (this.GameState.currentLevel.currentPlayerTurn === 0) this.GameState.currentLevel.GameState.round += 1;
+    // Upon return to the first player's turn
+    if (this.GameState.currentLevel.currentPlayerTurn === 0) {
+      // Increment round
+      this.GameState.currentLevel.GameState.round += 1;
+
+      // Move tiles down a row
+      if (this.GameState.tilesMoveDownEachRound) this.tileService.pushTilesDown();
+    }
 
     // Set new attacking player
     this.GameState.currentLevel.attackingPlayer = this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn];

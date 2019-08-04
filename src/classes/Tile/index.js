@@ -207,4 +207,19 @@ export default class extends Sprite {
       this.emptyTile();
     }
   }
+
+  getCanvasPosition(cellSize, padding) {
+    return new Vector2(
+      (this.x * cellSize) + padding.x + (cellSize/2),
+      (this.y * cellSize) + padding.y + (cellSize/2),
+    );
+  }
+
+  destroy() {
+    // Remove from tile list
+    this.GameState.currentLevel.grid.tiles = this.GameState.currentLevel.grid.tiles.filter(tile => tile.uuid !== this.uuid);
+
+    //Remove from scene
+    this.GameState.Scene.remove(this.uuid);
+  }
 }
