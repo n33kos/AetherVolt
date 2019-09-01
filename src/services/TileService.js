@@ -45,6 +45,7 @@ export default class extends BaseService {
   }
 
   pushTilesDown() {
+    // Move existing tiles
     this.GameState.currentLevel.grid.tiles.forEach(tile => {
       if (tile.tileType.type !== "PLAYER_COLUMN") {
         // Move the tile down
@@ -57,6 +58,12 @@ export default class extends BaseService {
 
         // Replace tile with empty if at the top
         if (tile.y === 1) {
+          // GET THIS TO RANDOMIZE, IT DOESNT WORK WITH NON_EMPTY TILES RIGHT NOW
+          // GET THIS TO RANDOMIZE, IT DOESNT WORK WITH NON_EMPTY TILES RIGHT NOW
+          // GET THIS TO RANDOMIZE, IT DOESNT WORK WITH NON_EMPTY TILES RIGHT NOW
+          // GET THIS TO RANDOMIZE, IT DOESNT WORK WITH NON_EMPTY TILES RIGHT NOW
+          // GET THIS TO RANDOMIZE, IT DOESNT WORK WITH NON_EMPTY TILES RIGHT NOW
+
           this.GameState.currentLevel.grid.addTile(tile.x, 0, new TileType("EMPTY"));
         }
 

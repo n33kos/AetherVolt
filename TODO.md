@@ -1,5 +1,5 @@
 # TO-DO
-- [ ] Implement background music
+- [ ] Test gameplay variants for maximum fun
 - [ ] Implement hero-specific sounds
 - [ ] Create Background sprites
 - [ ] Improve background sprite movement and performance (maybe all sprite movement)
@@ -11,6 +11,8 @@
 #### v0.0.5
 In Progress...
 - [x] Implement a few alternate play style options
+- [x] Implement background music for levels
+- [x] Fix all sprite animations (broke them at some point)
 
 #### v0.0.4
 - [x] Implement sprite color shifter function
