@@ -1,7 +1,6 @@
 import Action                     from 'classes/Action';
 import ActionType                 from 'classes/ActionType';
 import BaseService                from 'services/BaseService';
-import Deck                       from 'classes/Deck';
 import GameService                from 'services/GameService';
 import getRandomIntegerNotEqualTo from 'lib/getRandomIntegerNotEqualTo';
 import LightningService           from 'services/LightningService';
@@ -33,7 +32,9 @@ export default class extends BaseService {
     }
 
     // Process the lightning dicharge
-    this.lightningService.handleLightningDischarge();
+    if (this.GameState.autoAttackAtEndOfTurn) {
+      this.lightningService.handleLightningDischarge();
+    }
 
     // Check if game is completed
     this.gameService.endGame();
@@ -65,6 +66,9 @@ export default class extends BaseService {
 
     // Set new attacking player
     this.GameState.currentLevel.attackingPlayer = this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn];
+
+    // Set an AI turn
+    if (this.GameState.currentLevel.attackingPlayer.controller === 'AI') this.GameState.AiService.scheduleAction();
 
     // Draw a tile if we haven't met handSize
     if (this.GameState.currentLevel.attackingPlayer.hand.tiles.length < this.GameState.currentLevel.attackingPlayer.handSize) {

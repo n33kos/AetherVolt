@@ -1,4 +1,5 @@
 import PriorityQueue from 'classes/PriorityQueue';
+import getRandomArrayValue from 'lib/getRandomArrayValue';
 
 export default class {
   constructor(grid) {
@@ -10,9 +11,11 @@ export default class {
     this.pathFound = false;
     this.hasSearched = {};
 
-    // this.grid.forEach(tile => {
-    //   delete tile.cameFrom;
-    // });
+    // Remove cameFrom value from grid tiles to prevent
+    // inaccurate paths on build of failed path.
+    this.grid.forEach(tile => {
+      delete tile.cameFrom;
+    });
   }
 
   findPath(startCell, endCell) {
@@ -88,5 +91,40 @@ export default class {
     }
 
     return this.pathFound ? path : [];
+  }
+
+  buildFailedPath() {
+    const path = [this.startCell];
+    const breakerLimit = 100;
+    const hasSearchedFailedPath = {};
+    let breaker = 0;
+    let pathBuilt = false;
+
+    while (pathBuilt === false) {
+      breaker++;
+      if (breaker > breakerLimit) break;
+
+      const cell = path[path.length - 1];
+
+      if (hasSearchedFailedPath[cell.id]) {
+        break;
+      }
+      hasSearchedFailedPath[cell.id] = true
+
+      const connectedNeighbors = cell.neighbors.filter(neighbor => 
+        neighbor
+        && this.isPassable(neighbor)
+        && this.isConnected(cell, neighbor)
+        && neighbor.id !== this.startCell.id
+      );
+
+      const randomConnectedNeighbor = getRandomArrayValue(connectedNeighbors);
+      if (!randomConnectedNeighbor) return;
+
+      path.push(randomConnectedNeighbor);
+      cell.cameFrom = randomConnectedNeighbor;
+    }
+
+    return path.length > 1 ? path.reverse() : [];
   }
 }

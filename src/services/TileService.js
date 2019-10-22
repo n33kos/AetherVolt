@@ -56,9 +56,9 @@ export default class extends BaseService {
         if (tile.y === 0) {
           const randomTileTypes = [
             'EMPTY',
-            'STRAIGHT',
-            'BEND',
-            'TRIPLE',
+            // 'STRAIGHT',
+            // 'BEND',
+            // 'TRIPLE',
             'QUAD',
           ];
           const newTile = new Tile({
@@ -73,7 +73,7 @@ export default class extends BaseService {
             id: `${tile.x}_0`,
             x: tile.x,
             y: 0,
-            type: new TileType(randomTileTypes[Math.floor(Math.random()*4)]),
+            type: new TileType(randomTileTypes[Math.floor(Math.random()*randomTileTypes.length)]),
             outline: new TileOutline({ GameState: this.GameState }),
             // TODO: Replace this placedBy with something generic for auto generated tiles
             placedBy: tile.placedBy || this.GameState.currentLevel.attackingPlayer,
@@ -102,7 +102,7 @@ export default class extends BaseService {
           this.GameState.currentLevel.grid.padding
         );
 
-        // If we move a tile off the bottom, dismiss it, then detroy it.
+        // If we move a tile off the bottom, dismiss it, then destroy it.
         if (tile.y >= this.GameState.currentLevel.grid.rows) {
           tile.emptyTile();
           tile.destroy();
@@ -111,7 +111,7 @@ export default class extends BaseService {
     });
 
     // Add new tiles from top, must do this outside of the first loop
-    // because we cant modify the array in place and keep the neighbors in line
+    // because we cant modify the array in place and keep the neighbor calculations correct
     newTiles.forEach(newTile => {
       this.GameState.currentLevel.grid.addTile(newTile);
     });

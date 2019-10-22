@@ -90,4 +90,8 @@ export default class {
     this.GameState.Scene.add(tile);
     this.tiles.unshift(tile);
   }
+
+  removeTile(tileToRemove) {
+    this.tiles = this.tiles.filter(tile => tile.uuid !== tileToRemove.uuid)
+  }
 }

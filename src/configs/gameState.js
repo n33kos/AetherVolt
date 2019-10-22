@@ -1,4 +1,5 @@
 export default {
+  autoAttackAtEndOfTurn  : false,
   deltaTime              : 1,
   forceMoveAtEndOfTurn   : false,
   infiniteDeck           : false,
