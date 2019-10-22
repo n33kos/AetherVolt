@@ -5,6 +5,7 @@
 - [ ] Improve background sprite movement and performance (maybe all sprite movement)
 - [ ] Disable arrows for impossible actions
 - [ ] Create multiple levels and auto transition functionality
+- [ ] Create/Implement ship destruction animation
 
 # DONE
 
@@ -15,6 +16,9 @@ In Progress...
 - [x] Fix all sprite animations (broke them at some point)
 - [x] Add gamestate constant for autoAttackAtEndOfTurn
 - [x] Make attack a button, still fire off lightning on failed connections
+- [x] Experiment with "quad only" behavior
+- [x] Clean up AI action scheduling
+- [x] Add yet another test tile sprite
 
 #### v0.0.4
 - [x] Implement sprite color shifter function

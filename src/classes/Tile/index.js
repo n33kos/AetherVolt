@@ -78,7 +78,10 @@ export default class extends Sprite {
   }
 
   getSpriteSheet() {
-    return this.placedBy ? this.placedBy.tiles[this.tileType.id] : '';
+    //OVERRIDE FOR TESTING ALL QUAD MODE
+    return this.tileType.id === 1 || this.tileType.id === 2  ? '' : './img/orb.png';
+
+    // return this.placedBy ? this.placedBy.tiles[this.tileType.id] : '';
   }
 
   getNeighbors() {

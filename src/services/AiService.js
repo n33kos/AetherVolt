@@ -12,14 +12,24 @@ export default class extends BaseService {
     this.maxThinkyTime = 400;
     this.actionService = new ActionService(GameState);
     this.tileService = new TileService(GameState);
-    this.lightningService = new LightningService
+    this.lightningService = new LightningService(GameState);
+    this.scheduledActions = [];
   }
 
   scheduleAction() {
-    window.setTimeout(
-      this.fireAction.bind(this),
-      Math.random() * this.maxThinkyTime,
+    this.scheduledActions.push(
+      window.setTimeout(
+        this.fireAction.bind(this),
+        Math.random() * this.maxThinkyTime,
+      )
     );
+  }
+
+  clearScheduledActions() {
+    this.scheduledActions.forEach(actionId => {
+      window.clearTimeout(actionId);
+    });
+    this.scheduledActions = [];
   }
 
   fireAction() {
@@ -103,6 +113,7 @@ export default class extends BaseService {
 
   attack() {
     this.lightningService.handleLightningDischarge();
+    this.actionService.cycleAction();
   }
 
   getEmptyTileToPlace() {

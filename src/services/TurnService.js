@@ -64,6 +64,9 @@ export default class extends BaseService {
       if (this.GameState.tilesMoveDownEachRound) this.tileService.pushTilesDown();
     }
 
+    // Clear any squeued actions for previous player
+    if (this.GameState.AiService.scheduledActions.length > 0) this.GameState.AiService.clearScheduledActions();
+
     // Set new attacking player
     this.GameState.currentLevel.attackingPlayer = this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn];
 
