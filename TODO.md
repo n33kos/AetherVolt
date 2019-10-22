@@ -13,6 +13,8 @@ In Progress...
 - [x] Implement a few alternate play style options
 - [x] Implement background music for levels
 - [x] Fix all sprite animations (broke them at some point)
+- [x] Add gamestate constant for autoAttackAtEndOfTurn
+- [x] Make attack a button, still fire off lightning on failed connections
 
 #### v0.0.4
 - [x] Implement sprite color shifter function
