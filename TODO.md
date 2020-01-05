@@ -8,6 +8,8 @@
 - [ ] Create/Implement ship destruction animation
 
 # DONE
+#### v0.0.6
+In progress...
 
 #### v0.0.5
 - [x] Implement a few alternate play style options
