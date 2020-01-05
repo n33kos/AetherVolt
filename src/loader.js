@@ -1,6 +1,6 @@
 import GameState from 'classes/GameState';
 
-const AetherVolt = { GameState} ;
+const AetherVolt = { GameState };
 
 document.addEventListener("DOMContentLoaded", (e) => {
   const GameState = new AetherVolt.GameState();
