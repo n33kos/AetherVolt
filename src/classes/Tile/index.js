@@ -1,4 +1,3 @@
-import cloneClass    from 'lib/cloneClass';
 import DismissedTile from 'classes/DismissedTile';
 import Sprite        from 'classes/Sprite';
 import TileType      from 'classes/TileType';
@@ -19,6 +18,7 @@ export default class extends Sprite {
       scale,
       isInHand = false,
       dragPosition = null,
+      grid,
       targetPosition = null,
       outline = null,
       maxHealth = 2,
@@ -39,19 +39,32 @@ export default class extends Sprite {
     this.outline = outline;
     this.maxHealth = maxHealth;
     this.health = health;
+    this.placedBy = placedBy;
+    this.grid = grid;
 
+    this.init();
+  }
+
+  setType(type) {
+    this.tileType = type;
+    this.animations.exist.spriteSheet = this.getSpriteSheet();
+    this.neighborPattern = type.neighborPattern;
+    this.load();
+  }
+
+  init() {
     this.animations = {
       exist: {
-        frames        : 5,
-        spriteSheet   : this.getSpriteSheet(),
-        ticksPerFrame : 1,
-        loop          : true,
+        frames: 5,
+        spriteSheet: this.getSpriteSheet(),
+        ticksPerFrame: 1,
+        loop: true,
       },
     };
+    this.setType(this.tileType);
+    this.neighbors = this.getNeighbors();
     this.currentAnimation = 'exist';
-    this.neighborPattern = [];
     this.isHovered = false;
-    this.placedBy = placedBy;
 
     this.turbulence = new Vector2(0, 0);
     this.turbulenceStep = Math.random() * Math.PI * 2;
@@ -61,41 +74,31 @@ export default class extends Sprite {
     this.turbulenceScaleRange = 0.5;
     this.uuid = uuidv4();
 
-    this.setType(type);
     this.calculateOffset();
   }
 
-  setType(type) {
-    this.tileType = type;
-    this.animations.exist.spriteSheet = this.getSpriteSheet();
-    this.neighborPattern = type.neighborPattern
-    this.load();
-  }
-
-  init(grid) {
-    this.grid = grid;
-    this.neighbors = this.getNeighbors();
-  }
-
   getSpriteSheet() {
-    return this.placedBy ? this.placedBy.tiles[this.tileType.id] : '';
+    //OVERRIDE FOR TESTING ALL QUAD MODE
+    return this.tileType.id === 1 || this.tileType.id === 2  ? '' : './img/orb.png';
+
+    // return this.placedBy ? this.placedBy.tiles[this.tileType.id] : '';
   }
 
   getNeighbors() {
     const neighbors = [];
-    if (!this.grid) return [];
+    if (!this.grid || !this.grid.tiles) return [];
 
     if (this.neighborPattern.includes(0)) {
-      neighbors.push(this.grid.find(cell => cell.id == `${this.x + 1}_${this.y}`));
+      neighbors.push(this.grid.tiles.find(cell => cell.id == `${this.x + 1}_${this.y}`));
     }
     if (this.neighborPattern.includes(1)) {
-      neighbors.push(this.grid.find(cell => cell.id == `${this.x}_${this.y + 1}`));
+      neighbors.push(this.grid.tiles.find(cell => cell.id == `${this.x}_${this.y + 1}`));
     }
     if (this.neighborPattern.includes(2)) {
-      neighbors.push(this.grid.find(cell => cell.id == `${this.x - 1}_${this.y}`));
+      neighbors.push(this.grid.tiles.find(cell => cell.id == `${this.x - 1}_${this.y}`));
     }
     if (this.neighborPattern.includes(3)) {
-      neighbors.push(this.grid.find(cell => cell.id == `${this.x}_${this.y - 1}`));
+      neighbors.push(this.grid.tiles.find(cell => cell.id == `${this.x}_${this.y - 1}`));
     }
 
     return neighbors;
@@ -206,5 +209,20 @@ export default class extends Sprite {
     if (this.tileType.type !== 'PLAYER_COLUMN' && this.health <= 0) {
       this.emptyTile();
     }
+  }
+
+  getCanvasPosition(cellSize, padding) {
+    return new Vector2(
+      (this.x * cellSize) + padding.x + (cellSize/2),
+      (this.y * cellSize) + padding.y + (cellSize/2),
+    );
+  }
+
+  destroy() {
+    // Remove from tile list
+    this.GameState.currentLevel.grid.tiles = this.GameState.currentLevel.grid.tiles.filter(tile => tile.uuid !== this.uuid);
+
+    //Remove from scene
+    this.GameState.Scene.remove(this.uuid);
   }
 }

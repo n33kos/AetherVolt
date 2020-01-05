@@ -92,7 +92,10 @@ export default class {
       this.captains[0],
       this.captains[1],
     ];
-    // players[0].controller = 'Human'
+
+    // SET PLAYER 1 TO HUMAN
+    players[0].controller  = 'Human';
+
     newLevel.setPlayers(players);
 
     // load level

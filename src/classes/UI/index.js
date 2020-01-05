@@ -1,10 +1,12 @@
 import TurnService from 'services/TurnService';
+import LightningService from 'services/LightningService';
 
 export default class {
   constructor(GameState) {
     this.GameState = GameState;
     this.screens = document.querySelectorAll('[data-screen]');
     this.buttons = {
+      attack     : document.querySelectorAll('[data-gamestate-attack]'),
       fullscreen : document.querySelectorAll('[data-gamestate-fullscreen]'),
       initAudio  : document.querySelectorAll('[data-gamestate-init-audio]'),
       level      : document.querySelectorAll('[data-gamestate-change-level]'),
@@ -18,6 +20,7 @@ export default class {
     };
     this.isFullscreen = false;
     this.turnService = new TurnService(GameState);
+    this.lightningService = new LightningService(GameState);
   }
 
   init() {
@@ -52,6 +55,13 @@ export default class {
     //Fullscreen buttons
     Array.from(this.buttons.fullscreen).forEach(button => {
       button.addEventListener('click', () => this.toggleFullscreen() );
+    });
+
+    //Attack buttons
+    Array.from(this.buttons.attack).forEach(button => {
+      button.addEventListener('click', () => {
+        this.lightningService.handleLightningDischarge();
+      });
     });
 
     //Level selection buttons

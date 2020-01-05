@@ -1,7 +1,6 @@
 import Action                     from 'classes/Action';
 import ActionType                 from 'classes/ActionType';
 import BaseService                from 'services/BaseService';
-import Deck                       from 'classes/Deck';
 import GameService                from 'services/GameService';
 import getRandomIntegerNotEqualTo from 'lib/getRandomIntegerNotEqualTo';
 import LightningService           from 'services/LightningService';
@@ -33,7 +32,9 @@ export default class extends BaseService {
     }
 
     // Process the lightning dicharge
-    this.lightningService.handleLightningDischarge();
+    if (this.GameState.autoAttackAtEndOfTurn) {
+      this.lightningService.handleLightningDischarge();
+    }
 
     // Check if game is completed
     this.gameService.endGame();
@@ -54,11 +55,23 @@ export default class extends BaseService {
     this.GameState.currentLevel.currentPlayerTurn++;
     if (this.GameState.currentLevel.currentPlayerTurn >= this.GameState.currentLevel.players.length) this.GameState.currentLevel.currentPlayerTurn = 0;
 
-    // Increment round
-    if (this.GameState.currentLevel.currentPlayerTurn === 0) this.GameState.currentLevel.GameState.round += 1;
+    // Upon return to the first player's turn
+    if (this.GameState.currentLevel.currentPlayerTurn === 0) {
+      // Increment round
+      this.GameState.currentLevel.GameState.round += 1;
+
+      // Move tiles down a row
+      if (this.GameState.tilesMoveDownEachRound) this.tileService.pushTilesDown();
+    }
+
+    // Clear any squeued actions for previous player
+    if (this.GameState.AiService.scheduledActions.length > 0) this.GameState.AiService.clearScheduledActions();
 
     // Set new attacking player
     this.GameState.currentLevel.attackingPlayer = this.GameState.currentLevel.players[this.GameState.currentLevel.currentPlayerTurn];
+
+    // Set an AI turn
+    if (this.GameState.currentLevel.attackingPlayer.controller === 'AI') this.GameState.AiService.scheduleAction();
 
     // Draw a tile if we haven't met handSize
     if (this.GameState.currentLevel.attackingPlayer.hand.tiles.length < this.GameState.currentLevel.attackingPlayer.handSize) {

@@ -40,7 +40,29 @@ export default class {
       for (let x = 0; x < this.columns; x++) {
         let type = new TileType('EMPTY');
         if (x === 0 || x === this.columns - 1) type = new TileType('PLAYER_COLUMN');
-        this.addTile(x, y, type);
+
+        const tile = new Tile({
+          GameState: this.GameState,
+          dimensions: new Vector2(64, 64),
+          offset: new Vector2(0.5, 0.5),
+          scale: new Vector2(this.cellSize / 64, this.cellSize / 64),
+          id: `${x}_${y}`,
+          x,
+          y,
+          type,
+          grid: this,
+          outline: new TileOutline({ GameState: this.GameState }),
+        });
+
+        tile.canvasPosition = tile.getCanvasPosition(this.cellSize, this.padding);
+        tile.targetPosition = tile.canvasPosition;
+
+        // Set outline values
+        tile.outline.canvasPosition = tile.targetPosition;
+        tile.outline.scale = tile.scale;
+        tile.outline.dimensions = tile.dimensions;
+
+        this.addTile(tile);
       }
     }
 
@@ -64,30 +86,12 @@ export default class {
     });
   }
 
-  addTile(x, y, type) {
-    const cell = new Tile({
-      GameState: this.GameState,
-      dimensions: new Vector2(64, 64),
-      offset: new Vector2(0.5, 0.5),
-      scale: new Vector2(this.cellSize / 64, this.cellSize / 64),
-      id: `${x}_${y}`,
-      x,
-      y,
-      type,
-      outline: new TileOutline({ GameState: this.GameState }),
-    });
-    cell.canvasPosition = new Vector2(
-      (x * this.cellSize) + this.padding.x + (this.cellSize/2),
-      (y * this.cellSize) + this.padding.y + (this.cellSize/2),
-    );
-    cell.targetPosition = cell.canvasPosition;
+  addTile(tile) {
+    this.GameState.Scene.add(tile);
+    this.tiles.unshift(tile);
+  }
 
-    // Set outline values
-    cell.outline.canvasPosition = cell.targetPosition;
-    cell.outline.scale = cell.scale;
-    cell.outline.dimensions = cell.dimensions;
-
-    this.GameState.Scene.add(cell);
-    this.tiles.push(cell);
+  removeTile(tileToRemove) {
+    this.tiles = this.tiles.filter(tile => tile.uuid !== tileToRemove.uuid)
   }
 }

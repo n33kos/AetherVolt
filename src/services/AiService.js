@@ -1,22 +1,35 @@
-import ActionService     from 'services/ActionService';
-import ActionType        from 'classes/ActionType';
-import BaseService       from 'services/BaseService';
-import TileService       from 'services/TileService';
+import ActionService       from 'services/ActionService';
+import ActionType          from 'classes/ActionType';
+import BaseService         from 'services/BaseService';
+import TileService         from 'services/TileService';
+import LightningService    from 'services/LightningService';
+import getRandomArrayValue from 'lib/getRandomArrayValue';
 
 export default class extends BaseService {
   constructor(GameState) {
     super(GameState);
 
-    this.maxThinkyTime = 200;
+    this.maxThinkyTime = 400;
     this.actionService = new ActionService(GameState);
     this.tileService = new TileService(GameState);
+    this.lightningService = new LightningService(GameState);
+    this.scheduledActions = [];
   }
 
   scheduleAction() {
-    window.setTimeout(
-      this.fireAction.bind(this),
-      Math.random() * this.maxThinkyTime,
+    this.scheduledActions.push(
+      window.setTimeout(
+        this.fireAction.bind(this),
+        Math.random() * this.maxThinkyTime,
+      )
     );
+  }
+
+  clearScheduledActions() {
+    this.scheduledActions.forEach(actionId => {
+      window.clearTimeout(actionId);
+    });
+    this.scheduledActions = [];
   }
 
   fireAction() {
@@ -24,11 +37,14 @@ export default class extends BaseService {
 
     const possibleActions = [];
     if (this.GameState.currentLevel.attackingPlayer.moves > 0) possibleActions.push(this.move.bind(this));
-    if (this.GameState.currentLevel.attackingPlayer.actions > 0) possibleActions.push(this.rotate.bind(this));
-    if (this.GameState.currentLevel.attackingPlayer.actions > 0) possibleActions.push(this.place.bind(this));
+    if (this.GameState.currentLevel.attackingPlayer.actions > 0) {
+      possibleActions.push(this.rotate.bind(this));
+      possibleActions.push(this.place.bind(this));
+      possibleActions.push(this.attack.bind(this));
+    }
 
-    const moveFunction = possibleActions[Math.floor(Math.random() * possibleActions.length)];
-    if (moveFunction) moveFunction();
+    const action = getRandomArrayValue(possibleActions);
+    if (action) action();
   }
 
   move() {
@@ -93,6 +109,11 @@ export default class extends BaseService {
     } else {
       this.scheduleAction();
     }
+  }
+
+  attack() {
+    this.lightningService.handleLightningDischarge();
+    this.actionService.cycleAction();
   }
 
   getEmptyTileToPlace() {

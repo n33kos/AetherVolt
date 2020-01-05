@@ -7,8 +7,8 @@ export default class {
 
   getTypeId(type) {
     const ids = {
-      EMPTY         : 1,
-      PLAYER_COLUMN : 2,
+      PLAYER_COLUMN : 1,
+      EMPTY         : 2,
       STRAIGHT      : 3,
       BEND          : 4,
       TRIPLE        : 5,
@@ -20,8 +20,8 @@ export default class {
 
   getTypeString(id) {
     const types = {
-      1 : 'EMPTY',
-      2 : 'PLAYER_COLUMN',
+      1 : 'PLAYER_COLUMN',
+      2 : 'EMPTY',
       3 : 'STRAIGHT',
       4 : 'BEND',
       5 : 'TRIPLE',
@@ -33,8 +33,8 @@ export default class {
 
   getNeighborPattern(id) {
     const patterns = {
-      1 : [],
-      2 : [0,1,2,3],
+      1 : [0,1,2,3],
+      2 : [],
       3 : [1,3],
       4 : [0,1],
       5 : [0,1,3],

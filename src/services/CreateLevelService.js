@@ -1,4 +1,5 @@
 import Action         from 'classes/Action';
+import AudioBuffer    from 'classes/AudioBuffer';
 import Background     from 'classes/Background';
 import BaseService    from 'services/BaseService';
 import Cloud          from 'classes/Cloud';
@@ -48,6 +49,17 @@ export default class extends BaseService {
       });
       bg.canvasPosition = new Vector2(0, -this.GameState.Canvas.height);
       this.GameState.Scene.add(bg);
+    }
+
+    // Add Background Music
+    if (config.backgroundAudio) {
+      const audioNode = new AudioBuffer({
+        audioFileUrl : config.backgroundAudio,
+        autoPlay     : true,
+        GameState    : this.GameState,
+        shouldLoop   : true,
+      });
+      this.addAudioNode(audioNode);
     }
 
     // Seems like this ish is giving us slowdown
