@@ -94,7 +94,7 @@ export default class {
     ];
 
     // SET PLAYER 1 TO HUMAN
-    // players[0].controller = 'Human';
+    players[0].controller  = 'Human';
 
     newLevel.setPlayers(players);
 
