@@ -36,10 +36,10 @@ module.exports = [
     },
     plugins : [
       new CopyPlugin([
-        { from: 'src/audio/dist', to: 'audio' },
+        { from: 'src/audio/deploy', to: 'audio' },
         { from: 'src/font', to: 'font' },
         { from: 'src/html' },
-        { from: 'src/img/dist', to: 'img' },
+        { from: 'src/img/deploy', to: 'img' },
       ]),
     ],
     resolve: {
