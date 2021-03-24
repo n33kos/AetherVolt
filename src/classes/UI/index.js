@@ -33,7 +33,10 @@ export default class {
     // Init audio on user input
     Array.from(this.buttons.initAudio).forEach(button => {
       button.addEventListener('click', () => {
-        if (!this.GameState.Audio.isInitialized) this.GameState.Audio.init();
+        if (!this.GameState.Audio.isInitialized) {
+          this.GameState.Audio.init();
+          this.GameState.Audio.setMute(this.GameState.isMuted);
+        }
       });
     });
 

@@ -18,11 +18,23 @@ export default class {
     this.isInitialized = true;
   }
 
-  toggleMute() {
-    if(this.audioContext.state === 'running') {
+  setMute(mute) {
+    if (mute) {
       this.audioContext.suspend();
-    } else if(this.audioContext.state === 'suspended') {
+    } else {
       this.audioContext.resume();
+    }
+
+    this.GameState.isMuted = mute;
+  }
+
+  toggleMute() {
+    if (!this.GameState.isMuted) {
+      this.audioContext.suspend();
+      this.GameState.isMuted = true;
+    } else {
+      this.audioContext.resume();
+      this.GameState.isMuted = false;
     }
   }
 }
