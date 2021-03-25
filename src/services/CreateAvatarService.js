@@ -9,8 +9,8 @@ export default class extends BaseService {
       GameState : this.GameState,
       dimensions : new Vector2(64, 128),
       scale : new Vector2(
-        2 * getPixelDensity(),
-        2 * getPixelDensity(),
+        getPixelDensity(),
+        getPixelDensity(),
       ),
       playerName : config.player.name,
       offset : new Vector2(0.5, 0.5),

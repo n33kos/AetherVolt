@@ -1,8 +1,6 @@
-import Entity       from 'classes/Entity';
-import rectContains from 'lib/rectContains';
-import Tile         from 'classes/Tile';
-import uuidv4       from 'uuid/v4';
-import Vector2      from 'classes/Vector2';
+import Entity from 'classes/Entity';
+import Vector2 from 'classes/Vector2';
+import getPixelDensity from 'lib/getPixelDensity';
 
 export default class extends Entity {
   constructor(config) {
@@ -18,9 +16,9 @@ export default class extends Entity {
     this.path = path;
     this.color = color;
     this.elements = [];
-    this.offshoots = 20;
-    this.maxwidth = 15;
-    this.ofshootBranchLength = 40;
+    this.offshoots = 12;
+    this.maxwidth = 12 * getPixelDensity();
+    this.ofshootBranchLength = 20 * getPixelDensity();
 
     this.GameState.Scene.add(this);
     this.createElements();
@@ -62,7 +60,7 @@ export default class extends Entity {
   drawEntity() {
     this.createElements();
     this.elements.forEach(element => {
-      this.drawLine(element.from, element.to, element.index);
+      this.drawLine(element.from, element.to, 1);
       element.children.forEach(
         child => this.drawLine(child.from, child.to, child.index),
       );
@@ -72,7 +70,7 @@ export default class extends Entity {
   drawLine(from, to, iteration) {
     this.GameState.Canvas.ctx.beginPath();
     this.GameState.Canvas.ctx.strokeStyle = `rgba(${this.color}, 0.685)`;
-    this.GameState.Canvas.ctx.lineWidth = Math.max(1, this.maxwidth - iteration);
+    this.GameState.Canvas.ctx.lineWidth = Math.max(1, Math.random() * (this.maxwidth - iteration));
     this.GameState.Canvas.ctx.moveTo(from.x, from.y);
     this.GameState.Canvas.ctx.lineTo(to.x, to.y);
     this.GameState.Canvas.ctx.stroke();
