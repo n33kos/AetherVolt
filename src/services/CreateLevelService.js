@@ -39,13 +39,10 @@ export default class extends BaseService {
     if (config.background) {
       const bg = new Background({
         GameState: this.GameState,
-        dimensions: new Vector2(512, 1024),
+        dimensions: new Vector2(600, 600),
         image : config.background,
         offset: new Vector2(0, 0),
-        scale: new Vector2(
-          this.GameState.Canvas.width / 512,
-          this.GameState.Canvas.width / 512,
-        ),
+        scale: new Vector2(1, 1),
       });
       bg.canvasPosition = new Vector2(0, -this.GameState.Canvas.height);
       this.GameState.Scene.add(bg);

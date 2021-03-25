@@ -1,15 +1,24 @@
 # TO-DO
+- [ ] Improve lightning animation. Core too thick, doesnt waver enough (check different pixel densities)
+- [ ] Prevent arrow buttons from moving and scaling with sprites
+- [ ] Replace tile scale animation with drift animation (its too much)
 - [ ] Test gameplay variants for maximum fun
+- [ ] Add hero specific special abilities (direct across shot, charge boost, healing, etc.)
 - [ ] Implement hero-specific sounds
 - [ ] Create Background sprites
-- [ ] Improve background sprite movement and performance (maybe all sprite movement)
 - [ ] Disable arrows for impossible actions
 - [ ] Create multiple levels and auto transition functionality
 - [ ] Create/Implement ship destruction animation
 
 # DONE
+#### v0.0.7
+- [x] Improve background sprite movement and performance (maybe all sprite movement)
+- [x] Scale Background to window width
+In Progress...
+
 #### v0.0.6
-In progress...
+- [x] Various bugfixes
+- [x] Commit audio and images to repo
 
 #### v0.0.5
 - [x] Implement a few alternate play style options

@@ -1,6 +1,6 @@
 export default [
   {
-    background      : './img/Trees-Test.png',
+    background      : './img/rainbow.jpg',
     backgroundAudio : './audio/ethereal-steps.ogg',
     clearOnLoad     : true,
     cloudCount      : 0,
