@@ -1,7 +1,6 @@
 # TO-DO
 - [ ] Improve lightning animation. Core too thick, doesnt waver enough (check different pixel densities)
 - [ ] Prevent arrow buttons from moving and scaling with sprites
-- [ ] Replace tile scale animation with drift animation (its too much)
 - [ ] Test gameplay variants for maximum fun
 - [ ] Add hero specific special abilities (direct across shot, charge boost, healing, etc.)
 - [ ] Implement hero-specific sounds
@@ -12,6 +11,7 @@
 
 # DONE
 #### v0.0.7
+- [x] Replace tile scale animation with drift animation (its too much)
 - [x] Improve background sprite movement and performance (maybe all sprite movement)
 - [x] Scale Background to window width
 In Progress...

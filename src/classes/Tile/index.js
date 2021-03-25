@@ -69,9 +69,7 @@ export default class extends Sprite {
     this.turbulence = new Vector2(0, 0);
     this.turbulenceStep = Math.random() * Math.PI * 2;
     this.turbulenceSpeed = 0.02;
-    this.turbulenceRange = new Vector2(20, 20);
-    this.turbulenceScale = 0;
-    this.turbulenceScaleRange = 0.5;
+    this.turbulenceRange = new Vector2(15, 15);
     this.uuid = uuidv4();
 
     this.calculateOffset();
@@ -162,13 +160,6 @@ export default class extends Sprite {
       this.canvasPosition.y + positionDiff.y * 0.005 * this.GameState.deltaTime,
     )
 
-    // Set scale away from target to cause correction
-    const scaleDiff = this.targetScale.x - this.scale.x - this.turbulenceScale;
-    this.scale = new Vector2(
-      this.scale.x + scaleDiff * 0.01 * this.GameState.deltaTime,
-      this.scale.x + scaleDiff * 0.01 * this.GameState.deltaTime,
-    );
-
     this.calculateOffset();
   }
 
@@ -177,10 +168,9 @@ export default class extends Sprite {
     if (this.turbulenceStep >= Math.PI * 2) this.turbulenceStep = 0;
 
     this.turbulence = new Vector2(
-      Math.cos(this.turbulenceStep) * this.turbulenceRange.x,
-      Math.sin(this.turbulenceStep) * this.turbulenceRange.y,
+      Math.cos(this.turbulenceStep) * (Math.random() * this.turbulenceRange.x),
+      Math.sin(this.turbulenceStep) * (Math.random() * this.turbulenceRange.y),
     );
-    this.turbulenceScale = Math.cos(this.turbulenceStep) * this.turbulenceScaleRange;
   }
 
   emptyTile() {
