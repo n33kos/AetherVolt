@@ -1,4 +1,5 @@
 # TO-DO
+- [ ] Scale player avatars to match game board size
 - [ ] Improve lightning animation. Core too thick, doesnt waver enough (check different pixel densities)
 - [ ] Prevent arrow buttons from moving and scaling with sprites
 - [ ] Test gameplay variants for maximum fun
@@ -11,6 +12,7 @@
 
 # DONE
 #### v0.0.7
+- [x] Adjust game board to scale with browser window
 - [x] Replace tile scale animation with drift animation (its too much)
 - [x] Improve background sprite movement and performance (maybe all sprite movement)
 - [x] Scale Background to window width

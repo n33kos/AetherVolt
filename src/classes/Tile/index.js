@@ -139,7 +139,7 @@ export default class extends Sprite {
   }
 
   getOutlineColor() {
-    if (this.tileType.type === 'PLAYER_COLUMN') return 'rgba(0, 0, 0, 0)';
+    if (this.tileType.type === 'PLAYER_COLUMN') return 'rgba(1, 0, 0, 1)';
     return '#fff';
     if (this.placedBy) return `rgb(${this.placedBy.color}, 0.2`;
     if (this.isHovered && this.GameState.currentLevel.tileHelper.isDragging) return 'rgba(0, 0, 0, 0.2)';

@@ -1,3 +1,5 @@
+import { throttle } from 'throttle-debounce';
+
 import randomRange from 'lib/randomRange';
 import Tile        from 'classes/Tile';
 import TileOutline from 'classes/TileOutline';
@@ -21,6 +23,10 @@ export default class {
     this.minimumPadding = minimumPadding;
     this.tiles = [];
     this.players = players;
+
+    window.addEventListener('resize', throttle(500, () => {
+      this.init();
+    }));
   }
 
   init() {
@@ -35,7 +41,36 @@ export default class {
       (this.GameState.Canvas.height - this.cellSize * this.rows) / 2,
     );
 
-    // Build grid tiles
+    if (this.tiles.length > 0) {
+      this.resizeGridTiles();
+    } else {
+      this.buildGridTiles();
+    }
+
+    // Init cells
+    this.tiles.forEach(cell => {
+      cell.init(this.tiles);
+    });
+
+    // Position avatars
+    this.positionAvatars();
+  }
+
+  resizeGridTiles() {
+    this.tiles.forEach(tile => {
+      tile.scale = new Vector2(this.cellSize / 64, this.cellSize / 64);
+
+      tile.canvasPosition = tile.getCanvasPosition(this.cellSize, this.padding);
+      tile.targetPosition = tile.canvasPosition;
+
+      // Set outline values
+      tile.outline.canvasPosition = tile.targetPosition;
+      tile.outline.scale = tile.scale;
+      tile.outline.dimensions = tile.dimensions;
+    });
+  }
+
+  buildGridTiles() {
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.columns; x++) {
         let type = new TileType('EMPTY');
@@ -65,25 +100,29 @@ export default class {
         this.addTile(tile);
       }
     }
-
-    // Init cells
-    this.tiles.forEach(cell => {
-      cell.init(this.tiles);
-    });
-
-    // Position avatars
-    this.positionAvatars();
   }
 
   positionAvatars() {
-    this.players.forEach((player, index) => {
-      const tileID = `${index === 0 ? 0 : this.columns - 1}_${Math.floor(randomRange(0, this.rows - 1))}`;
-      const tile = this.tiles.find(tile => tile.id === tileID);
-
-      tile.player = player;
-      player.setAvatarPosition(tile);
-      this.GameState.Scene.add(player.avatar);
+    const playersInScene = this.GameState.Scene.find(gameObject => {
+      return gameObject.isPlayerAvatar;
     });
+
+    if (playersInScene.length) {
+      this.tiles.forEach(tile => {
+        if (tile.player) {
+          tile.player.setAvatarPosition(tile);
+        }
+      });
+    } else {
+      this.players.forEach((player, index) => {
+        const tileID = `${index === 0 ? 0 : this.columns - 1}_${Math.floor(randomRange(0, this.rows - 1))}`;
+        const tile = this.tiles.find(tile => tile.id === tileID);
+
+        tile.player = player;
+        player.setAvatarPosition(tile);
+        this.GameState.Scene.add(player.avatar);
+      });
+    }
   }
 
   addTile(tile) {

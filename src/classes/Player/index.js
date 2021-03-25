@@ -36,6 +36,7 @@ export default class {
     this.spritePath = spritePath;
     this.createAvatarService = new CreateAvatarService(this.GameState);
     this.uuid = uuidv4();
+    this.isPlayer = true;
 
     this.avatar = null;
     this.tiles = {

@@ -14,7 +14,7 @@ export default class extends Sprite {
 
     super(config);
 
-    this.moveSpeed = 0.5;
+    this.moveSpeed = 0.25;
     this.windowScale = window.innerWidth / this.dimensions.x;
     this.yPosition = this.getStartYPosition();
     this.canvasPosition.y = this.getStartYPosition();

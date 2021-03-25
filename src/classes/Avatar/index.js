@@ -19,6 +19,7 @@ export default class extends SpriteButton {
     this.turbulenceStep = Math.random() * Math.PI * 2;
     this.turbulenceSpeed = 0.05;
     this.turbulenceRange = new Vector2(1, 15);
+    this.isPlayerAvatar = true;
   }
 
   draw() {
