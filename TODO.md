@@ -5,7 +5,7 @@
 - [ ] Implement hero-specific sounds
 - [ ] Create Background sprites
 - [ ] Disable arrows for impossible actions
-- [ ] Create multiple levels and auto transition functionality
+- [ ] Create multiple levels/scenes and auto transition functionality
 - [ ] Create/Implement ship destruction animation
 
 # DONE
