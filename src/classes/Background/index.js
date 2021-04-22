@@ -1,4 +1,5 @@
 import Sprite  from 'classes/Sprite';
+import getPixelDensity from 'lib/getPixelDensity';
 
 export default class extends Sprite {
   constructor(config) {
@@ -23,8 +24,8 @@ export default class extends Sprite {
 
   draw() {
     this.windowScale = window.innerWidth / this.dimensions.x;
-    this.scale.x = this.windowScale;
-    this.scale.y = this.windowScale;
+    this.scale.x = this.windowScale * getPixelDensity();
+    this.scale.y = this.windowScale * getPixelDensity();
 
     this.handleMovement();
     super.draw();
@@ -36,7 +37,7 @@ export default class extends Sprite {
     const tilesToDraw = Math.ceil(window.innerHeight / this.getWindowAdjustedHeight()) + 1;
 
     for (let i = 1; i <= tilesToDraw; i++) {
-      // Abusing the draw system here by movind the canvas draw position and re-drawing the same tile
+      // Abusing the draw system here by moving the canvas draw position and re-drawing the same tile
       this.GameState.Canvas.ctx.translate(0, -this.getWindowAdjustedHeight());
       super.draw();
     }
@@ -53,7 +54,7 @@ export default class extends Sprite {
   handleMovement() {
     let newY = this.yPosition + (this.moveSpeed * this.GameState.deltaTime);
     if (newY >= this.getStartYPosition() + this.getWindowAdjustedHeight()) newY = this.getStartYPosition();
-    
+
     this.canvasPosition.y = newY;
     this.yPosition = newY;
   }
